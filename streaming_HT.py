@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import argparse
 import threading
+from Streaming import VideoStreamOut, VideoStreamIn
 import time
 
 '''***********Arguments************'''
@@ -10,53 +11,9 @@ arg.add_argument('-v', '--video', type=str,help="Your video")
 arg.add_argument('-t', '--threading', type=str, default="no", help="Enable or disable Multi-thread mode")
 args = vars(arg.parse_args())
 '''**********************************'''
-'''**********Streaming In Thread*********'''
-class VideoStreamIn(threading.Thread):
-    def __init__(self, src):
-        threading.Thread.__init__(self)
-        self.stream = cv2.VideoCapture(src)
-        self.stop = False
-        self.frame = None
-    def stopStream(self):
-        self.stop = True
-    def run(self):
-        while True:
-            if(self.stop):
-                print "[INFO] End of streaming.."
-                return
-            (self.grabbed, self.frame) = self.stream.read()
-            if not self.grabbed:
-                self.stopStream()
-    def readFrame(self):
-        return self.frame
-    def streamFlag(self):
-        return self.stop
-'''**************************************'''
-'''**************Streaming Out Thread*********'''
-class VideoStreamOut(threading.Thread):
-    def __init__(self):
-        threading.Thread.__init__(self)
-        self.frame = None
-        self.EndFlag = False
-    def run(self):
-        while True:
-            thread_lock.acquire()
-            if self.frame is not None:
-                cv2.imshow('video', self.frame)
-            thread_lock.release()
-            if cv2.waitKey(1) & 0xFF == ord('q') or video_in.streamFlag():
-                break
-        cv2.destroyAllWindows()
-        video_in.stopStream()
-        self.EndFlag = True
-    def showFrame(self, f):
-        self.frame = f
-    def getShowFlag(self):
-        return self.EndFlag
-'''**********************************************'''
+
 '''***************main code**************'''
 print "[INFO] Start of streaming.."
-thread_lock = threading.Lock()
 if args['video'] is not None: #decide video source
     video_in = VideoStreamIn(src=args['video'])
 else:
@@ -65,7 +22,10 @@ video_out = VideoStreamOut()
 video_in.start()    #start thread of streaming in
 video_out.start()   #start thread of streaming out
 while True:
+    if video_in.streamFlag():
+        video_out.setEndStream()
     if video_out.getShowFlag():
+        video_in.stopStream()
         exit()
     frame = video_in.readFrame()
     if frame is None:
