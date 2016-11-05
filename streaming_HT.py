@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import argparse
 import threading
+import time
 
 '''***********Arguments************'''
 arg = argparse.ArgumentParser()
@@ -9,8 +10,8 @@ arg.add_argument('-v', '--video', type=str,help="Your video")
 arg.add_argument('-t', '--threading', type=str, default="no", help="Enable or disable Multi-thread mode")
 args = vars(arg.parse_args())
 '''**********************************'''
-'''**********Streaming Thread*********'''
-class VideoStream(threading.Thread):
+'''**********Streaming In Thread*********'''
+class VideoStreamIn(threading.Thread):
     def __init__(self, src):
         threading.Thread.__init__(self)
         self.stream = cv2.VideoCapture(src)
@@ -32,21 +33,41 @@ class VideoStream(threading.Thread):
     def streamFlag(self):
         return self.stop
 '''**************************************'''
+'''**************Streaming Out Thread*********'''
+class VideoStreamOut(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.frame = None
+    def run(self):
+        while True:
+            thread_lock.acquire()
+            if self.frame is not None:
+                cv2.imshow('video', self.frame)
+            thread_lock.release()
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+        cv2.destroyAllWindows()
+        video_in.stopStream()
+    def showFrame(self, f):
+        self.frame = f
+'''**********************************************'''
 '''***************main code**************'''
 print "[INFO] Starting streaming.."
-if args['video'] is not None:
-    video = VideoStream(src=args['video'])
+thread_lock = threading.Lock()
+if args['video'] is not None: #decide video source
+    video_in = VideoStreamIn(src=args['video'])
 else:
-    video = VideoStream(src=0) #decide video source
-video.start() #start thread of streaming
+    video_in = VideoStreamIn(src=0)
+video_out = VideoStreamOut()
+video_in.start()    #start thread of streaming in
+video_out.start()   #start thread of streaming out
 while True:
-    frame = video.readFrame()
+    frame = video_in.readFrame()
     if frame is None:
         continue
-    cv2.imshow('frame', frame)
-    if cv2.waitKey(1) & 0xFF == ord('q') or video.streamFlag():
+    if video_in.streamFlag():
         break
+    video_out.showFrame(frame)
+
 
 print "[INFO] End of program!"
-cv2.destroyAllWindows() #End of code
-video.stopStream()
