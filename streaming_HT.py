@@ -11,7 +11,7 @@ args = vars(arg.parse_args())
 '''**********************************'''
 '''**********Streaming Thread*********'''
 class VideoStream(threading.Thread):
-    def __init__(self, src=0):
+    def __init__(self, src):
         threading.Thread.__init__(self)
         self.stream = cv2.VideoCapture(src)
         self.stop = False
@@ -25,7 +25,7 @@ class VideoStream(threading.Thread):
                 return
             (self.grabbed, self.frame) = self.stream.read()
             if not self.grabbed:
-                print "[INFO] End of streaming.."
+                print "[INFO] End of streaming video.."
                 self.stopStream()
     def readFrame(self):
         return self.frame
@@ -34,7 +34,10 @@ class VideoStream(threading.Thread):
 '''**************************************'''
 '''***************main code**************'''
 print "[INFO] Starting streaming.."
-video = VideoStream(src=0) #decide video source
+if args['video'] is not None:
+    video = VideoStream(src=args['video'])
+else:
+    video = VideoStream(src=0) #decide video source
 video.start() #start thread of streaming
 while True:
     frame = video.readFrame()
@@ -44,6 +47,6 @@ while True:
     if cv2.waitKey(1) & 0xFF == ord('q') or video.streamFlag():
         break
 
-print "[INFO] End of stream.."
+print "[INFO] End of program!"
 cv2.destroyAllWindows() #End of code
 video.stopStream()
