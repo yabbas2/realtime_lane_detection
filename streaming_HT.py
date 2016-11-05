@@ -8,7 +8,6 @@ import time
 '''***********Arguments************'''
 arg = argparse.ArgumentParser()
 arg.add_argument('-v', '--video', type=str,help="Your video")
-arg.add_argument('-t', '--threading', type=str, default="no", help="Enable or disable Multi-thread mode")
 args = vars(arg.parse_args())
 '''**********************************'''
 
