@@ -5,6 +5,7 @@ import threading
 from Streaming import VideoStreamOut, VideoStreamIn
 import time
 import IPM
+import gabor
 
 
 '''***********Arguments************'''
@@ -40,6 +41,10 @@ while True:
                     [0, h]], dtype="float32")
     # apply the four point tranform to obtain a "birds eye view" of image
     ipmOutput = IPM.four_point_transform(frame, pts)
+    '''********************************Gabor Filter******************************'''
+    gabor_filter = gabor.build_gabor_filter()  # build gabor filter
+    gaborOutput = gabor.process(ipmOutput, gabor_filter)  # processing on image
+    '''********************************Hough Trasnform****************************'''
     #using SHT
     '''lines = cv2.HoughLines(frame, 1, np.pi/180, 100)
     frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
