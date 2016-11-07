@@ -4,11 +4,13 @@ import argparse
 from Streaming import VideoStreamOut, VideoStreamIn
 import IPM
 import gabor
+import HT
 
 
 '''***********Arguments************'''
 arg = argparse.ArgumentParser()
 arg.add_argument('-v', '--video', type=str,help="Video source")
+arg.add_argument('-u', '--use', type=str,help="Type of Hough transform: Standard or Probabilistic")
 args = vars(arg.parse_args())
 '''**********************************'''
 
@@ -44,26 +46,14 @@ while True:
     gaborInput = ipmOutput
     gabor_filter = gabor.build_gabor_filter()  # build gabor filter
     gaborOutput = gabor.process(gaborInput, gabor_filter)  # processing on image
-    '''********************************Hough Transform****************************'''
-    #using SHT
-    houghInput = cv2.cvtColor(gaborOutput, cv2.COLOR_BGR2GRAY)
-    lines = cv2.HoughLines(houghInput, 1, np.pi/180, 300)
-    for line in lines:
-        for rho, theta in line:
-            if not theta == np.pi/2:#(theta < 100 * np.pi / 180 and theta > 80 * np.pi / 180): #between 100 degree and 80 degree
-                continue
-            # print rho, theta
-            a = np.cos(theta)
-            b = np.sin(theta)
-            x0 = a * rho
-            y0 = b * rho
-            x1 = int(x0 + 400 * (-b))
-            y1 = int(y0 + 400 * (a))
-            x2 = int(x0 - 400 * (-b))
-            y2 = int(y0 - 400 * (a))
-            cv2.line(ipmOutput, (x1, y1), (x2, y2), (0, 0, 255), 1)
+    '''*******************************Hough Transform****************************'''
+    temp = ipmOutput
+    if args['use'] == 'PHT':
+        houghOutput = HT.HoughTransform(gaborOutput, temp, PHT=True, SHT=False)
+    elif args['use'] == 'SHT':
+        houghOutput = HT.HoughTransform(gaborOutput, temp, PHT=False, SHT=True)
     '''******************************************************************************'''
-    video_out.showFrame(ipmOutput)
+    video_out.showFrame(houghOutput)
 
 
 #End of program
