@@ -5,15 +5,15 @@ def HoughTransform(input, houghOutput, PHT=False, SHT=False):
     houghInput = cv2.cvtColor(input, cv2.COLOR_BGR2GRAY)
     houghInput = cv2.GaussianBlur(houghInput, (19, 19), 0)
     houghInput = cv2.adaptiveThreshold(houghInput, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 3, 2)
-    # kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 1))
-    # houghInput = cv2.morphologyEx(houghInput, cv2.MORPH_OPEN, kernel, iterations=1)
-    # mu, sigma = cv2.meanStdDev(houghInput)
-    # houghInput = cv2.Canny(houghInput, mu - sigma, mu + sigma)
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 1))
+    houghInput = cv2.morphologyEx(houghInput, cv2.MORPH_OPEN, kernel, iterations=1)
+    #mu, sigma = cv2.meanStdDev(houghInput)
+    #houghInput = cv2.Canny(houghInput, mu - sigma, mu + sigma)
     # using PHT
     if PHT:
         minLineLength = 60  # 50
         maxLineGap = 5  # 5
-        maxVotes = 60  # 50
+        maxVotes = 70  # 50
         lines = cv2.HoughLinesP(houghInput, 1, np.pi / 180, maxVotes, minLineLength, maxLineGap)
         for line in lines:
             for x1, y1, x2, y2 in line:
