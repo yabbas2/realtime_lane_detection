@@ -1,4 +1,4 @@
-import threading, cv2
+import threading, cv2, time
 
 thread_lock = threading.Lock()
 
@@ -16,6 +16,7 @@ class VideoStreamIn(threading.Thread):
             if(self.stop):
                 print "[INFO] End of streaming.."
                 return
+            time.sleep(0.1)
             (self.grabbed, self.frame) = self.stream.read()
             if not self.grabbed:
                 self.stopStream()
