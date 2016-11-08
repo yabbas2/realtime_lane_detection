@@ -19,7 +19,7 @@ def HoughTransform(input, houghOutput, PHT=False, SHT=False):
             for x1, y1, x2, y2 in line:
                 if not (abs(x1 - x2) == 0):  # 0 and abs(x1 - x2) < ):  #catch vertical lines
                     continue
-                print x1, x2, y1, y2  # debugging
+                #print x1, x2, y1, y2  # debugging
                 cv2.line(houghOutput, (x1, y1), (x2, y2), (0, 0, 255), 2)
     # using SHT
     if SHT:
@@ -28,7 +28,7 @@ def HoughTransform(input, houghOutput, PHT=False, SHT=False):
             for rho, theta in line:
                 if not (theta < 4 * np.pi / 180 and theta > -4 * np.pi / 180):  # between 100 degree and 80 degree
                     continue
-                print rho, theta  # debugging
+                #print rho, theta  # debugging
                 a = np.cos(theta)
                 b = np.sin(theta)
                 x0 = a * rho
