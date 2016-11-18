@@ -1,4 +1,4 @@
-import threading, cv2
+import threading, cv2, time
 import numpy as np
 
 thread_lock = threading.Lock()
@@ -7,7 +7,8 @@ thread_lock = threading.Lock()
 class VideoStreamIn(threading.Thread):
     def __init__(self, src):
         threading.Thread.__init__(self)
-        self.stream = cv2.VideoCapture(src)
+        self.videoSource = src
+        self.stream = cv2.VideoCapture(self.videoSource)
         self.stop = False
         self.frame = None
     def stopStream(self):
@@ -17,6 +18,7 @@ class VideoStreamIn(threading.Thread):
             if(self.stop):
                 print "[INFO] End of streaming.."
                 return
+            time.sleep(0.1)
             (self.grabbed, self.frame) = self.stream.read()
             if not self.grabbed:
                 self.stopStream()
