@@ -1,4 +1,5 @@
-import threading, cv2, time
+import threading, cv2
+import numpy as np
 
 thread_lock = threading.Lock()
 
@@ -16,7 +17,6 @@ class VideoStreamIn(threading.Thread):
             if(self.stop):
                 print "[INFO] End of streaming.."
                 return
-            time.sleep(0.1)
             (self.grabbed, self.frame) = self.stream.read()
             if not self.grabbed:
                 self.stopStream()
@@ -30,21 +30,23 @@ class VideoStreamIn(threading.Thread):
 class VideoStreamOut(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
-        self.frame = None
+        self.frame1 = None
+        self.frame2 = None
         self.EndFlag = False
         self.EndStream = False
     def run(self):
         while True:
             thread_lock.acquire()
-            if self.frame is not None:
-                cv2.imshow('video', self.frame)
+            if self.frame1 is not None and self.frame2 is not None:
+                cv2.imshow('video', np.hstack([self.frame1, self.frame2]))
             thread_lock.release()
             if cv2.waitKey(1) & 0xFF == ord('q') or self.EndStream:
                 break
         cv2.destroyAllWindows()
         self.EndFlag = True
-    def showFrame(self, f):
-        self.frame = f
+    def showFrame(self, f1, f2):
+        self.frame1 = f1
+        self.frame2 = f2
     def getShowFlag(self):
         return self.EndFlag
     def setEndStream(self):
