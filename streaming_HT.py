@@ -48,7 +48,7 @@ while True:
             y2 = int(y0 - 400 * (a))
             cv2.line(frame, (x1, y1), (x2, y2), (0, 0, 255), 1)'''
     '''******************************************************************************'''
-    video_out.showFrame(frame)
+    video_out.showFrame(frame, frame)
 
 
 #End of program
