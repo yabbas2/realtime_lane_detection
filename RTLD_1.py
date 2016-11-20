@@ -54,11 +54,14 @@ while True:
     gabor_filter = gabor.build_gabor_filter()  # build gabor filter
     gaborOutput = gabor.process(gaborInput, gabor_filter)  # processing on image
     '''***************************Hough Transform****************************'''
-    temp = ipmOutput
-    if args['use'] == 'PHT':
-        houghOutput = HT.HoughTransform(gaborOutput, temp, PHT=True, SHT=False)
-    elif args['use'] == 'SHT':
-        houghOutput = HT.HoughTransform(gaborOutput, temp, PHT=False, SHT=True)
+    try:
+        temp = ipmOutput
+        if args['use'] == 'PHT':
+            houghOutput = HT.HoughTransform(gaborOutput, temp, PHT=True, SHT=False)
+        elif args['use'] == 'SHT':
+            houghOutput = HT.HoughTransform(gaborOutput, temp, PHT=False, SHT=True)
+    except ValueError:
+        pass
     '''**************************Displaying Videos***************************'''
     video_out.showFrame(frame, houghOutput)
 
