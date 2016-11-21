@@ -57,11 +57,10 @@ def four_point_transform(image, pts):
 	# in the top-left, top-right, bottom-right, and bottom-left
 	# order
 	dst = np.array([
-		[-w/10, h/2],
+		[-w/7, h/2],
 		[w+(w/10), h/2],
 		[w-(w/3), h],
 		[w/3, h]], dtype = "float32")
-	
 	##########################################################################
 	'''
 	phi = 0
