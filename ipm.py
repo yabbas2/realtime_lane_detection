@@ -80,13 +80,12 @@ def four_point_transform(image, pts):
 	########################################################################## 
 	# compute the perspective transform matrix and then apply it
 	M = cv2.getPerspectiveTransform(pts, dst)
-	H = cv2.getPerspectiveTransform(dst, pts)
+	#H = cv2.getPerspectiveTransform(dst, pts)
 	
 	
 	warped = cv2.warpPerspective(image, M, (w, h))
-	original2 = cv2.warpPerspective(warped, H, (w, h))
-	cv2.imshow("o", original2)
-	# return the warped image
+	#original2 = cv2.warpPerspective(warped, H, (w, h))
+	
 	return warped
 
 # construct the argument parse and parse the arguments
