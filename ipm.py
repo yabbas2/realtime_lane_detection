@@ -1,4 +1,4 @@
-# python transform_example.py --image path of image
+# python ipm.py --image path of image
 
 
 # import the necessary packages
