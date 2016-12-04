@@ -40,7 +40,8 @@ class VideoStreamOut(threading.Thread):
         while True:
             thread_lock.acquire()
             if self.frame1 is not None and self.frame2 is not None:
-                cv2.imshow('video', np.hstack([self.frame1, self.frame2]))
+                #cv2.imshow('video', np.hstack([self.frame1, self.frame2]))
+                cv2.imshow('video', self.frame2)
             thread_lock.release()
             if cv2.waitKey(1) & 0xFF == ord('q') or self.EndStream:
                 break
