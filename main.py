@@ -21,10 +21,10 @@ print "[INFO] Start of streaming.."
 res = args['res'].split('x')
 h = int(res[1])
 w = int(res[0])
-pts = np.array([[0, h / 2],
-                [w, h / 2],
-                [w, h],
-                [0, h]], dtype="float32")
+pts = np.array([[263, 142],
+                [394, 142],
+                [485, 209],
+                [107, 208]], dtype="float32")
 houghOutput = np.zeros((h, w, 3), dtype=np.uint8)
 if args['video'] is not None: #decide video source
     video_in = VideoStreamIn(src=args['video'])
