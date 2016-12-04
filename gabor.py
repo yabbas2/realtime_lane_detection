@@ -8,8 +8,8 @@ def build_gabor_filter():
  ksize = 31 #filter size
 
  #for theta in np.arange(0, np.pi, np.pi / 16): 	#de zeyada ... 3shan law 3ayz ageb kaza line lehom thetas mo5talefa hatetshal bardo ^^
- 
- gabor_filter = cv2.getGaborKernel((ksize, ksize), 4.5,0, 10.0, 2, 0, ktype=cv2.CV_32F) #passing parameters to gabor
+ #cv2.getGaborKernel(ksize, sigma, theta, lambda, gamma, psi, ktype)
+ gabor_filter = cv2.getGaborKernel((ksize, ksize), 4,0, 10, 0, 0, ktype=cv2.CV_32F) #passing parameters to gabor
  gabor_filter /= 1.5*gabor_filter.sum() 
  return gabor_filter
  
