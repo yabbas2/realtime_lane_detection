@@ -57,9 +57,9 @@ while True:
     try:
         temp = ipmOutput
         if args['use'] == 'PHT':
-            houghOutput = HT.HoughTransform(gaborOutput, temp, PHT=True, SHT=False)
+            houghOutput = HT.HoughTransform(gaborOutput, temp)
         elif args['use'] == 'SHT':
-            houghOutput = HT.HoughTransform(gaborOutput, temp, PHT=False, SHT=True)
+            houghOutput = HT.HoughTransform(gaborOutput, temp)
     except ValueError:
         pass
     '''**************************Displaying Videos***************************'''
