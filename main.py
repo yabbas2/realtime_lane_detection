@@ -5,7 +5,7 @@ from Streaming import VideoStreamOut, VideoStreamIn
 import IPM
 import gabor
 import HT
-
+import GTN
 
 '''***********Arguments************'''
 arg = argparse.ArgumentParser()
@@ -48,13 +48,16 @@ while True:
     gaborInput = ipmOutput
     gabor_filter = gabor.build_gabor_filter()  # build gabor filter
     gaborOutput = gabor.process(gaborInput, gabor_filter)  # processing on image
+    '''****************Gaussian blur - threshold - noise removal*************'''
+    gtnInput = gaborOutput
+    gtnOutput = GTN.process(gtnInput)
     '''***************************Hough Transform****************************'''
     try:
         temp = ipmOutput
-        houghOutput = HT.HoughTransform(gaborOutput, temp)
+        houghOutput = HT.HoughTransform(gtnOutput, temp)
     except:
         pass
     '''**************************Displaying Videos***************************'''
-    video_out.showFrame(frame, houghOutput)
+    video_out.showFrame(frame, ipmOutput)
 
 #End of program
