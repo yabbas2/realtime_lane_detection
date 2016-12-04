@@ -20,6 +20,7 @@ pts = np.array([[263, 142],
                 [394, 142],
                 [485, 209],
                 [107, 208]], dtype="float32")
+houghOutput = np.zeros((200, 200, 3), dtype=np.uint8)
 if args['video'] is not None: #decide video source
     video_in = VideoStreamIn(src=args['video'])
 else:
