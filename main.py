@@ -58,6 +58,6 @@ while True:
     except:
         pass
     '''**************************Displaying Videos***************************'''
-    video_out.showFrame(frame, ipmOutput)
+    video_out.showFrame(frame, houghOutput)
 
 #End of program
