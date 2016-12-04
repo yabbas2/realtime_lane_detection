@@ -25,7 +25,7 @@ def HoughTransform(input, houghOutput):
         sumP = percentage[i]  # sum(percentage[i:i+17])
         avg_i = i  # ((i * 16) + 120) / 16
         if sumP > 0.4:
-            cv2.line(houghOutput, (avg_i, 0), (avg_i, 480), (0, 0, 255), 4)
+            cv2.line(houghOutput, (avg_i, 0), (avg_i, h), (0, 0, 255), 4)
     return houghOutput
 
 
