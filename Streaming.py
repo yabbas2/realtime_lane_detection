@@ -33,23 +33,20 @@ class VideoStreamOut(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
         self.frame1 = None
-        self.frame2 = None
         self.EndFlag = False
         self.EndStream = False
     def run(self):
         while True:
             thread_lock.acquire()
-            if self.frame1 is not None and self.frame2 is not None:
-                #cv2.imshow('video', np.hstack([self.frame1, self.frame2]))
-                cv2.imshow('video', self.frame2)
+            if self.frame1 is not None:
+                cv2.imshow('video', self.frame1)
             thread_lock.release()
             if cv2.waitKey(1) & 0xFF == ord('q') or self.EndStream:
                 break
         cv2.destroyAllWindows()
         self.EndFlag = True
-    def showFrame(self, f1, f2):
+    def showFrame(self, f1):
         self.frame1 = f1
-        self.frame2 = f2
     def getShowFlag(self):
         return self.EndFlag
     def setEndStream(self):
