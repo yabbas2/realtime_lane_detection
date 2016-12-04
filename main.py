@@ -10,22 +10,16 @@ import HT
 '''***********Arguments************'''
 arg = argparse.ArgumentParser()
 arg.add_argument('-v', '--video', type=str,help="Video source")
-arg.add_argument('-u', '--use', type=str,help="Type of Hough transform: Standard or Probabilistic")
-arg.add_argument('-r', '--res', type=str,help="Width and Height (resolution) of video frames")
 args = vars(arg.parse_args())
 '''**********************************'''
 
 '''***************main code**************'''
 print "[INFO] Start of streaming.."
 '''*****************************Initialization*******************'''
-res = args['res'].split('x')
-h = int(res[1])
-w = int(res[0])
 pts = np.array([[263, 142],
                 [394, 142],
                 [485, 209],
                 [107, 208]], dtype="float32")
-houghOutput = np.zeros((h, w, 3), dtype=np.uint8)
 if args['video'] is not None: #decide video source
     video_in = VideoStreamIn(src=args['video'])
 else:
@@ -56,11 +50,8 @@ while True:
     '''***************************Hough Transform****************************'''
     try:
         temp = ipmOutput
-        if args['use'] == 'PHT':
-            houghOutput = HT.HoughTransform(gaborOutput, temp)
-        elif args['use'] == 'SHT':
-            houghOutput = HT.HoughTransform(gaborOutput, temp)
-    except ValueError:
+        houghOutput = HT.HoughTransform(gaborOutput, temp)
+    except:
         pass
     '''**************************Displaying Videos***************************'''
     video_out.showFrame(frame, houghOutput)
