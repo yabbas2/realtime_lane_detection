@@ -18,7 +18,7 @@ class VideoStreamIn(threading.Thread):
             if(self.stop):
                 print "[INFO] End of streaming.."
                 return
-            time.sleep(0.1)
+            time.sleep(0.05)
             (self.grabbed, self.frame) = self.stream.read()
             if not self.grabbed:
                 self.stopStream()
