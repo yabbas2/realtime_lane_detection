@@ -16,10 +16,15 @@ args = vars(arg.parse_args())
 '''***************main code**************'''
 print "[INFO] Start of streaming.."
 '''*****************************Initialization*******************'''
-pts = np.array([[263, 142],
-                [394, 142],
-                [485, 209],
-                [107, 208]], dtype="float32")
+if args['video'].endswith("sample7.mp4"):
+    pts = np.array([[263, 142], [394, 142], [485, 209], [107, 208]], dtype="float32")
+'''elif args['video'].endswith("sample5_cut_1.mp4"):
+    pts =
+elif args['video'].endswith("sample5_cut_2.mp4"):
+    pts =
+elif args['video'].endswith("sample5_cut_3.mp4"):
+    pts =
+'''
 houghOutput = np.zeros((200, 200, 3), dtype=np.uint8)
 if args['video'] is not None:
     video_in = VideoStreamIn(src=args['video'])
@@ -42,7 +47,7 @@ while True:
     if frame is None:
         continue
     '''*******************************IPM************************************'''
-    ipmInput = frame
+    ipmInput = frame.copy()
     ipmOutput = IPM.four_point_transform(ipmInput, pts)
     '''****************************Gabor Filter******************************'''
     gaborInput = ipmOutput
@@ -69,5 +74,7 @@ while True:
         video_out.showFrame(houghOutput)
     elif args['show'] == 'all':
         video_out.showFrame(finalOutput)
+    elif args['show'] == 'original':
+        video_out.showFrame(frame)
 
 #End of program
