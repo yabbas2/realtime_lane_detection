@@ -1,4 +1,3 @@
-import cv2
 import numpy as np
 import argparse
 from Streaming import VideoStreamOut, VideoStreamIn
@@ -6,7 +5,6 @@ import IPM
 import gabor
 import HT
 import GTN
-import os
 
 '''***********Arguments************'''
 arg = argparse.ArgumentParser()
@@ -23,13 +21,14 @@ pts = np.array([[263, 142],
                 [485, 209],
                 [107, 208]], dtype="float32")
 houghOutput = np.zeros((200, 200, 3), dtype=np.uint8)
-if args['video'] is not None: #decide video source
+if args['video'] is not None:
     video_in = VideoStreamIn(src=args['video'])
 else:
     video_in = VideoStreamIn(src=0)
 video_out = VideoStreamOut()
-video_in.start()    #start thread of streaming in
-video_out.start()   #start thread of streaming out
+
+video_in.start()
+video_out.start()
 '''**************************************************************'''
 '''********************************Algorithm*********************************'''
 while True:
@@ -44,12 +43,11 @@ while True:
         continue
     '''*******************************IPM************************************'''
     ipmInput = frame
-    # apply the four point transform to obtain a "birds eye view" of image
     ipmOutput = IPM.four_point_transform(ipmInput, pts)
     '''****************************Gabor Filter******************************'''
     gaborInput = ipmOutput
-    gabor_filter = gabor.build_gabor_filter()  # build gabor filter
-    gaborOutput = gabor.process(gaborInput, gabor_filter)  # processing on image
+    gabor_filter = gabor.build_gabor_filter()
+    gaborOutput = gabor.process(gaborInput, gabor_filter)
     '''****************Gaussian blur - threshold - noise removal*************'''
     gtnInput = gaborOutput
     gtnOutput = GTN.process(gtnInput)
@@ -60,6 +58,8 @@ while True:
         houghOutput = HT.HoughTransform(houghInput1, houghInput2)
     except:
         pass
+    '''*************************Final Step***********************************'''
+    # @amal @amany: call the required function here - your input is houghOutput
     '''**************************Displaying Videos***************************'''
     if args['show'] == 'gabor':
         video_out.showFrame(gaborOutput)
