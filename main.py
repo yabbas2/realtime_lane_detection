@@ -69,5 +69,9 @@ while True:
         video_out.showFrame(houghOutput)
     elif args['show'] == 'all':
         video_out.showFrame(finalOutput)
+    elif args['show'] == 'original':
+        video_out.showFrame(frame)
+    elif args['show'] == 'gtn':
+        video_out.showFrame(gtnOutput)
 
 #End of program
