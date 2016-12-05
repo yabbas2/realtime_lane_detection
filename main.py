@@ -60,6 +60,7 @@ while True:
         pass
     '''*************************Final Step***********************************'''
     # @amal @amany: call the required function here - your input is houghOutput
+    finalOutput = IPM.inverse(ipmInput,houghOutput,pts)
     '''**************************Displaying Videos***************************'''
     if args['show'] == 'gabor':
         video_out.showFrame(gaborOutput)
@@ -67,5 +68,7 @@ while True:
         video_out.showFrame(ipmOutput)
     elif args['show'] == 'ht':
         video_out.showFrame(houghOutput)
+    elif args['show'] == 'all':
+        video_out.showFrame(finalOutput)
 
 #End of program
