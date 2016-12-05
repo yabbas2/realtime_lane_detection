@@ -15,7 +15,7 @@ def HoughTransform(input, houghOutput):
     x = 0
     for line in lines:
         for x1, y1, x2, y2 in line:
-            if not (abs(x1 - x2) == 0 and x1 > 15 and x1 < w-30):  # 0 and abs(x1 - x2) < ):  #catch vertical lines
+            if not (abs(x1 - x2) < 1 and x1 > 15 and x1 < w-30):  # 0 and abs(x1 - x2) < ):  #catch vertical lines
                 continue
             # print x1, x2, y1, y2  # debugging
             array_of_lines[x][x1] = x1
