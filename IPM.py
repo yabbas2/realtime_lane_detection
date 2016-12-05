@@ -110,3 +110,16 @@ def four_point_transform(image, pts):
 
     # return the warped image
     return warped
+
+
+def inverse(image,houghOutput, pts):
+    h, w, channels = houghOutput.shape
+    dst = np.array([[0, 0],
+                    [w, 0],
+                    [w, h],
+                    [0, h]], dtype="float32")
+    H = cv2.getPerspectiveTransform(dst, pts)
+    original = cv2.warpPerspective(houghOutput, H, (h, w))
+    inv_image = cv2.bitwise_or(original, image)
+    return inv_image
+
