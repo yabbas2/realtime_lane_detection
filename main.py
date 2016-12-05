@@ -59,7 +59,6 @@ while True:
     except:
         pass
     '''*************************Final Step***********************************'''
-    # @amal @amany: call the required function here - your input is houghOutput
     finalOutput = IPM.inverse(ipmInput,houghOutput,pts)
     '''**************************Displaying Videos***************************'''
     if args['show'] == 'gabor':
