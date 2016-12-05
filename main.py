@@ -6,10 +6,12 @@ import IPM
 import gabor
 import HT
 import GTN
+import os
 
 '''***********Arguments************'''
 arg = argparse.ArgumentParser()
 arg.add_argument('-v', '--video', type=str,help="Video source")
+arg.add_argument('-s', '--show', type=str,help="Choose algorithm to be displayed")
 args = vars(arg.parse_args())
 '''**********************************'''
 
@@ -53,11 +55,17 @@ while True:
     gtnOutput = GTN.process(gtnInput)
     '''***************************Hough Transform****************************'''
     try:
-        temp = ipmOutput
-        houghOutput = HT.HoughTransform(gtnOutput, temp)
+        houghInput1 = gtnOutput
+        houghInput2 = ipmOutput.copy()
+        houghOutput = HT.HoughTransform(houghInput1, houghInput2)
     except:
         pass
     '''**************************Displaying Videos***************************'''
-    video_out.showFrame(frame, houghOutput)
+    if args['show'] == 'gabor':
+        video_out.showFrame(gaborOutput)
+    elif args['show'] == 'ipm':
+        video_out.showFrame(ipmOutput)
+    elif args['show'] == 'ht':
+        video_out.showFrame(houghOutput)
 
 #End of program
