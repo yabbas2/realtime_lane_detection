@@ -5,22 +5,28 @@ import IPM
 import gabor
 import HT
 import GTN
+import LSD
+import time
 
 '''***********Arguments************'''
 arg = argparse.ArgumentParser()
 arg.add_argument('-v', '--video', type=str,help="Video source")
-arg.add_argument('-s', '--show', type=str,help="Choose algorithm to be displayed")
+arg.add_argument('-s', '--show', type=str,help="Choose only one algorithm to be displayed")
+arg.add_argument('-m', '--show2', type=str,help="Choose only two algorithms to be displayed")
 args = vars(arg.parse_args())
 '''**********************************'''
 
 '''***************main code**************'''
 print "[INFO] Start of streaming.."
-'''*****************************Initialization*******************'''
+'''*****************************Initialization*******************************'''
+if args['show2'] is not None:
+    frames = args['show2'].split(',')
+
 if args['video'].endswith("sample7.mp4"):
     pts = np.array([[263, 142], [394, 142], [485, 209], [107, 208]], dtype="float32")
 else:
     pts = np.array([[269, 206], [384, 206], [596, 297], [1, 297]], dtype="float32")
-houghOutput = np.zeros((200, 200, 3), dtype=np.uint8)
+
 if args['video'] is not None:
     video_in = VideoStreamIn(src=args['video'])
 else:
@@ -28,10 +34,12 @@ else:
 video_out = VideoStreamOut()
 video_in.start()
 video_out.start()
-'''**************************************************************'''
+'''**************************************************************************'''
 '''********************************Algorithm*********************************'''
 while True:
-    '''**************************Reading Frames*******************************'''
+    '''**************************Start time**********************************'''
+    start = time.time()
+    '''**************************Reading Frames******************************'''
     if video_in.streamFlag():
         video_out.setEndStream()
     if video_out.getShowFlag():
@@ -48,7 +56,7 @@ while True:
     gabor_filter = gabor.build_gabor_filter()
     gaborOutput = gabor.process(gaborInput, gabor_filter)
     '''****************Gaussian blur - threshold - noise removal*************'''
-    gtnInput = gaborOutput
+    gtnInput = gaborOutput.copy()#lsdOutput.copy()
     gtnOutput = GTN.process(gtnInput)
     '''***************************Hough Transform****************************'''
     try:
@@ -57,21 +65,24 @@ while True:
         houghOutput = HT.HoughTransform(houghInput1, houghInput2)
     except:
         pass
+    '''**********************Line Segment Detector***************************'''
+    lsdInput = houghOutput.copy()
+    lsdOutput = LSD.LineSegmentDetector(lsdInput)
     '''*************************Final Step***********************************'''
     # @amal @amany: call the required function here - your input is houghOutput
-    finalOutput = IPM.inverse(ipmInput,houghOutput,pts)
+    #finalOutput = IPM.inverse(ipmInput,houghOutput,pts)
+    finalOutput = IPM.inverse(ipmInput, lsdOutput, pts)
     '''**************************Displaying Videos***************************'''
-    if args['show'] == 'gabor':
-        video_out.showFrame(gaborOutput)
-    elif args['show'] == 'ipm':
-        video_out.showFrame(ipmOutput)
-    elif args['show'] == 'ht':
-        video_out.showFrame(houghOutput)
-    elif args['show'] == 'all':
-        video_out.showFrame(finalOutput)
-    elif args['show'] == 'original':
-        video_out.showFrame(frame)
-    elif args['show'] == 'gtn':
-        video_out.showFrame(gtnOutput)
+    display = {'gabor': gaborOutput, 'ht': houghOutput, 'lsd': lsdOutput, 'gtn': gtnOutput, 'ipm': ipmOutput,
+               'original': frame, 'all': finalOutput}
+    if args['show'] is not None:
+        video_out.showFrame(display[args['show']])
+    elif args['show2'] is not None:
+        video_out.showTwoFrames(display[frames[0]], display[frames[1]])
+    else:
+        print 'No algorithm\'s output is selected!'
+    '''**************************End time - Calculate time*******************'''
+    end = time.time()
+    print 'Time is:', end - start
 
 #End of program
