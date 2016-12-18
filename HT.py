@@ -68,6 +68,7 @@ def drawLines(lines, image):
 
 def searchForLine(x, filtered_lines):
     for line in filtered_lines:
-        if int(line[0]) == x:
-            return True, line[0], line[1], line[2], line[3]
+        [x1, y1, x2, y2] = line
+        if int(x1) == x:
+            return True, x1, y1, x2, y2
     return False, 0, 0, 0, 0
