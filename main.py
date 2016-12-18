@@ -22,8 +22,10 @@ print "[INFO] Start of streaming.."
 if args['show2'] is not None:
     frames = args['show2'].split(',')
 
-if args['video'].endswith("sample7.mp4"):
+if args['video'].startswith("sample7"):
     pts = np.array([[263, 142], [394, 142], [485, 209], [107, 208]], dtype="float32")
+elif args['video'].startswith("sample8"):
+    pts = np.array([[271, 247], [370, 247], [468, 281], [168, 281]], dtype="float32")
 else:
     pts = np.array([[269, 206], [384, 206], [596, 297], [1, 297]], dtype="float32")
 
