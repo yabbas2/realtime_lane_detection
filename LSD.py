@@ -14,7 +14,7 @@ def LineSegmentDetector(input):
                 continue
             #print x1, y1, x2, y2
             filtered_lines.append([x1, y1, x2, y2])
-    for i in range(10, w-10, 40):
+    '''for i in range(10, w-10, 40):
         counter = int()
         sum_x1 = float()
         sum_x2 = float()
@@ -27,10 +27,10 @@ def LineSegmentDetector(input):
         if counter > 0:
             avg_x1 = sum_x1 / counter
             avg_x2 = sum_x2 / counter
-            cv2.line(new_image, (int(avg_x1), 0), (int(avg_x2), h), (0, 0, 255), 6)
+            cv2.line(new_image, (int(avg_x1), 0), (int(avg_x2), h), (0, 0, 255), 6)'''
     #print lines
-    #filtered_lines = np.array(filtered_lines)
-    #new_image = LSD.drawSegments(new_image, filtered_lines)
+    filtered_lines = np.array(filtered_lines)
+    new_image = LSD.drawSegments(new_image, filtered_lines)
     return new_image
 
 def searchForLine(x, filtered_lines):
