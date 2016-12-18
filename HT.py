@@ -14,28 +14,34 @@ def HoughTransform(input, houghOutput):
             if not (x1 > 15 and x1 < w - 30):
                 continue
             filtered_lines.append([x1, y1, x2, y2])
-    for i in range(10, w-10, 40):
+    for i in range(15, w-30, 40):
         counter = int()
         sum_x1 = float()
         sum_x2 = float()
+        sum_y1 = float()
+        sum_y2 = float()
         for x in range(i, i + 40, 1):
-            flag, x_1, x_2 = searchForLine(x, filtered_lines)
+            flag, x_1, y_1, x_2, y_2 = searchForLine(x, filtered_lines)
             if flag:
                 counter += 1
                 sum_x1 += x_1
                 sum_x2 += x_2
+                sum_y1 += y_1
+                sum_y2 += y_2
         if counter > 0:
             avg_x1 = sum_x1 / counter
             avg_x2 = sum_x2 / counter
-            cv2.line(houghOutput, (int(avg_x1), 0), (int(avg_x2), h), (0, 255, 0), 6)
+            avg_y1 = sum_y1 / counter
+            avg_y2 = sum_y2 / counter
+            cv2.line(houghOutput, (int(avg_x1), int(avg_y1)), (int(avg_x2), int(avg_y2)), (0, 255, 0), 6)
     return houghOutput
 
 
 def searchForLine(x, filtered_lines):
     for line in filtered_lines:
         if int(line[0]) == x:
-            return True, line[0], line[2]
-    return False, 0, 0
+            return True, line[0], line[1], line[2], line[3]
+    return False, 0, 0, 0, 0
 
 '''def calculateMax(matrix, row, column):
     percentage = list()
