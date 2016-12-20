@@ -30,7 +30,7 @@ if args['show2'] is not None:
     frames = args['show2'].split(',')
 
 if args['video'].endswith("sample7.mp4"):
-    pts = np.array([[271, 143], [390, 143], [480, 209], [115, 209]], dtype="float32")
+    pts = np.array([[270, 143], [383, 143], [430, 187], [166, 187]], dtype="float32")
 elif args['video'].endswith("sample8.mp4"):
     pts = np.array([[236, 205], [406, 205], [498, 253], [86, 253]], dtype="float32")
 elif args['video'].endswith("sample9.mp4"):
