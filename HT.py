@@ -4,9 +4,9 @@ import numpy as np
 
 def HoughTransform(input, height):
     h, w = input.shape[:2]
-    minLineLength = 70  # 50
+    minLineLength = 60  # 70
     maxLineGap = 1  # 5
-    maxVotes = 90  # 50
+    maxVotes = 90  # 90
     phaseOneFilteredLines = list()
     lines = cv2.HoughLinesP(input, 1, np.pi / 180, maxVotes, minLineLength, maxLineGap)
     for line in lines:
@@ -15,9 +15,13 @@ def HoughTransform(input, height):
                 continue
             phaseOneFilteredLines.append([x1, y1, x2, y2])
     #Stage one
-    phaseTwoFilteredLines = averaging(15, w - 30, 40, phaseOneFilteredLines, 0)
+    phaseTwoFilteredLines = averaging(15, w - 30, 10, phaseOneFilteredLines, 0)
     #Stage two
-    phaseThreeFilteredLines = averaging(15, w - 30, 80, phaseTwoFilteredLines, 0)
+    phaseThreeFilteredLines = averaging(15, w - 30, 20, phaseTwoFilteredLines, 0)
+    #Stage three
+    phaseThreeFilteredLines = averaging(15, w - 30, 40, phaseThreeFilteredLines, 0)
+    #Stage Four
+    phaseThreeFilteredLines = averaging(15, w - 30, 80, phaseThreeFilteredLines, 0)
 
     phaseFourFilteredLines = findLines(phaseThreeFilteredLines, height)
     return phaseFourFilteredLines
