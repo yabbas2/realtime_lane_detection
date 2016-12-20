@@ -32,7 +32,7 @@ if args['show2'] is not None:
 if args['video'].endswith("sample7.mp4"):
     pts = np.array([[263, 142], [394, 142], [485, 209], [107, 208]], dtype="float32")
 elif args['video'].endswith("sample8.mp4"):
-    pts = np.array([[271, 247], [370, 247], [468, 281], [168, 281]], dtype="float32")
+    pts = np.array([[236, 205], [406, 205], [498, 253], [86, 253]], dtype="float32")
 elif args['video'].endswith("washintgon2.mp4"):
     pts = np.array([[241, 205], [360, 205], [486, 256], [40, 256]], dtype="float32")
 else:
