@@ -24,7 +24,7 @@ linesToDraw = list()
 countFrames = 0
 continueFlag = True
 pauseFlag = False
-numFrames = 30
+numFrames = 5
 
 if args['show2'] is not None:
     frames = args['show2'].split(',')
