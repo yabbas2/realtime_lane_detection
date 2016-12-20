@@ -81,26 +81,23 @@ while True:
         gabor_filter = gabor.build_gabor_filter()
         gaborOutput = gabor.process(gaborInput, gabor_filter)
         '''****************Gaussian blur - threshold - noise removal*************'''
-        gtnInput = gaborOutput.copy()#lsdOutput.copy()
+        gtnInput = gaborOutput.copy()
         gtnOutput = GTN.process(gtnInput)
         '''***************************Hough Transform****************************'''
         try:
-            houghInput1 = gtnOutput
-            houghInput2 = ipmOutput.copy()
-            lines, houghOutput = HT.HoughTransform(houghInput1, houghInput2)
+            houghInput = gtnOutput
+            lines = HT.HoughTransform(houghInput, frame.shape[0])
         except:
             pass
         '''**********************Get points of final lines***********************'''
         linesToDraw = IPM.inverse(lines)
     '''************************Draw lines over lanes*************************'''
-
+    finalImage = IPM.DrawLanes(linesToDraw, frame.copy())
     '''**************************Displaying Videos***************************'''
-    display = {'gabor': gaborOutput, 'ht': houghOutput, 'lsd': lsdOutput, 'gtn': gtnOutput, 'ipm': ipmOutput,
-               'original': frame, 'all': finalOutput}
     if args['show'] is not None:
-        video_out.showFrame(display[args['show']])
+        video_out.showFrame(finalImage)
     elif args['show2'] is not None:
-        video_out.showTwoFrames(display[frames[0]], display[frames[1]])
+        video_out.showTwoFrames(frame, finalImage)
     '''**************************End time - Calculate time*******************'''
     end = time.time()
     print 'Time is:', end - start
