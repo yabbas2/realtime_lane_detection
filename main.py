@@ -35,6 +35,8 @@ elif args['video'].endswith("sample8.mp4"):
     pts = np.array([[236, 205], [406, 205], [498, 253], [86, 253]], dtype="float32")
 elif args['video'].endswith("sample9.mp4"):
     pts = np.array([[230, 211], [342, 211], [373, 238], [160, 238]], dtype="float32")
+elif args['video'].endswith("sample10.mp4"):
+    pts = np.array([[253, 219], [352, 219], [444, 288], [60, 288]], dtype="float32")
 elif args['video'].endswith("washintgon2.mp4"):
     pts = np.array([[241, 205], [360, 205], [486, 256], [40, 256]], dtype="float32")
 else:
