@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 
-def HoughTransform(input, houghOutput):
+def HoughTransform(input, height):
     h, w = input.shape[:2]
     minLineLength = 70  # 50
     maxLineGap = 1  # 5
@@ -19,8 +19,8 @@ def HoughTransform(input, houghOutput):
     #Stage two
     phaseThreeFilteredLines = averaging(15, w - 30, 80, phaseTwoFilteredLines, 0)
 
-    phaseFourFilteredLines, houghOutput = findLines(phaseThreeFilteredLines, houghOutput)
-    return phaseFourFilteredLines, houghOutput
+    phaseFourFilteredLines = findLines(phaseThreeFilteredLines, height)
+    return phaseFourFilteredLines
 
 
 def averaging(start, end, windowSize, _2D_array, threshold):
@@ -47,8 +47,7 @@ def averaging(start, end, windowSize, _2D_array, threshold):
             filtered.append([avg_x1, avg_y1, avg_x2, avg_y2])
     return filtered
 
-def findLines(lines, image):
-    h, w = image.shape[:2]
+def findLines(lines, height):
     returnLines = list()
     for line in lines:
         perfectVertical = False
@@ -60,14 +59,14 @@ def findLines(lines, image):
         finally:
             if(perfectVertical):
                 x = np.float32(x1)
-                returnLines.append([x, 0, x, h])
-                cv2.line(image, (x, 0), (x, h), (0, 255, 0), 4)
+                returnLines.append([x, 0, x, height])
+                #cv2.line(image, (x, 0), (x, h), (0, 255, 0), 4)
             else:
                 new_x1 = np.float32((0-y1)/slope + x1)
-                new_x2 = np.float32((h-y1)/slope + x1)
-                returnLines.append([new_x1, 0, new_x2, h])
-                cv2.line(image, (new_x1, 0), (new_x2, h), (0, 255, 0), 4)
-    return returnLines, image
+                new_x2 = np.float32((height-y1)/slope + x1)
+                returnLines.append([new_x1, 0, new_x2, height])
+                #cv2.line(image, (new_x1, 0), (new_x2, h), (0, 255, 0), 4)
+    return returnLines
 
 
 def searchForLine(x, filtered_lines):
