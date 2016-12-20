@@ -48,13 +48,16 @@ def DrawLanes(lines, image):
         except ZeroDivisionError:
             perfectVertical = True
         finally:
-            if(perfectVertical):
-                x = np.float32(x1)
-                cv2.line(image, (x, 0), (x, h), (0, 255, 0), 6)
-            else:
-                new_x2 = np.float32((h-y1)/slope + x1)
-                cv2.line(image, (x1, y1), (new_x2, h), (0, 255, 0), 6)
-    return
+            try:
+                if(perfectVertical):
+                    x = np.float32(x1)
+                    cv2.line(image, (x, 0), (x, h), (0, 255, 0), 6)
+                else:
+                    new_x2 = np.float32((h-y1)/slope + x1)
+                    cv2.line(image, (x1, y1), (new_x2, h), (0, 255, 0), 6)
+            except:
+                pass
+    return image
 
 
 
