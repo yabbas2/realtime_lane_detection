@@ -20,6 +20,7 @@ args = vars(arg.parse_args())
 houghOutput = np.zeros((300, 300, 3), dtype=np.uint8)
 lsdOutput = np.zeros((300, 300, 3), dtype=np.uint8)
 lines = list()
+linesToDraw = list()
 countFrames = 0
 continueFlag = True
 pauseFlag = False
@@ -90,7 +91,7 @@ while True:
         except:
             pass
         '''**********************Get points of final lines***********************'''
-        finalOutput = IPM.inverse(ipmInput,houghOutput,pts)
+        linesToDraw = IPM.inverse(lines)
     '''************************Draw lines over lanes*************************'''
 
     '''**************************Displaying Videos***************************'''
@@ -100,8 +101,6 @@ while True:
         video_out.showFrame(display[args['show']])
     elif args['show2'] is not None:
         video_out.showTwoFrames(display[frames[0]], display[frames[1]])
-    else:
-        print 'No algorithm\'s output is selected!'
     '''**************************End time - Calculate time*******************'''
     end = time.time()
     print 'Time is:', end - start
