@@ -20,8 +20,10 @@ def HoughTransform(input, height):
     phaseThreeFilteredLines = averaging(0, w, 20, phaseTwoFilteredLines, 0)
     #Stage three
     phaseThreeFilteredLines = averaging(0, w, 40, phaseThreeFilteredLines, 0)
-    #Stage Four
+    #Stage four
     phaseThreeFilteredLines = averaging(0, w, 80, phaseThreeFilteredLines, 0)
+    #Stage five
+    phaseThreeFilteredLines = averaging(0, w, 100, phaseThreeFilteredLines, 0)
 
     phaseFourFilteredLines = findLines(phaseThreeFilteredLines, height)
     return phaseFourFilteredLines
