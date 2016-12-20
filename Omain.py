@@ -26,9 +26,13 @@ if args['video'].endswith("sample7.mp4"):
     pts = np.array([[263, 142], [394, 142], [485, 209], [107, 208]], dtype="float32")
 elif args['video'].endswith("sample8.mp4"):
     pts = np.array([[236, 205], [406, 205], [498, 253], [86, 253]], dtype="float32")
+elif args['video'].endswith("sample9.mp4"):
+    pts = np.array([[230, 211], [342, 211], [373, 238], [160, 238]], dtype="float32")
+elif args['video'].endswith("washintgon2.mp4"):
+    pts = np.array([[241, 205], [360, 205], [486, 256], [40, 256]], dtype="float32")
 else:
     pts = np.array([[269, 206], [384, 206], [596, 297], [1, 297]], dtype="float32")
-
+    
 if args['video'] is not None:
     video_in = VideoStreamIn(src=args['video'])
 else:
