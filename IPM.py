@@ -41,22 +41,17 @@ def inverse(inputPts):
 def DrawLanes(lines, image):
     h, w = image.shape[:2]
     for line in lines:
-        perfectVertical = False
         [x1, y1, x2, y2] = line
         try:
-            slope = (y2-y1)/(x2-x1)
-        except ZeroDivisionError:
-            perfectVertical = True
-        finally:
-            try:
-                if(perfectVertical):
-                    x = np.float32(x1)
-                    cv2.line(image, (x, 0), (x, h), (0, 255, 0), 6)
-                else:
-                    new_x2 = np.float32((h-y1)/slope + x1)
-                    cv2.line(image, (x1, y1), (new_x2, h), (0, 255, 0), 6)
-            except:
-                pass
+            if (x1-x2) == 0:
+                x = np.float32(x1)
+                cv2.line(image, (x, y1), (x, h), (0, 255, 0), 6)
+            else:
+                slope = (y2 - y1) / (x2 - x1)
+                new_x2 = np.float32((h - y1) / slope + x1)
+                cv2.line(image, (x1, y1), (new_x2, h), (0, 255, 0), 6)
+        except:
+            pass
     return image
 
 
