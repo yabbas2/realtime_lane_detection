@@ -23,13 +23,15 @@ if args['show2'] is not None:
     frames = args['show2'].split(',')
 
 if args['video'].endswith("sample7.mp4"):
-    pts = np.array([[259, 147], [384, 147], [470, 226], [87, 226]], dtype="float32")
+    pts = np.array([[271, 143], [390, 143], [480, 209], [115, 209]], dtype="float32")
 elif args['video'].endswith("sample8.mp4"):
     pts = np.array([[236, 205], [406, 205], [498, 253], [86, 253]], dtype="float32")
 elif args['video'].endswith("sample9.mp4"):
     pts = np.array([[230, 211], [342, 211], [373, 238], [160, 238]], dtype="float32")
 elif args['video'].endswith("sample10.mp4"):
     pts = np.array([[253, 219], [352, 219], [444, 288], [60, 288]], dtype="float32")
+elif args['video'].endswith("sample11.mp4"):
+    pts = np.array([[197, 212], [326, 212], [348, 230], [106, 230]], dtype="float32")
 elif args['video'].endswith("washintgon2.mp4"):
     pts = np.array([[241, 205], [360, 205], [486, 256], [40, 256]], dtype="float32")
 else:
