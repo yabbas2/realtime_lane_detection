@@ -69,7 +69,8 @@ while True:
     '''***************************Hough Transform****************************'''
     try:
         houghInput = gtnOutput
-        houghOutput = HT.HoughTransform(houghInput, frame.shape[0])
+        lines = HT.HoughTransform(houghInput, frame.shape[0])
+        houghOutput = IPM.DrawLanes(lines, ipmOutput.copy())
     except:
         pass
     '''**********************Line Segment Detector***************************'''
@@ -81,7 +82,7 @@ while True:
     #finalOutput = IPM.inverse(ipmInput, lsdOutput, pts)
     '''**************************Displaying Videos***************************'''
     display = {'gabor': gaborOutput,'gtn': gtnOutput, 'ipm': ipmOutput,
-               'original': frame,}
+               'original': frame, 'ht': houghOutput}
     if args['show'] is not None:
         video_out.showFrame(display[args['show']])
     elif args['show2'] is not None:
