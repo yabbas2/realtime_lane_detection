@@ -2,7 +2,8 @@ import cv2, math
 import numpy as np
 
 
-def HoughTransform(input, height):
+def HoughTransform(input):
+    global h, w
     h, w = input.shape[:2]
     minLineLength = 60  # 70
     maxLineGap = 1  # 5
@@ -25,7 +26,9 @@ def HoughTransform(input, height):
     #Stage five
     phaseThreeFilteredLines = averaging(0, w, 100, phaseThreeFilteredLines, 0)
 
-    phaseFourFilteredLines = findLines(phaseThreeFilteredLines, height)
+    phaseFourFilteredLines = findLines(phaseThreeFilteredLines)
+    phaseFourFilteredLines = checkForAllLanes(phaseFourFilteredLines)
+
     return phaseFourFilteredLines
 
 
@@ -55,21 +58,21 @@ def averaging(start, end, windowSize, _2D_array, threshold):
             filtered.append([avg_x1, avg_y1, avg_x2, avg_y2])
     return filtered
 
-def findLines(lines, height):
+def findLines(lines):
     returnLines = list()
     for line in lines:
         [x1, y1, x2, y2] = line
         if (x1-x2) == 0:
             x = np.float32(x1)
-            returnLines.append([x, 0, x, height])
+            returnLines.append([x, 0, x, h])
         else:
             slope = (y2 - y1) / (x2 - x1)
             theta = math.atan(slope)
             if theta > (95 * np.pi / 180) or theta < (85 * np.pi / 180):
                 continue
             new_x1 = np.float32((0 - y1) / slope + x1)
-            new_x2 = np.float32((height - y1) / slope + x1)
-            returnLines.append([new_x1, 0, new_x2, height])
+            new_x2 = np.float32((h - y1) / slope + x1)
+            returnLines.append([new_x1, 0, new_x2, h])
     return returnLines
 
 
@@ -82,3 +85,31 @@ def searchForLine(x, filtered_lines):
     if(len(detectedLines) > 0):
         return True, detectedLines
     return False, [0, 0, 0, 0]
+
+def checkForAllLanes(lines):
+    if(len(lines) == 3):
+        return lines
+    filtered = lines
+    for i in range(0, 120, 10):
+        if(len(lines) > 3):
+            filtered = averaging(0, w, 10+i, filtered, 0)
+        else: break
+    if(len(filtered) == 3):
+        return filtered
+    if(len(filtered) == 1):
+        raise ValueError('just one line')
+    if filtered[0][0] - filtered[1][0] > w/2:
+        x1 = (filtered[0][0] + filtered[1][0])/2
+        x2 = (filtered[0][2] + filtered[1][2])/2
+        filtered.insert(1, [x1, 0, x2, h])
+        return filtered
+    if filtered[0][0] - filtered[1][0] < w / 2 and filtered[1][0] > w/2:
+        x1 = 2 * filtered[0][0] - filtered[1][0]
+        x2 = 2 * filtered[0][2] - filtered[1][2]
+        filtered.insert(0, [x1, 0, x2, h])
+        return filtered
+    if filtered[0][0] - filtered[1][0] < w / 2 and filtered[0][0] < w/2:
+        x1 = 2 * filtered[1][0] - filtered[0][0]
+        x2 = 2 * filtered[1][2] - filtered[0][2]
+        filtered.insert(2, [x1, 0, x2, h])
+        return filtered
