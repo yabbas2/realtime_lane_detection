@@ -14,6 +14,7 @@ def order_points(pts):
 
 
 def four_point_transform(image, pts):
+    global h, w
     h, w, channels = image.shape
     dst = np.array([[0, 0],
                 [h, 0],
@@ -39,17 +40,20 @@ def inverse(inputPts):
     return outputPts
 
 def DrawLanes(lines, image):
-    h, w = image.shape[:2]
+    redFlag = True
     for line in lines:
         [x1, y1, x2, y2] = line
         try:
-            if (x1-x2) == 0:
+            if (x1 - x2) == 0:
                 x = np.float32(x1)
-                cv2.line(image, (x, y1), (x, h), (0, 255, 0), 6)
+                if redFlag: cv2.line(image, (x, y1), (x, h), (0, 0, 255), 6)
+                else: cv2.line(image, (x, y1), (x, h), (0, 255, 0), 6)
             else:
                 slope = (y2 - y1) / (x2 - x1)
                 new_x2 = np.float32((h - y1) / slope + x1)
-                cv2.line(image, (x1, y1), (new_x2, h), (0, 255, 0), 6)
+                if redFlag: cv2.line(image, (x1, y1), (new_x2, h), (0, 0, 255), 6)
+                else: cv2.line(image, (x1, y1), (new_x2, h), (0, 255, 0), 6)
+            redFlag = False
         except:
             pass
     return image
