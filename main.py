@@ -92,7 +92,7 @@ while True:
         '''***************************Hough Transform****************************'''
         try:
             houghInput = gtnOutput
-            lines = HT.HoughTransform(houghInput, frame.shape[0])
+            lines = HT.HoughTransform(houghInput)
         except:
             pass
         '''**********************Get points of final lines***********************'''
