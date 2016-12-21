@@ -15,19 +15,10 @@ def HoughTransform(input):
             if not (x1 > 0 and x1 < w):
                 continue
             phaseOneFilteredLines.append([x1, y1, x2, y2])
-    #Stage one
-    phaseTwoFilteredLines = averaging(0, w, 10, phaseOneFilteredLines, 0)
-    #Stage two
-    phaseThreeFilteredLines = averaging(0, w, 20, phaseTwoFilteredLines, 0)
-    #Stage three
-    phaseThreeFilteredLines = averaging(0, w, 40, phaseThreeFilteredLines, 0)
-    #Stage four
-    phaseThreeFilteredLines = averaging(0, w, 80, phaseThreeFilteredLines, 0)
-    #Stage five
-    phaseThreeFilteredLines = averaging(0, w, 100, phaseThreeFilteredLines, 0)
 
-    phaseFourFilteredLines = findLines(phaseThreeFilteredLines)
-    phaseFourFilteredLines = checkForAllLanes(phaseFourFilteredLines)
+    phaseTwoFilteredLines = averagingStages(phaseOneFilteredLines, 90, 10)
+    phaseThreeFilteredLines = findLines(phaseTwoFilteredLines)
+    phaseFourFilteredLines = checkForAllLanes(phaseThreeFilteredLines)
 
     return phaseFourFilteredLines
 
@@ -86,30 +77,34 @@ def searchForLine(x, filtered_lines):
         return True, detectedLines
     return False, [0, 0, 0, 0]
 
+def averagingStages(lines, max, step):
+    filtered = lines
+    for i in range(0, max, step):
+        filtered = averaging(0, w, 10+i, filtered, 0)
+    return filtered
+
 def checkForAllLanes(lines):
     if(len(lines) == 3):
+        if (abs(lines[0][0] - lines[1][0]) < w/2) and (abs(lines[1][0] - lines[2][0]) < w/2):
+            return lines
+        else:
+            raise ValueError('[ERROR] unknown detected lanes!')
+    if(len(lines) == 1):
+        raise IndexError('[ERROR] just one line is detected!')
+    line1_x1, line2_x1, line1_x2, line2_x2 = lines[0][0], lines[1][0], lines[0][2], lines[1][2]
+    if abs(line1_x1 - line2_x1) > w/2:
+        x1 = (line1_x1 + line2_x1)/2
+        x2 = (line1_x2 + line2_x2)/2
+        lines.insert(1, [x1, 0, x2, h])
         return lines
-    filtered = lines
-    for i in range(0, 120, 10):
-        if(len(lines) > 3):
-            filtered = averaging(0, w, 10+i, filtered, 0)
-        else: break
-    if(len(filtered) == 3):
-        return filtered
-    if(len(filtered) == 1):
-        raise ValueError('just one line')
-    if filtered[0][0] - filtered[1][0] > w/2:
-        x1 = (filtered[0][0] + filtered[1][0])/2
-        x2 = (filtered[0][2] + filtered[1][2])/2
-        filtered.insert(1, [x1, 0, x2, h])
-        return filtered
-    if filtered[0][0] - filtered[1][0] < w / 2 and filtered[1][0] > w/2:
-        x1 = 2 * filtered[0][0] - filtered[1][0]
-        x2 = 2 * filtered[0][2] - filtered[1][2]
-        filtered.insert(0, [x1, 0, x2, h])
-        return filtered
-    if filtered[0][0] - filtered[1][0] < w / 2 and filtered[0][0] < w/2:
-        x1 = 2 * filtered[1][0] - filtered[0][0]
-        x2 = 2 * filtered[1][2] - filtered[0][2]
-        filtered.insert(2, [x1, 0, x2, h])
-        return filtered
+    if abs(line1_x1 - line2_x1) < w/2 and line2_x1 > w/2:
+        x1 = 2 * line1_x1 - line2_x1
+        x2 = 2 * line1_x2 - line2_x2
+        lines.insert(0, [x1, 0, x2, h])
+        return lines
+    if abs(line1_x1 - line2_x1) < w/2 and line1_x1 < w/2:
+        x1 = 2 * line2_x1 - line1_x1
+        x2 = 2 * line2_x2 - line1_x2
+        lines.insert(2, [x1, 0, x2, h])
+        return lines
+    return lines
