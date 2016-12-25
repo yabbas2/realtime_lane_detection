@@ -27,6 +27,8 @@ void Stream::videoInStream()
         cap >> frame;
         if(frame.empty())
             stopStream = true;
+        if((waitKey((int)fps) & 0xFF) == (int)endStream)
+            stopStream = true;
     }
     cout << "[INFO] End of streaming!" << endl;
     cap.release();
@@ -45,8 +47,6 @@ void Stream::videoOutStream()
         if(frame.empty())
             continue;
         imshow("Video", frame);
-        if((waitKey((int)fps) & 0xFF) == (int)endStream)
-            stopStream = true;
     }
     destroyWindow("Video");
     exit(0);
