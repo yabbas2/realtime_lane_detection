@@ -1,0 +1,2 @@
+Linux:
+g++ main.cpp -o app `pkg-config --cflags opencv` -L/usr/local/lib -lopencv_core -lopencv_video -lopencv_videoio -lopencv_videostab -lopencv_imgproc -lopencv_highgui -lopencv_ml -lopencv_features2d -lopencv_calib3d -lopencv_flann -lm -std=c++11
