@@ -1,2 +1,6 @@
 *.pyc
 .idea/
+nbproject/
+build/
+dist/
+Makefile
