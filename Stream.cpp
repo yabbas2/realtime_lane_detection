@@ -1,11 +1,11 @@
 #include "Stream.hpp"
 
-bool Stream::stopStream = false;
 const char Stream::endStream = 'q';
 Mat Stream::frame;
 VideoCapture Stream::cap;
 double Stream::fps = 0;
-//mutex Stream::lock;
+double Stream::framesNumber = 0;
+vector<Vec4d>Stream::lanes = vector<Vec4d>(0, 0);
 
 bool Stream::setVideoSource(string source)
 {
@@ -16,39 +16,43 @@ bool Stream::setVideoSource(string source)
     if(!cap.isOpened())
         return false;
     fps = cap.get(CV_CAP_PROP_FPS);
+    framesNumber = cap.get(CV_CAP_PROP_FRAME_COUNT);
     return true;
 }
-void Stream::videoInStream()
+void Stream::videoIOStream()
 {
+    namedWindow("Video");
     cout << "[INFO] Start of streaming!" << endl;
-    while(!stopStream)
+    while(true)
     {
-        //lock_guard<mutex> guard(lock);
         cap >> frame;
         if(frame.empty())
-            stopStream = true;
+            break;
         if((waitKey((int)fps) & 0xFF) == (int)endStream)
-            stopStream = true;
+            break;
+        if(!lanes.empty())
+            for(size_t i = 0; i < lanes.size(); i++)
+                line(frame, Point(lanes[i][0], lanes[i][1]), 
+                            Point(lanes[i][2], lanes[i][3]), 
+                                                    Scalar(0,0,255), 3, CV_AA);
+        imshow("Video", frame);  
     }
     cout << "[INFO] End of streaming!" << endl;
     cap.release();
+    destroyWindow("Video");
+    exit(0);
     return;
 }
 Mat Stream::readFrame()
 {
-    return frame;
+    return frame.clone();
 }
-void Stream::videoOutStream()
+double Stream::getFrameCount()
 {
-    namedWindow("Video", 1);
-    while(!stopStream)
-    {
-        //lock_guard<mutex> guard(lock);
-        if(frame.empty())
-            continue;
-        imshow("Video", frame);
-    }
-    destroyWindow("Video");
-    exit(0);
+    return framesNumber;
 }
-
+void Stream::setLanesPositions(vector<Vec4d> l)
+{
+    lanes = l;
+    return;
+}
