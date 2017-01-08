@@ -5,3 +5,6 @@ build/
 dist/
 Makefile
 *.inc
+cmake-build-debug/
+*.txt
+
