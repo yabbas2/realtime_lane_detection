@@ -32,8 +32,8 @@ void Stream::videoIOStream()
             break;
         if(!lanes.empty())
             for(size_t i = 0; i < lanes.size(); i++)
-                line(frame, Point(lanes[i][0], lanes[i][1]), 
-                            Point(lanes[i][2], lanes[i][3]), 
+                line(frame, Point((int)lanes[i][0], (int)lanes[i][1]),
+                            Point((int)lanes[i][2], (int)lanes[i][3]),
                                                     Scalar(0,0,255), 3, CV_AA);
         imshow("Video", frame);  
     }
@@ -41,7 +41,6 @@ void Stream::videoIOStream()
     cap.release();
     destroyWindow("Video");
     exit(0);
-    return;
 }
 Mat Stream::readFrame()
 {
