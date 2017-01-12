@@ -1,8 +1,6 @@
 #ifndef PROCESSING_HPP
 #define PROCESSING_HPP
 
-#define _USE_MATH_DEFINES
-
 #include <opencv2/opencv.hpp>
 #include <vector>
 #include <list>
@@ -26,7 +24,7 @@ class Processing
         static void fourPointTransform();
         static void inverse();
         static void houghTransform();
-        static void takeAverage(unsigned int start, unsigned int end, unsigned int windowSize, unsigned int threshold);
+        static void takeAverage(int start, int end, unsigned int windowSize, unsigned int threshold);
         static void checkForAllLanes();
     public:
         static void laneDetection();
