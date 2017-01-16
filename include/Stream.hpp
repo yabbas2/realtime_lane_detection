@@ -5,6 +5,7 @@
 #include <iostream>
 #include <opencv2/highgui.hpp>
 #include <opencv2/core/matx.hpp>
+#include <list>
 
 using namespace std;
 using namespace cv;
@@ -13,7 +14,7 @@ class Stream
 {
     private:
         static Mat frame;
-        static vector<Vec4d> lanes;
+        static list<Vec4d> lanes;
         static VideoCapture cap;
         static double fps;
         static double framesNumber;
@@ -23,7 +24,7 @@ class Stream
         static void videoIOStream();
         static Mat readFrame();
         static double getFrameCount();
-        static void setLanesPositions(vector<Vec4d> lines);
+        static void setLanesPositions(list<Vec4d> * lines);
 };
 
 #endif /* STREAM_HPP */
