@@ -12,7 +12,7 @@ void Processing::laneDetection()
 {
     
 }
-vector<Vec4d> Processing::getLanesPositions()
+list<Vec4d> * Processing::getLanesPositions()
 {
-    return vector<Vec4d>(detectedLanes.begin(), detectedLanes.end());
+    return &detectedLanes;
 }
