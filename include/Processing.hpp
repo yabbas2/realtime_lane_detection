@@ -29,7 +29,7 @@ class Processing
     public:
         static void laneDetection();
         static void setFrame(Mat f);
-        static vector<Vec4d> getLanesPositions();
+        static list<Vec4d> * getLanesPositions();
 };
 
 #endif /* PROCESSING_HPP */
