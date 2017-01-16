@@ -5,7 +5,7 @@ Mat Stream::frame;
 VideoCapture Stream::cap;
 double Stream::fps = 0;
 double Stream::framesNumber = 0;
-vector<Vec4d>Stream::lanes = vector<Vec4d>(0, 0);
+list<Vec4d>Stream::lanes;
 
 bool Stream::setVideoSource(string source)
 {
@@ -23,6 +23,7 @@ void Stream::videoIOStream()
 {
     namedWindow("Video");
     cout << "[INFO] Start of streaming!" << endl;
+    list<Vec4d>::iterator lane;
     while(true)
     {
         cap >> frame;
@@ -30,12 +31,13 @@ void Stream::videoIOStream()
             break;
         if((waitKey((int)fps) & 0xFF) == (int)endStream)
             break;
-        if(!lanes.empty())
-            for(size_t i = 0; i < lanes.size(); i++)
-                line(frame, Point((int)lanes[i][0], (int)lanes[i][1]),
-                            Point((int)lanes[i][2], (int)lanes[i][3]),
-                                                    Scalar(0,0,255), 3, CV_AA);
-        imshow("Video", frame);  
+        if(lanes.empty())
+            goto init;
+        for(lane = lanes.begin(); lane != lanes.end(); lane++)
+            line(frame, Point((int)(*lane)[0], (int)(*lane)[1]),
+                        Point((int)(*lane)[2], (int)(*lane)[3]),
+                                                Scalar(0,255,0), 3, CV_AA);
+init:   imshow("Video", frame);
     }
     cout << "[INFO] End of streaming!" << endl;
     cap.release();
@@ -50,8 +52,8 @@ double Stream::getFrameCount()
 {
     return framesNumber;
 }
-void Stream::setLanesPositions(vector<Vec4d> l)
+void Stream::setLanesPositions(list<Vec4d> * l)
 {
-    lanes = l;
+    lanes = *l;
     return;
 }
