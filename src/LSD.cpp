@@ -32,8 +32,8 @@ void Processing::filterAndTakeAverage(int start, int end, unsigned int windowSiz
             filteredLines.push_back(lines[k]);
         }
     }
-    #pragma omp parallel for default(none) private(detectedList, sum_x1, sum_x2, avg_x1, avg_x2, slope,\
-        i, j, line, size) shared(height, threshold, windowSize, start, end)
+    #pragma omp parallel for default(none) private(detectedList, sum_x1, sum_x2, avg_x1, avg_x2,\
+        i, j, line, size) shared(height, threshold, windowSize, start, end, filteredLines)
     for(i = start; i <= end; i += windowSize)
     {
         sum_x1 = 0.0; sum_x2 = 0.0;
