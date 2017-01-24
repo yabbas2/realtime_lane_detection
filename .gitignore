@@ -6,5 +6,5 @@ dist/
 Makefile
 *.inc
 cmake-build-debug/
-*.txt
+g++ command.txt
 
