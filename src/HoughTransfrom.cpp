@@ -1,6 +1,6 @@
 #include "Processing.hpp"
 
-vector<Vec4d>Processing::lines = vector<Vec4d>(0, 0);
+vector<Vec4d>Processing::lines;
 list<Vec4d>Processing::detectedLanes;
 
 void Processing::houghTransform()
@@ -12,6 +12,7 @@ void Processing::houghTransform()
     HoughLinesP(ipmFrame, lines, 1, M_PI/180, minLineLength, maxLineGap, maxVotes);
     takeAverage(0, width, 40, 0);
 }
+
 void Processing::takeAverage(int start, int end, unsigned int windowSize, unsigned int threshold)
 {
     list<Vec4d> detectedList;
@@ -20,19 +21,21 @@ void Processing::takeAverage(int start, int end, unsigned int windowSize, unsign
     double slope;
     unsigned int size;
     int i;
-    size_t j;
+    vector<Vec4d>::iterator j;
     list<Vec4d>::iterator line;
     detectedLanes.clear();
-    #pragma omp parallel for default(none) private(detectedList, sum_x1, sum_x2, avg_x1, avg_x2, slope,\
-    i, j, line, size) shared(height, threshold, windowSize, start, end)
+    /*#pragma omp parallel for default(none) private(detectedList, sum_x1, sum_x2, avg_x1, avg_x2, slope,\
+    i, j, line, size) shared(height, threshold, windowSize, start, end)*/
     for(i = start; i <= end; i += windowSize)
     {
         sum_x1 = 0.0; sum_x2 = 0.0;
         detectedList.clear();
-        for(j = 0; j < lines.size(); j++)
+        for(j = lines.begin(); j != lines.end(); j++)
         {
-            if(lines[j][0] >= i && lines[j][0] < i+windowSize)
-                detectedList.push_back(lines[j]);
+            if ((*j)[0] >= i && (*j)[0] < i + windowSize)
+            {
+                detectedList.push_back(*j);
+            }
         }
         size = (unsigned int)detectedList.size();
         if(size < threshold)
@@ -45,7 +48,7 @@ void Processing::takeAverage(int start, int end, unsigned int windowSize, unsign
         slope = atan2(height - 0, avg_x2 - avg_x1);
         if (abs(slope) <= 95 * M_PI / 180 && abs(slope) >= 85 * M_PI / 180)
         {
-            #pragma omp critical
+            //#pragma omp critical
             {
                 detectedLanes.push_back(Vec4d{avg_x1, 0, avg_x2, (double) height});
             }
