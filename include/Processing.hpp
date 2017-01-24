@@ -4,8 +4,9 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 #include <list>
-#include <opencv2/core/matx.hpp>
 #include <math.h>
+#include <opencv2/core/matx.hpp>
+#include <iostream>
 
 using namespace cv;
 using namespace std;
@@ -17,17 +18,20 @@ class Processing
         static Mat ipmFrame;
         static Mat pts;
         static Mat dst;
-        static Mat gaborFilter[3];
+        static Mat gaborFilter;
         static Mat HomographyToOriginal;
         static vector<Vec4d> lines;
         static list<Vec4d> detectedLanes;
+        static VideoCapture cap;
+        static double fps;
+        static double framesNumber;
+        static const char endStream;
         static void buildGaborFilter();
         static void gaborProcess();
         static void preHT();
         static void preLSD();
         static void LSD();
         static void filterAndTakeAverage(int start, int end, unsigned int windowSize, unsigned int threshold);
-        static void orderPoints();
         static void fourPointTransform();
         static void inverse();
         static void houghTransform();
@@ -35,8 +39,9 @@ class Processing
         static void checkForAllLanes();
     public:
         static void laneDetection();
-        static void setFrame(Mat f);
-        static list<Vec4d> * getLanesPositions();
+        static bool setVideoSource(string source);
+        static void videoIOStream();
+        static double getFrameCount();
 };
 
 #endif /* PROCESSING_HPP */
