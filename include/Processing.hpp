@@ -19,7 +19,10 @@ class Processing
         static list<Vec4d> detectedLanes;
         static void buildGaborFilter();
         static void gaborProcess();
-        static void gtnProcess();
+        static void preHT();
+        static void preLSD();
+        static void LSD();
+        static void filterAndTakeAverage(int start, int end, unsigned int windowSize, unsigned int threshold);
         static void orderPoints();
         static void fourPointTransform();
         static void inverse();
