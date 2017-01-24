@@ -19,6 +19,7 @@ class Processing
         static Mat dst;
         static Mat gaborFilter[3];
         static Mat HomographyToOriginal;
+        static vector<Vec4d> lines;
         static list<Vec4d> detectedLanes;
         static void buildGaborFilter();
         static void gaborProcess();
