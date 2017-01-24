@@ -16,12 +16,12 @@ void Processing::fourPointTransform()
     HomographyToOriginal = getPerspectiveTransform(dst, pts);
     warpPerspective(normalFrame, ipmFrame,HomographyToInv,CvSize(height, width));
 }
-void Processing:: inverse()
+void Processing::inverse()
 {
-    int size = detectedLanes.size();
+    unsigned int size = (unsigned int)detectedLanes.size();
     for(int i = 0; i < size; i++)
     {
-        float Z,px1,py1,px2,py2;
+        double Z, px1, py1, px2, py2;
         Vec4d x = detectedLanes.front();
         detectedLanes.pop_front();
         Z = 1 / (HomographyToOriginal.at<double>(2,0) * x[0] + HomographyToOriginal.at<double>(2,1) * x[1] + HomographyToOriginal.at<double>(2,2));
