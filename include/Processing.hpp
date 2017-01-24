@@ -15,7 +15,9 @@ class Processing
     private:
         static Mat normalFrame;
         static Mat ipmFrame;
-        static vector<Vec4d> lines;
+        static Mat pts;
+        static Mat dst;
+        static Mat HomographyToOriginal;
         static list<Vec4d> detectedLanes;
         static void buildGaborFilter();
         static void gaborProcess();
