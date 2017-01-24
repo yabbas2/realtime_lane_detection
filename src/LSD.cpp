@@ -32,8 +32,8 @@ void Processing::filterAndTakeAverage(int start, int end, unsigned int windowSiz
             filteredLines.push_back(lines[k]);
         }
     }
-    #pragma omp parallel for default(none) private(detectedList, sum_x1, sum_x2, avg_x1, avg_x2,\
-        i, j, line, size) shared(height, threshold, windowSize, start, end, filteredLines)
+    /*#pragma omp parallel for default(none) private(detectedList, sum_x1, sum_x2, avg_x1, avg_x2,\
+        i, j, line, size) shared(height, threshold, windowSize, start, end, filteredLines)*/
     for(i = start; i <= end; i += windowSize)
     {
         sum_x1 = 0.0; sum_x2 = 0.0;
@@ -51,7 +51,7 @@ void Processing::filterAndTakeAverage(int start, int end, unsigned int windowSiz
             sum_x1 += (*line)[0]; sum_x2 += (*line)[2];
         }
         avg_x1 = sum_x1/size; avg_x2 = sum_x2/size;
-        #pragma omp critical
+        //#pragma omp critical
         {
             detectedLanes.push_back(Vec4d{avg_x1, 0, avg_x2, (double) height});
         }
