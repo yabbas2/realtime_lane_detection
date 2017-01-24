@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 11)
 find_package(OpenCV REQUIRED core imgproc video videoio videostab highgui ml features2d calib3d flann)
 
 set(SOURCE_FILES src/main.cpp src/IPM.cpp src/Pre-HT.cpp src/Processing.cpp src/Stream.cpp src/GaborFilter.cpp src/HoughTransfrom.cpp src/LSD.cpp src/Pre-LSD.cpp)
-set(HEADER_FILES include/Processing.hpp include/Stream.hpp)
+set(HEADER_FILES include/Processing.hpp)
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
