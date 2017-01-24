@@ -1,9 +1,11 @@
 #include "Processing.hpp"
 
 using namespace cv;
+
 Mat Processing::gaborFilter[3];
+
 void Processing::buildGaborFilter(){
-    double ksize = 31;
+    int ksize = 31;
     // kernel = getGaborKernel(Size(kernel_size,kernel_size), sig, th, lm, gm, ps);
     int theta [3] = {359, 0, 1};
     for (int i = 0; i < 3 ; ++i) {
@@ -11,7 +13,6 @@ void Processing::buildGaborFilter(){
     }
     //gaborFilter /= 1.5 * sum(gaborFilter)[0];
 }
-
 
 void Processing::gaborProcess(){
     Mat maxFrame = ipmFrame.clone();
