@@ -17,6 +17,7 @@ class Processing
         static Mat ipmFrame;
         static Mat pts;
         static Mat dst;
+        static Mat gaborFilter[3];
         static Mat HomographyToOriginal;
         static list<Vec4d> detectedLanes;
         static void buildGaborFilter();
