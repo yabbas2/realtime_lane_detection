@@ -12,9 +12,6 @@ int main(int argc, char** argv) {
     thread video(Processing::videoIOStream);
     video.detach();
     assert(!video.joinable());
-    while(true)
-    {
-        Processing::laneDetection();
-    }
+    Processing::laneDetection();
 }
 
