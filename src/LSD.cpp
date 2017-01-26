@@ -8,6 +8,7 @@ list<Vec4d>Processing::detectedLanes;
 void Processing::LSD()
 {
     int width = ipmFrame.size().width;
+    cvtColor(ipmFrame, ipmFrame, COLOR_BGR2GRAY);
     Ptr<LineSegmentDetector> lsd = createLineSegmentDetector(LSD_REFINE_STD);
     lines.clear();
     lsd->detect(ipmFrame, lines);
