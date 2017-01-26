@@ -4,7 +4,6 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 #include <list>
-#include <math.h>
 #include <iostream>
 
 using namespace cv;
