@@ -4,7 +4,6 @@ using namespace cv;
 
 vector<Vec4f>Processing::lines;
 list<Vec4f>Processing::detectedLanes;
-int Processing::marginCount = 0;
 int Processing::margin = 0;
 
 void Processing::LSD()
@@ -14,13 +13,7 @@ void Processing::LSD()
     Ptr<LineSegmentDetector> lsd = createLineSegmentDetector(LSD_REFINE_STD);
     lines.clear();
     lsd->detect(ipmFrame, lines);
-    margin += checkLanes(40, 1);
-//    if(marginCount < 2)
-//    {
-//        margin += checkLanes(40, 1);
-//        margin = margin / marginCount;
-//        cout << margin << endl;
-//    }
+    checkLanes();
     filterAndTakeAverage(0, width, 40, margin);
 }
 
@@ -60,44 +53,29 @@ void Processing::filterAndTakeAverage(int start, int end, unsigned int windowSiz
     }
 }
 
-int Processing::checkLanes(int windowSize, int threshold)
+void Processing::checkLanes()
 {
-    sort(begin(lines), end(lines), [](const Vec4f &a, const Vec4f &b) {return a[0] < b[0];});
-    int size = lines.size();
-    marginCount++;
-    int margin;
-    vector<Vec4f>::iterator j;
-    int D = 0;
-    for(j = lines.begin(); j != lines.end(); j++)
-    {
-        if((*j)[0] >= 160 && (*j)[0] < 160+windowSize && (*j)[2] >= 160 && (*j)[2] < 160+windowSize)
-            D++;
-    }
-    if(D >= threshold)
-    {
-        D = 0;
-        for(j = lines.begin(); j != lines.end(); j++)
-        {
-            if(((*j)[0] >= 80 && (*j)[0] < 80+windowSize && (*j)[2] >= 80 && (*j)[2] < 80+windowSize)
-               || ((*j)[0] >= 240 && (*j)[0] < 240+windowSize && (*j)[2] >= 240 && (*j)[2] < 240+windowSize))
-                D++;
-        }
-        if(D >= 2*threshold)
-            margin = 40;
-        else
-            margin = 120;
-        return margin;
-    }
-    D = 0;
-    for(j = lines.begin(); j != lines.end(); j++)
-    {
-        if(((*j)[0] >= 106 && (*j)[0] < 106+windowSize && (*j)[2] >= 106 && (*j)[2] < 106+windowSize)
-           || ((*j)[0] >= 212 && (*j)[0] < 212+windowSize && (*j)[2] >= 212 && (*j)[2] < 212+windowSize))
-            D++;
-    }
-    if(D >= 2*threshold)
-        margin = 66;
-    else
+    sort(begin(lines), end(lines), [](const Vec4f &a, const Vec4f &b) { return a[0] < b[0]; });
+    vector<Vec4f>::iterator j = lines.begin();
+    while ((int)(*j)[0] >= 0 && (int)(*j)[0] <= 50) j++;
+
+    if ((int)(*j)[0] >= 310 && (int)(*j)[0] <= 370) //Two lanes
         margin = 280;
-    return margin;
+    else if ((int)(*j)[0] >= 150 && (int)(*j)[0] <= 210) //Three lanes
+        margin = 120;
+
+    if ((int)(*j)[0] >= 96 && (int)(*j)[0] <= 156) //Four lanes
+    {
+        while ((int)(*j)[0] >= 96 && (int)(*j)[0] <= 156) j++;
+        if((int)(*j)[0] >= 202 && (int)(*j)[0] <= 262)
+            margin = 66;
+    }
+
+    if ((int)(*j)[0] >= 70 && (int)(*j)[0] <= 130) //Five lanes
+    {
+        while ((int)(*j)[0] >= 70 && (int)(*j)[0] <= 130) j++;
+        if((int)(*j)[0] >= 150 && (int)(*j)[0] <= 210)
+            margin = 40;
+    }
+    //cout << margin << endl;
 }
