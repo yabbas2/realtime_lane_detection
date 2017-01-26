@@ -1,8 +1,5 @@
 #include "Processing.hpp"
 
-vector<Vec4d>Processing::lines;
-list<Vec4d>Processing::detectedLanes;
-
 void Processing::houghTransform()
 {
     int width = ipmFrame.size().width;
