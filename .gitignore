@@ -1,10 +1,4 @@
-*.pyc
 .idea/
-nbproject/
-build/
-dist/
-Makefile
-*.inc
 cmake-build-debug/
 g++ command.txt
 
