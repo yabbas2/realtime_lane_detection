@@ -19,8 +19,8 @@ class Processing
         static Mat dst;
         static bool waitFlag;
         static Mat HomographyToOriginal;
-        static vector<Vec4d> lines;
-        static list<Vec4d> detectedLanes;
+        static vector<Vec4f> lines;
+        static list<Vec4f> detectedLanes;
         static VideoCapture cap;
         static char videoSourceNum;
         static double fps;
