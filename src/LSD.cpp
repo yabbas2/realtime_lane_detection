@@ -1,12 +1,15 @@
-#include <opencv2/opencv.hpp>
 #include "Processing.hpp"
 
 using namespace cv;
+
+vector<Vec4d>Processing::lines;
+list<Vec4d>Processing::detectedLanes;
 
 void Processing::LSD()
 {
     int width = ipmFrame.size().width;
     Ptr<LineSegmentDetector> lsd = createLineSegmentDetector(LSD_REFINE_STD);
+    lines.clear();
     lsd->detect(ipmFrame, lines);
     filterAndTakeAverage(0, width, 40, 0);
 }
@@ -20,16 +23,17 @@ void Processing::filterAndTakeAverage(int start, int end, unsigned int windowSiz
     double sum_x1, sum_x2, avg_x1, avg_x2;
     unsigned int size;
     int i;
-    size_t k;
+    vector<Vec4d>::iterator k;
     list<Vec4d>::iterator j;
     list<Vec4d>::iterator line;
     detectedLanes.clear();
-    for(k = 0; k < lines.size(); k++)
+    filteredLines.clear();
+    for(k = lines.begin(); k != lines.end(); k++)
     {
-        slope = atan2(lines[k][3] - lines[k][1], lines[k][2] - lines[k][0]);
+        slope = atan2((*k)[3] - (*k)[1], (*k)[2] - (*k)[0]);
         if (abs(slope) <= 95 * M_PI / 180 && abs(slope) >= 85 * M_PI / 180)
         {
-            filteredLines.push_back(lines[k]);
+            filteredLines.push_back(*k);
         }
     }
     /*#pragma omp parallel for default(none) private(detectedList, sum_x1, sum_x2, avg_x1, avg_x2,\
