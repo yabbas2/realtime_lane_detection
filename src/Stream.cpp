@@ -27,7 +27,7 @@ void Processing::videoIOStream()
 {
     namedWindow("Video");
     cout << "[INFO] Start of streaming!" << endl;
-    list<Vec4d>::iterator lane;
+    list<Vec4f>::iterator lane;
     Mat frameToShow;
     while(true)
     {
