@@ -12,7 +12,6 @@ int main(int argc, char** argv) {
     thread video(Processing::videoIOStream);
     video.detach();
     assert(!video.joinable());
-    Mat videoFrame;
     while(true)
     {
         Processing::laneDetection();
