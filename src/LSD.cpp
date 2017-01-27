@@ -6,6 +6,7 @@ vector<Vec4f>Processing::lines;
 list<Vec4f>Processing::detectedLanes;
 int Processing::margin = 0;
 int Processing::marginCount = 0;
+string Processing::lanesNumber = "0";
 
 void Processing::LSD()
 {
@@ -53,6 +54,7 @@ void Processing::filterAndTakeAverage(int start, int end, unsigned int windowSiz
             detectedLanes.push_back(Vec4d{avg_x1, 0, avg_x2, (float) height});
         }
     }
+
 }
 
 void Processing::checkLanes()
@@ -63,22 +65,21 @@ void Processing::checkLanes()
     while ((int)(*j)[0] >= 0 && (int)(*j)[0] <= 50) j++;
 
     if ((int)(*j)[0] >= 310 && (int)(*j)[0] <= 370) //Two lanes
-        margin = 280;
+    {margin = 280; lanesNumber = "2";}
     else if ((int)(*j)[0] >= 150 && (int)(*j)[0] <= 210) //Three lanes
-        margin = 120;
+    {margin = 120; lanesNumber = "3";}
 
     if ((int)(*j)[0] >= 96 && (int)(*j)[0] <= 156) //Four lanes
     {
         while ((int)(*j)[0] >= 96 && (int)(*j)[0] <= 156) j++;
         if((int)(*j)[0] >= 202 && (int)(*j)[0] <= 262)
-            margin = 66;
+        {margin = 66; lanesNumber = "4";}
     }
 
     if ((int)(*j)[0] >= 70 && (int)(*j)[0] <= 130) //Five lanes
     {
         while ((int)(*j)[0] >= 70 && (int)(*j)[0] <= 130) j++;
         if((int)(*j)[0] >= 150 && (int)(*j)[0] <= 210)
-            margin = 40;
+        {margin = 40; lanesNumber = "5";}
     }
-    cout << margin << endl;
 }
