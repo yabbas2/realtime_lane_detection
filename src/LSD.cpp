@@ -5,6 +5,7 @@ using namespace cv;
 vector<Vec4f>Processing::lines;
 list<Vec4f>Processing::detectedLanes;
 int Processing::margin = 0;
+int Processing::marginCount = 0;
 
 void Processing::LSD()
 {
@@ -13,7 +14,8 @@ void Processing::LSD()
     Ptr<LineSegmentDetector> lsd = createLineSegmentDetector(LSD_REFINE_STD);
     lines.clear();
     lsd->detect(ipmFrame, lines);
-    checkLanes();
+    marginCount++;
+    if(marginCount == (int)fps * 2) checkLanes();
     filterAndTakeAverage(0, width, 40, margin);
 }
 
@@ -55,6 +57,7 @@ void Processing::filterAndTakeAverage(int start, int end, unsigned int windowSiz
 
 void Processing::checkLanes()
 {
+    marginCount = 0;
     sort(begin(lines), end(lines), [](const Vec4f &a, const Vec4f &b) { return a[0] < b[0]; });
     vector<Vec4f>::iterator j = lines.begin();
     while ((int)(*j)[0] >= 0 && (int)(*j)[0] <= 50) j++;
@@ -77,5 +80,5 @@ void Processing::checkLanes()
         if((int)(*j)[0] >= 150 && (int)(*j)[0] <= 210)
             margin = 40;
     }
-    //cout << margin << endl;
+    cout << margin << endl;
 }
