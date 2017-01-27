@@ -39,12 +39,21 @@ void Processing::videoIOStream()
             break;
         if(!detectedLanes.empty() && waitFlag)
         {
-            for (lane = detectedLanes.begin(); lane != detectedLanes.end(); lane++)
+            for (lane = detectedLanes.begin(); lane != detectedLanes.end() && margin > 0; lane++)
             {
                 line(frameToShow, Point((int)(*lane)[0], (int)(*lane)[1]),
                                      Point((int)(*lane)[2], (int)(*lane)[3]),
-                                             Scalar(0, 255, 0), 3, CV_AA);
+                                             Scalar(255, 0, 0), 3, CV_AA);
             }
+            if(margin == 0)
+                putText(frameToShow, "Searching for lanes..", Point(640/3, 20), FONT_HERSHEY_SIMPLEX, 0.7,
+                        Scalar(0, 0, 255), 2, CV_AA);
+            if(margin > 0)
+                putText(frameToShow, lanesNumber+"-lane road" , Point(640/3, 20), FONT_HERSHEY_SIMPLEX, 0.7,
+                        Scalar(0, 0, 255), 2, CV_AA);
+            if(!arrow.empty())
+                arrowedLine(frameToShow, Point(arrow[0], arrow[1]),
+                                            Point(arrow[2], arrow[3]), Scalar(0, 255, 0), 5, CV_AA, 0, 0.3);
             waitFlag = false;
         }
         imshow("Video", frameToShow);
