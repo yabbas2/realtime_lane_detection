@@ -35,6 +35,6 @@ void Processing::inverse()
         py2 = height;
 
         detectedLanes.push_back(Vec4f{(float)px1, (float)py1, (float)px2, (float)py2});
-        CV_Assert(detectedLanes.size() == size);
     }
+    CV_Assert(detectedLanes.size() == size);
 }
