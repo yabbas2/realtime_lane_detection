@@ -4,6 +4,7 @@ using namespace cv;
 
 Mat Processing::ipmFrame;
 Mat Processing::HomographyToOriginal;
+vector<int> Processing::arrow;
 
 void Processing::fourPointTransform()
 {
@@ -19,6 +20,8 @@ void Processing::inverse()
     int height = normalFrame.rows;
     double Z, px1, py1, px2, py2;
     float slope;
+    vector<float> X2Points(size);
+    vector<float> X1Points(size);
     for(unsigned int i = 0; i < size; i++)
     {
         Vec4d x = detectedLanes.front();
@@ -34,7 +37,28 @@ void Processing::inverse()
         px2 = (height - py1) / slope + px1;
         py2 = height;
 
+        X2Points[i] = (float)px2;
+        X1Points[i] = (float)px1;
+
         detectedLanes.push_back(Vec4f{(float)px1, (float)py1, (float)px2, (float)py2});
     }
     CV_Assert(detectedLanes.size() == size);
-}
+    if(size > 5) return;
+    float max = 0;
+    unsigned int index = 0;
+    for(unsigned int i = 0; i < size-1; i++)
+    {
+        if(X2Points[i] < 0 || X2Points[i+1] < 0)
+            continue;
+        if((X2Points[i] - X2Points[i+1]) < max)
+        {
+            max = X2Points[i] - X2Points[i+1];
+            index = i;
+        }
+    }
+    if(max == 0) return;
+    arrow.push_back((int)((X2Points[index]+X2Points[index+1])/2));
+    arrow.push_back(height-50);
+    arrow.push_back((int)((X1Points[index]+X1Points[index+1])/2));
+    arrow.push_back(height-100);
+ }
