@@ -18,7 +18,9 @@ class Processing
         static Mat dst;
         static bool waitFlag;
         static int marginCount;
+        static string lanesNumber;
         static int margin;
+        static vector<int> arrow;
         static Mat HomographyToOriginal;
         static vector<Vec4f> lines;
         static list<Vec4f> detectedLanes;
