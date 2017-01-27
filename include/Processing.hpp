@@ -17,6 +17,8 @@ class Processing
         static Mat pts;
         static Mat dst;
         static bool waitFlag;
+        static int marginCount;
+        static int margin;
         static Mat HomographyToOriginal;
         static vector<Vec4f> lines;
         static list<Vec4f> detectedLanes;
@@ -26,10 +28,11 @@ class Processing
         //static double framesNumber;
         static const char endStream;
         static void LSD();
-        static void filterAndTakeAverage(int start, int end, unsigned int windowSize, unsigned int threshold);
+        static void filterAndTakeAverage(int start, int end, unsigned int windowSize, int margin);
         static void fourPointTransform();
         static void inverse();
         static void initIPM();
+        static void checkLanes();
     public:
         static void laneDetection();
         static bool setVideoSource(string source);
