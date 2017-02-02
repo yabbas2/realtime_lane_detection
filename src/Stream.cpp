@@ -25,7 +25,6 @@ bool Processing::setVideoSource(string source)
 
 void Processing::videoIOStream()
 {
-    namedWindow("Video");
     cout << "[INFO] Start of streaming!" << endl;
     list<Vec4f>::iterator lane;
     Mat frameToShow;
@@ -56,7 +55,12 @@ void Processing::videoIOStream()
                                             Point(arrow[2], arrow[3]), Scalar(0, 255, 0), 5, CV_AA, 0, 0.3);
             waitFlag = false;
         }
-        imshow("Video", frameToShow);
+        #if show_final
+            imshow("Video", frameToShow);
+        #endif
+        #if show_ipm
+            imshow("IPM", ipmFrame);
+        #endif
     }
     cout << "[INFO] End of streaming!" << endl;
     cap.release();
