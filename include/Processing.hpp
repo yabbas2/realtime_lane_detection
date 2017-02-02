@@ -6,6 +6,9 @@
 #include <list>
 #include <iostream>
 
+#define show_ipm        0
+#define show_final      1
+
 using namespace cv;
 using namespace std;
 
