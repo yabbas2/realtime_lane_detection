@@ -18,6 +18,8 @@ void Processing::initIPM()
             pts = (Mat_<double>(4, 2) << 253, 219, 352, 219, 444, 288, 60, 288); break;
         case '2':
             pts = (Mat_<double>(4, 2) << 197, 212, 326, 212, 348, 230, 106, 230); break;
+        case '3':
+            pts = (Mat_<double>(4, 2) << 220, 200, 322, 200, 361, 230, 85, 230); break;
         case '7':
             pts = (Mat_<double>(4, 2) << 270, 143, 383, 143, 430, 187, 166, 187); break;
         case '8':
