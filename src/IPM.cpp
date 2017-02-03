@@ -57,6 +57,7 @@ void Processing::inverse()
         }
     }
     if(max == 0) return;
+    arrow.clear();
     arrow.push_back((int)((X2Points[index]+X2Points[index+1])/2));
     arrow.push_back(height-50);
     arrow.push_back((int)((X1Points[index]+X1Points[index+1])/2));
