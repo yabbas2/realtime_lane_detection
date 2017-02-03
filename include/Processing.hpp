@@ -22,7 +22,7 @@ class Processing
         static bool waitFlag;
         static int marginCount;
         static string lanesNumber;
-        static int margin;
+        static int lineMargin;
         static vector<int> arrow;
         static Mat HomographyToOriginal;
         static vector<Vec4f> lines;
