@@ -6,8 +6,9 @@
 #include <list>
 #include <iostream>
 
-#define show_ipm        0
-#define show_final      1
+#define show_ipm                    0
+#define show_final                  1
+#define writeVideo                  1
 
 using namespace cv;
 using namespace std;
@@ -37,7 +38,8 @@ class Processing
         static void fourPointTransform();
         static void inverse();
         static void initIPM();
-        static void checkLanes();
+        static int checkLanesFromLeft();
+        static int checkLanesFromRight();
     public:
         static void laneDetection();
         static bool setVideoSource(string source);
