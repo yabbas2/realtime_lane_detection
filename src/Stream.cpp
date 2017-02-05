@@ -26,6 +26,9 @@ bool Processing::setVideoSource(string source)
 void Processing::videoIOStream()
 {
     cout << "[INFO] Start of streaming!" << endl;
+#if writeVideo
+    VideoWriter video("out.avi",CV_FOURCC('M','J','P','G'),fps, Size(1280,360),true);
+#endif
     list<Vec4f>::iterator lane;
     Mat frameToShow;
     Mat finalFrame;
@@ -51,18 +54,21 @@ void Processing::videoIOStream()
             if(lineMargin > 0)
                 putText(frameToShow, lanesNumber+"-lane road" , Point(640/3, 20), FONT_HERSHEY_SIMPLEX, 0.7,
                         Scalar(255, 255, 0), 2, CV_AA);
-            if(!arrow.empty())
+            if(!arrow.empty() && lineMargin > 0)
                 arrowedLine(frameToShow, Point(arrow[0], arrow[1]),
                                             Point(arrow[2], arrow[3]), Scalar(0, 255, 0), 5, CV_AA, 0, 0.3);
             waitFlag = false;
         }
-        #if show_final
-            hconcat(normalFrame, frameToShow, finalFrame);
-            imshow("Real-time Lane Detection", finalFrame);
-        #endif
-        #if show_ipm
-            if(!ipmFrame.empty()) imshow("IPM", ipmFrame);
-        #endif
+#if show_final
+        hconcat(normalFrame, frameToShow, finalFrame);
+#if writeVideo
+        video.write(finalFrame);
+#endif
+        imshow("Real-time Lane Detection", finalFrame);
+#endif
+#if show_ipm
+        if(!ipmFrame.empty()) imshow("IPM", ipmFrame);
+#endif
     }
     cout << "[INFO] End of streaming!" << endl;
     cap.release();
