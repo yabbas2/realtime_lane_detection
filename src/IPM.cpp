@@ -43,7 +43,7 @@ void Processing::inverse()
         detectedLanes.push_back(Vec4f{(float)px1, (float)py1, (float)px2, (float)py2});
     }
     CV_Assert(detectedLanes.size() == size);
-    if(size > 5) return;
+    if(size > 5 || size == 0) return;
     float max = 0;
     unsigned int index = 0;
     for(unsigned int i = 0; i < size-1; i++)
