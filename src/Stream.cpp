@@ -28,6 +28,7 @@ void Processing::videoIOStream()
     cout << "[INFO] Start of streaming!" << endl;
     list<Vec4f>::iterator lane;
     Mat frameToShow;
+    Mat finalFrame;
     while(true)
     {
         cap >> normalFrame;
@@ -56,7 +57,8 @@ void Processing::videoIOStream()
             waitFlag = false;
         }
         #if show_final
-            imshow("Video", frameToShow);
+            hconcat(normalFrame, frameToShow, finalFrame);
+            imshow("Real-time Lane Detection", finalFrame);
         #endif
         #if show_ipm
             if(!ipmFrame.empty()) imshow("IPM", ipmFrame);
