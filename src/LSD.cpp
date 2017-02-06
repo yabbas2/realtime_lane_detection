@@ -6,7 +6,7 @@ vector<Vec4f>Processing::lines;
 list<Vec4f>Processing::detectedLanes;
 int Processing::lineMargin = 0;
 int Processing::marginCount = 0;
-string Processing::lanesNumber = "0";
+string Processing::lanesNumber = "zero";
 
 void Processing::LSD()
 {
@@ -29,6 +29,14 @@ void Processing::LSD()
                 lineMargin = leftMargin;
             else if(leftMargin == 0 && rightMargin > 0)
                 lineMargin = rightMargin;
+        }
+        switch(lineMargin)
+        {
+            case 280: lanesNumber = "one"; break;
+            case 120: lanesNumber = "two"; break;
+            case 66: lanesNumber = "three"; break;
+            case 40: lanesNumber = "four"; break;
+            default: break;
         }
     }
     filterAndTakeAverage(0, width, 40, lineMargin);
@@ -74,22 +82,22 @@ int Processing::checkLanesFromLeft()
     while ((int)(*j)[0] >= 0 && (int)(*j)[0] <= 50) j++;
 
     if ((int)(*j)[0] >= 310 && (int)(*j)[0] <= 360) //Two lanes
-    {margin = 280; lanesNumber = "one";}
+        margin = 280;
     else if ((int)(*j)[0] >= 150 && (int)(*j)[0] <= 210) //Three lanes
-    {margin = 120; lanesNumber = "two";}
+        margin = 120;
 
     if ((int)(*j)[0] >= 96 && (int)(*j)[0] <= 156) //Four lanes
     {
         while ((int)(*j)[0] >= 96 && (int)(*j)[0] <= 156) j++;
         if((int)(*j)[0] >= 202 && (int)(*j)[0] <= 262)
-        {margin = 66; lanesNumber = "three";}
+            margin = 66;
     }
 
     if ((int)(*j)[0] >= 70 && (int)(*j)[0] <= 130) //Five lanes
     {
         while ((int)(*j)[0] >= 70 && (int)(*j)[0] <= 130) j++;
         if((int)(*j)[0] >= 150 && (int)(*j)[0] <= 210)
-        {margin = 40; lanesNumber = "four";}
+            margin = 40;
     }
     return margin;
 }
@@ -102,22 +110,22 @@ int Processing::checkLanesFromRight()
     while ((int)(*j)[0] <= 360 && (int)(*j)[0] >= 310) j++;
 
     if ((int)(*j)[0] <= 50 && (int)(*j)[0] >= 0) //Two lanes
-    {margin = 280; lanesNumber = "one";}
+        margin = 280;
     else if ((int)(*j)[0] <= 210 && (int)(*j)[0] >= 150) //Three lanes
-    {margin = 120; lanesNumber = "two";}
+        margin = 120;
 
     if ((int)(*j)[0] <= 264 && (int)(*j)[0] >= 204) //Four lanes
     {
         while ((int)(*j)[0] <= 264 && (int)(*j)[0] >= 204) j++;
         if((int)(*j)[0] <= 158 && (int)(*j)[0] >= 98)
-        {margin = 66; lanesNumber = "three";}
+            margin = 66;
     }
 
     if ((int)(*j)[0] <= 290 && (int)(*j)[0] >= 230) //Five lanes
     {
         while ((int)(*j)[0] <= 290 && (int)(*j)[0] >= 230) j++;
         if((int)(*j)[0] <= 210 && (int)(*j)[0] >= 150)
-        {margin = 40; lanesNumber = "four";}
+            margin = 40;
     }
     return margin;
 }
