@@ -6,6 +6,7 @@ using namespace std;
 bool Processing::waitFlag = false;
 Mat Processing::pts;
 Mat Processing::dst;
+double Processing::afps = 0;
 
 void Processing::initIPM()
 {
@@ -49,8 +50,8 @@ void Processing::laneDetection()
         inverse();
         double d3 = (double(getTickCount()) - s3) * 1000 / getTickFrequency();
 
-        cout << "IPM_1: " << d1 << "\t\t" << "LSD: " << d2 << "\t\t" << "IPM_2: " << d3 << "\t\t" << "Total: " << d1+d2+d3 << endl;
-
+        //cout << "IPM_1: " << d1 << "\t\t" << "LSD: " << d2 << "\t\t" << "IPM_2: " << d3 << "\t\t" << "Total: " << d1+d2+d3 << endl;
+        afps = 1000 / (d1+d2+d3);
         waitFlag = true;
     }
 }
