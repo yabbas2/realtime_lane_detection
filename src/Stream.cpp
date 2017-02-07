@@ -28,9 +28,9 @@ void Processing::videoIOStream()
 {
     cout << "[INFO] Start of streaming!" << endl;
 #if writeVideo
-    VideoWriter video("out.avi",CV_FOURCC('M','J','P','G'),fps, Size(1280,360),true);
+    VideoWriter video("out.avi",CV_FOURCC('M','J','P','G'),fps, Size(640,360),true);
 #endif
-    Mat finalFrame;
+    //Mat finalFrame;
     while(true)
     {
         cap >> normalFrame;
@@ -41,11 +41,11 @@ void Processing::videoIOStream()
             break;
         draw();
 #if show_final
-        hconcat(normalFrame, frameToShow, finalFrame);
+        //hconcat(normalFrame, frameToShow, finalFrame);
 #if writeVideo
-        video.write(finalFrame);
+        video.write(frameToShow);
 #endif
-        imshow("Real-time Lane Detection", finalFrame);
+        imshow("Real-time Lane Detection", frameToShow);
 #endif
 #if show_ipm
         if(!ipmFrame.empty()) imshow("IPM", ipmFrame);
