@@ -29,8 +29,10 @@ class Processing
         static vector<Vec4f> lines;
         static list<Vec4f> detectedLanes;
         static VideoCapture cap;
+        static Mat frameToShow;
         static char videoSourceNum;
         static double fps;
+        static double afps;
         //static double framesNumber;
         static const char endStream;
         static void LSD();
@@ -38,6 +40,7 @@ class Processing
         static void fourPointTransform();
         static void inverse();
         static void initIPM();
+        static void draw();
         static int checkLanesFromLeft();
         static int checkLanesFromRight();
     public:
