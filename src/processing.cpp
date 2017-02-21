@@ -1,4 +1,4 @@
-#include "Processing.hpp"
+#include "processing.hpp"
 
 using namespace cv;
 using namespace std;
@@ -23,6 +23,8 @@ void Processing::initIPM()
             pts = (Mat_<double>(4, 2) << 220, 200, 322, 200, 361, 230, 85, 230); break;
         case '4':
             pts = (Mat_<double>(4, 2) << 230, 211, 342, 211, 373, 238, 160, 238); break;
+        case '5':
+            pts = (Mat_<double>(4, 2) << 241, 208, 345, 208, 450, 297, 23, 297); break;
         default: return;
     }
     pts.convertTo(pts, CV_32F);

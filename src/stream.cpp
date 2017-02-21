@@ -1,11 +1,11 @@
-#include "Processing.hpp"
+#include "processing.hpp"
 
 const char Processing::endStream = 'q';
 Mat Processing::normalFrame;
 Mat Processing::frameToShow;
 VideoCapture Processing::cap;
 double Processing::fps = 0;
-//double Processing::framesNumber = 0;
+double Processing::framesNumber = 0;
 char Processing::videoSourceNum;
 
 bool Processing::setVideoSource(string source)
@@ -20,7 +20,7 @@ bool Processing::setVideoSource(string source)
     if(!cap.isOpened())
         return false;
     fps = cap.get(CV_CAP_PROP_FPS);
-    //framesNumber = cap.get(CV_CAP_PROP_FRAME_COUNT);
+    framesNumber = cap.get(CV_CAP_PROP_FRAME_COUNT);
     return true;
 }
 
@@ -54,6 +54,7 @@ void Processing::videoIOStream()
     cout << "[INFO] End of streaming!" << endl;
     cap.release();
     destroyWindow("Video");
+    printAccuracy();
     exit(0);
 }
 

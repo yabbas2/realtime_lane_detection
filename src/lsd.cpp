@@ -1,4 +1,4 @@
-#include "Processing.hpp"
+#include "processing.hpp"
 
 using namespace cv;
 
@@ -40,6 +40,7 @@ void Processing::LSD()
         }
     }
     filterAndTakeAverage(0, width, 40, lineMargin);
+    calAccuracy();
 }
 
 void Processing::filterAndTakeAverage(int start, int end, unsigned int windowSize, int margin)

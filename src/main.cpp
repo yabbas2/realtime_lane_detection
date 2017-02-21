@@ -1,6 +1,6 @@
 #include <cstdlib>
 #include <thread>
-#include "Processing.hpp"
+#include "processing.hpp"
 
 using namespace std;
 using namespace cv;

@@ -33,8 +33,11 @@ class Processing
         static char videoSourceNum;
         static double fps;
         static double afps;
-        //static double framesNumber;
+        static double framesNumber;
         static const char endStream;
+        static double error[3];
+        static double accuracy;
+        static unsigned int mismatch;
         static void LSD();
         static void filterAndTakeAverage(int start, int end, unsigned int windowSize, int margin);
         static void fourPointTransform();
@@ -43,6 +46,8 @@ class Processing
         static void draw();
         static int checkLanesFromLeft();
         static int checkLanesFromRight();
+        static void calAccuracy();
+        static void printAccuracy();
     public:
         static void laneDetection();
         static bool setVideoSource(string source);
