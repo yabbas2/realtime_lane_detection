@@ -13,7 +13,7 @@ void Processing::initIPM()
     while(normalFrame.empty());
     int height = normalFrame.rows;
     int width = normalFrame.cols;
-    dst = (Mat_<double>(4,2) << 0, 0, height, 0, height, width, 0, width);
+    dst = (Mat_<double>(4,2) << 90, 0, height-90, 0, height-90, width, 90, width);
     switch(videoSourceNum) {
         case '1':
             pts = (Mat_<double>(4, 2) << 253, 219, 352, 219, 444, 288, 60, 288); break;
