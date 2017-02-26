@@ -11,9 +11,10 @@ args = vars(arg.parse_args())
 
 def draw(frameToShow, lines, lineMargin, lanesNum, afps, fps):
     if lines is not None:
-        for line in lines:
-            cv2.line(frameToShow, (int(line[0]), int(line[1])), (int(line[2]), int(line[3])), (255, 0, 0),
-                     3, cv2.LINE_AA)
+        if lanesNum != "none":
+            for line in lines:
+                cv2.line(frameToShow, (int(line[0]), int(line[1])), (int(line[2]), int(line[3])), (255, 0, 0),
+                         3, cv2.LINE_AA)
         cv2.rectangle(frameToShow, (0, 0), (200, 50), (0, 0, 0), 1, cv2.LINE_AA)
         cv2.putText(frameToShow, "status: ", (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.4
                     , (255, 0, 0), 1, cv2.LINE_AA)
@@ -41,10 +42,12 @@ frame = cv2.imread(args['video'])
 pts, dst = determinePtsAndDst(args, ".png")
 start = time.time()
 ipmFrame, homo = fourPointTransform(frame, pts, dst)
-lines = lineSegmentDetector(ipmFrame, 120, 40)
-print(lines)
+lines = lineSegmentDetector(ipmFrame)
+margin, lanesNum = calcMargin(lines)
+print(margin)
+lines = filterAndAverage(lines, 0, ipmFrame.shape[1], 40, margin, ipmFrame.shape[:2])
 lines, arrow = doInverse(lines, homo, args)
-draw(frame, lines, 120, "two", 100, 30)
+draw(frame, lines, margin, lanesNum, 100, 30)
 end = time.time()
 print('Time is: %s' % (end - start))
 cv2.imshow('image', frame)
