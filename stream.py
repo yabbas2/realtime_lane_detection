@@ -11,8 +11,8 @@ class stream(threading.Thread):
         self.stop = False
         self.normalFrame = None
         self.frameToShow = None
-        self.lines = None
-        self.arrow = None
+        self.lines = []
+        self.arrow = []
         self.lanesNum = "none"
         self.lineMargin = 0
         self.locker = True
@@ -42,6 +42,9 @@ class stream(threading.Thread):
         else:
             return None
 
+    def getInfo(self):
+        return self.fps
+
     def setInfo(self, detectedLanes, arrow, margin, lanesNumber, afps):
         self.locker = False
         self.lines = detectedLanes
@@ -52,8 +55,8 @@ class stream(threading.Thread):
         self.locker = True
 
     def draw(self):
-        if self.lines is not None and self.locker:
-            if self.lanesNum != "none":
+        if len(self.lines) != 0 and self.locker:
+            if self.lanesNum is not None:
                 for line in self.lines:
                     cv2.line(self.frameToShow, (int(line[0]), int(line[1])), (int(line[2]), int(line[3])), (255, 0, 0),
                              3, cv2.LINE_AA)
@@ -66,7 +69,7 @@ class stream(threading.Thread):
                 cv2.putText(self.frameToShow, "searching for lanes..", (60, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.4
                             , (0, 0, 255), 1, cv2.LINE_AA)
             if self.lineMargin > 0:
-                cv2.putText(self.frameToShow, self.lanesNum+"-lane road" , (60, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.4
+                cv2.putText(self.frameToShow, self.lanesNum+"-lane road", (60, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.4
                             , (0, 255, 0), 1, cv2.LINE_AA)
             if self.afps >= self.fps:
                 cv2.putText(self.frameToShow, str(self.afps), (60, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.4
@@ -74,6 +77,6 @@ class stream(threading.Thread):
             else:
                 cv2.putText(self.frameToShow, str(self.afps), (60, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.4
                             , (0, 0, 255), 1, cv2.LINE_AA)
-            if self.arrow is not None and self.lineMargin > 0:
+            if len(self.arrow) != 0 and self.lineMargin > 0:
                 cv2.arrowedLine(self.frameToShow, (int(self.arrow[0]), int(self.arrow[1]))
                                 , (int(self.arrow[2]), int(self.arrow[3])), (0, 255, 0), 5, cv2.LINE_AA, 0, 0.3)
