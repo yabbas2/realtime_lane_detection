@@ -11,8 +11,8 @@ class stream(threading.Thread):
         self.stop = False
         self.normalFrame = None
         self.frameToShow = None
-        self.lines = list()
-        self.arrow = list()
+        self.lines = None
+        self.arrow = None
         self.lanesNum = "zero"
         self.lineMargin = 0
         self.locker = True
@@ -24,7 +24,7 @@ class stream(threading.Thread):
             if not grabbed:
                 break
             self.frameToShow = self.normalFrame.copy()
-            # self.draw()
+            self.draw()
             if cv2.waitKey(int(self.fps)) & 0xFF == ord('q'):
                 break
             cv2.imshow('video', self.frameToShow)
@@ -42,16 +42,17 @@ class stream(threading.Thread):
         else:
             return None
 
-    def setInfo(self, detectedLanes, arrow, margin, lanesNumber):
+    def setInfo(self, detectedLanes, arrow, margin, lanesNumber, afps):
         self.locker = False
         self.lines = detectedLanes
         self.arrow = arrow
         self.lanesNum = lanesNumber
         self.lineMargin = margin
+        self.afps = afps
         self.locker = True
 
     def draw(self):
-        if len(self.lines) != 0 and self.locker:
+        if self.lines is not None and self.locker:
             for line in self.lines:
                 cv2.line(self.frameToShow, (int(line[0]), int(line[1])), (int(line[2]), int(line[3])), (255, 0, 0),
                          3, cv2.LINE_AA)
@@ -72,6 +73,6 @@ class stream(threading.Thread):
             else:
                 cv2.putText(self.frameToShow, str(self.afps), (60, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.4
                             , (0, 0, 255), 1, cv2.LINE_AA)
-            if len(self.arrow) != 0 and self.lineMargin > 0:
+            if self.arrow is not None and self.lineMargin > 0:
                 cv2.arrowedLine(self.frameToShow, (int(self.arrow[0]), int(self.arrow[1]))
                                 , (int(self.arrow[2]), int(self.arrow[3])), (0, 255, 0), 5, cv2.LINE_AA, 0, 0.3)
