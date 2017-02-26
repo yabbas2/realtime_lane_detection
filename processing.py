@@ -28,14 +28,39 @@ def fourPointTransform(normalFrame, pts, dst):
     return ipmFrame, HomographyToOriginal
 
 
-def lineSegmentDetector(inputFrame, margin, windowSize):
+def lineSegmentDetector(inputFrame):
     out = cv2.cvtColor(inputFrame, cv2.COLOR_BGR2GRAY)
     LSD = cv2.createLineSegmentDetector(cv2.LSD_REFINE_STD)
     lines, w, prec, nfa = LSD.detect(out)
-    lines = filterAndAverage(lines, 0, inputFrame.shape[1], windowSize, margin, inputFrame.shape[:2])
     # lines = np.array(lines)
     # inputFrame =  LSD.drawSegments(inputFrame, lines)
+    if lines is None:
+        return []
     return lines
+
+
+def calcMargin(lines):
+    margin = 0
+    leftMargin = checkLanesFromLeft(lines)
+    rightMargin = checkLanesFromRight(lines)
+    if leftMargin == rightMargin and leftMargin > 0:
+        margin = leftMargin
+    else:
+        if rightMargin == 0 and leftMargin > 0:
+            margin = leftMargin
+        elif leftMargin == 0 and rightMargin > 0:
+            margin = rightMargin
+    if margin == 280:
+        lanesNum = "one"
+    elif margin == 120:
+        lanesNum = "two"
+    elif margin == 66:
+        lanesNum = "three"
+    elif margin == 40:
+        lanesNum = "four"
+    else:
+        lanesNum = "none"
+    return margin, lanesNum
 
 
 def filterAndAverage(lines, start, end, windowSize, margin, inputShape):
@@ -82,7 +107,7 @@ def doInverse(lines, HomographyToOriginal, args):
         outputLines.append([px1, py1, px2, py2])
     assert (len(outputLines) == size)
     if size > 5 or size == 0:
-        return None, None
+        return [], []
     max = 0
     index = 0
     for i in range(0, size-1, 1):
@@ -92,9 +117,64 @@ def doInverse(lines, HomographyToOriginal, args):
             max = X2Points[i] - X2Points[i+1]
             index = i
     if max == 0:
-        return None, None
+        return [], []
     arrow.append(int((X1Points[index]+X1Points[index+1])/2))
     arrow.append(height-50)
     arrow.append(int((X1Points[index]+X1Points[index+1])/2))
     arrow.append(height-100)
     return outputLines, arrow
+
+
+def checkLanesFromLeft(lines):
+    margin = 0
+    i = 0
+    lines = sorted(lines, key=lambda l: l[0][0], reverse=False)
+    while int(lines[i][0][0]) in range(0, 51):
+        i += 1
+    if int(lines[i][0][0]) in range(310, 361):  # one lanes
+        margin = 280
+        return margin
+    if int(lines[i][0][0]) in range(150, 211):  # two lanes
+        margin = 120
+        return margin
+    if int(lines[i][0][0]) in range(96, 157):
+        while int(lines[i][0][0]) in range(96, 157):
+            i += 1
+        if int(lines[i][0][0]) in range(202, 263):
+            margin = 66  # three lanes
+            return margin
+
+    if int(lines[i][0][0]) in range(70, 131):
+        while int(lines[i][0][0]) in range(70, 131):
+            i += 1
+        if int(lines[i][0][0]) in range(150, 211):
+            margin = 40  # four lanes
+            return margin
+    return margin
+
+
+def checkLanesFromRight(lines):
+    margin = 0
+    i = 0
+    lines = sorted(lines, key=lambda l: l[0][0], reverse=True)
+    while int(lines[i][0][0]) in range(310, 361):
+        i += 1
+    if int(lines[i][0][0]) in range(0, 51):  # one lanes
+        margin = 280
+        return margin
+    if int(lines[i][0][0]) in range(150, 211):  # two lanes
+        margin = 120
+        return margin
+    if int(lines[i][0][0]) in range(204, 265):
+        while int(lines[i][0][0]) in range(204, 265):
+            i += 1
+        if int(lines[i][0][0]) in range(98, 159):
+            margin = 66  # three lanes
+            return margin
+    if int(lines[i][0][0]) in range(230, 291):
+        while int(lines[i][0][0]) in range(230, 291):
+            i += 1
+        if int(lines[i][0][0]) in range(150, 211):
+            margin = 40  # four lanes
+            return margin
+    return margin
