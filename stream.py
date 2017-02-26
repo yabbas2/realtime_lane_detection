@@ -13,7 +13,7 @@ class stream(threading.Thread):
         self.frameToShow = None
         self.lines = None
         self.arrow = None
-        self.lanesNum = "zero"
+        self.lanesNum = "none"
         self.lineMargin = 0
         self.locker = True
         self.streamStatus = True
@@ -53,9 +53,10 @@ class stream(threading.Thread):
 
     def draw(self):
         if self.lines is not None and self.locker:
-            for line in self.lines:
-                cv2.line(self.frameToShow, (int(line[0]), int(line[1])), (int(line[2]), int(line[3])), (255, 0, 0),
-                         3, cv2.LINE_AA)
+            if self.lanesNum != "none":
+                for line in self.lines:
+                    cv2.line(self.frameToShow, (int(line[0]), int(line[1])), (int(line[2]), int(line[3])), (255, 0, 0),
+                             3, cv2.LINE_AA)
             cv2.rectangle(self.frameToShow, (0, 0), (200, 50), (0, 0, 0), 1, cv2.LINE_AA)
             cv2.putText(self.frameToShow, "status: ", (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.4
                         , (255, 0, 0), 1, cv2.LINE_AA)
