@@ -17,8 +17,15 @@ if args['video'] is not None:
 else:
     video = stream(src=0)
 video.start()
+fps = int(video.getInfo())
 pts, dst = determinePtsAndDst(args, ".mp4")
 afps = 0
+counter = 0
+windowSize = 40
+lanesNum = "none"
+oldMargin = 0
+oldLanesNum = "none"
+margin = 0
 while True:
     start = time.time()
     if not video.getStreamStatus():
@@ -27,11 +34,22 @@ while True:
     frame = video.readFrame()
     if frame is None:
         continue
+    counter += 1
     ipmFrame, homo = fourPointTransform(frame, pts, dst)
-    lines = lineSegmentDetector(ipmFrame, 66, 40)
+    lines = lineSegmentDetector(ipmFrame)
+    if counter == fps:
+        margin, lanesNum = calcMargin(lines)
+        if margin == 0:
+            margin = oldMargin
+            lanesNum = oldLanesNum
+        else:
+            oldMargin = margin
+            oldLanesNum = lanesNum
+        # print(margin)
+        counter = 0
+    lines = filterAndAverage(lines, 0, ipmFrame.shape[1], windowSize, margin, ipmFrame.shape[:2])
     lines, arrow = doInverse(lines, homo, args)
-    if lines is not None and arrow is not None:
-        video.setInfo(lines, arrow, 66, "two", afps)
+    video.setInfo(lines, arrow, margin, lanesNum, afps)
     end = time.time()
     afps = int(1 / (end - start))
     # print('[INFO]   Time is: %s' % (end - start))
