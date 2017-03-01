@@ -30,36 +30,31 @@ def fourPointTransform(normalFrame, pts, dst):
 
 def lineSegmentDetector(inputFrame):
     out = cv2.cvtColor(inputFrame, cv2.COLOR_BGR2GRAY)
+    out = cv2.GaussianBlur(out, (15, 15), 0)
     LSD = cv2.createLineSegmentDetector(cv2.LSD_REFINE_STD)
     lines, w, prec, nfa = LSD.detect(out)
     # lines = np.array(lines)
-    # inputFrame =  LSD.drawSegments(inputFrame, lines)
+    # inputFrame = LSD.drawSegments(inputFrame, lines)
     if lines is None:
         return []
     return lines
 
 
-def calcMargin(lines):
+def calcMargin(lines, windowSize, width):
     margin = 0
-    leftMargin = checkLanesFromLeft(lines)
-    rightMargin = checkLanesFromRight(lines)
+    lanesNum = "none"
+    leftMargin, leftLaneNum = checkLanesFromLeft(lines, windowSize, width)
+    rightMargin, rightLaneNum = checkLanesFromRight(lines, windowSize, width)
     if leftMargin == rightMargin and leftMargin > 0:
         margin = leftMargin
+        lanesNum = leftLaneNum
     else:
         if rightMargin == 0 and leftMargin > 0:
             margin = leftMargin
+            lanesNum = leftLaneNum
         elif leftMargin == 0 and rightMargin > 0:
             margin = rightMargin
-    if margin == 280:
-        lanesNum = "one"
-    elif margin == 120:
-        lanesNum = "two"
-    elif margin == 66:
-        lanesNum = "three"
-    elif margin == 40:
-        lanesNum = "four"
-    else:
-        lanesNum = "none"
+            lanesNum = rightLaneNum
     return margin, lanesNum
 
 
@@ -125,56 +120,56 @@ def doInverse(lines, HomographyToOriginal, args):
     return outputLines, arrow
 
 
-def checkLanesFromLeft(lines):
+def checkLanesFromLeft(lines, windowSize, width):
     margin = 0
     i = 0
     lines = sorted(lines, key=lambda l: l[0][0], reverse=False)
     while int(lines[i][0][0]) in range(0, 51):
         i += 1
-    if int(lines[i][0][0]) in range(310, 361):  # one lanes
-        margin = 280
-        return margin
+    if int(lines[i][0][0]) in range(310, 361):  # one lane
+        margin = (width - (2 * windowSize)) / 1
+        return int(margin), "one"
     if int(lines[i][0][0]) in range(150, 211):  # two lanes
-        margin = 120
-        return margin
+        margin = (width - (3 * windowSize)) / 2
+        return int(margin), "two"
     if int(lines[i][0][0]) in range(96, 157):
         while int(lines[i][0][0]) in range(96, 157):
             i += 1
         if int(lines[i][0][0]) in range(202, 263):
-            margin = 66  # three lanes
-            return margin
+            margin = (width - (4 * windowSize)) / 3  # three lanes
+            return int(margin), "three"
 
     if int(lines[i][0][0]) in range(70, 131):
         while int(lines[i][0][0]) in range(70, 131):
             i += 1
         if int(lines[i][0][0]) in range(150, 211):
-            margin = 40  # four lanes
-            return margin
-    return margin
+            margin = (width - (5 * windowSize)) / 4  # four lanes
+            return int(margin), "four"
+    return int(margin), "none"
 
 
-def checkLanesFromRight(lines):
+def checkLanesFromRight(lines, windowSize, width):
     margin = 0
     i = 0
     lines = sorted(lines, key=lambda l: l[0][0], reverse=True)
     while int(lines[i][0][0]) in range(310, 361):
         i += 1
-    if int(lines[i][0][0]) in range(0, 51):  # one lanes
-        margin = 280
-        return margin
+    if int(lines[i][0][0]) in range(0, 51):  # one lane
+        margin = (width - (2 * windowSize)) / 1
+        return int(margin), "one"
     if int(lines[i][0][0]) in range(150, 211):  # two lanes
-        margin = 120
-        return margin
+        margin = (width - (3 * windowSize)) / 2
+        return int(margin), "two"
     if int(lines[i][0][0]) in range(204, 265):
         while int(lines[i][0][0]) in range(204, 265):
             i += 1
         if int(lines[i][0][0]) in range(98, 159):
-            margin = 66  # three lanes
-            return margin
+            margin = (width - (4 * windowSize)) / 3  # three lanes
+            return int(margin), "three"
     if int(lines[i][0][0]) in range(230, 291):
         while int(lines[i][0][0]) in range(230, 291):
             i += 1
         if int(lines[i][0][0]) in range(150, 211):
-            margin = 40  # four lanes
-            return margin
-    return margin
+            margin = (width - (5 * windowSize)) / 4  # four lanes
+            return int(margin), "four"
+    return int(margin), "none"
