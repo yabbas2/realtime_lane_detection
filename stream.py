@@ -8,6 +8,7 @@ class stream(threading.Thread):
         self.stream = cv2.VideoCapture(src)
         self.fps = self.stream.get(cv2.CAP_PROP_FPS)
         self.afps = 0
+        self.negCount = 0
         self.stop = False
         self.normalFrame = None
         self.frameToShow = None
@@ -47,11 +48,16 @@ class stream(threading.Thread):
 
     def setInfo(self, detectedLanes, arrow, margin, lanesNumber, afps):
         self.locker = False
-        self.lines = detectedLanes
-        self.arrow = arrow
-        self.lanesNum = lanesNumber
-        self.lineMargin = margin
-        self.afps = afps
+        lines = detectedLanes
+        if len(lines) != 0 or self.negCount == self.fps:
+            self.lines = detectedLanes
+            self.arrow = arrow
+            self.lanesNum = lanesNumber
+            self.lineMargin = margin
+            self.afps = afps
+            self.negCount = 0
+        else:
+            self.negCount += 1
         self.locker = True
 
     def draw(self):
