@@ -21,7 +21,7 @@ fps = int(video.getInfo())
 pts, dst = determinePtsAndDst(args, ".mp4")
 afps = 0
 counter = 0
-windowSize = 40
+windowSize = 20
 lanesNum = "none"
 oldMargin = 0
 oldLanesNum = "none"
@@ -38,7 +38,7 @@ while True:
     ipmFrame, homo = fourPointTransform(frame, pts, dst)
     lines = lineSegmentDetector(ipmFrame)
     if counter == fps:
-        margin, lanesNum = calcMargin(lines)
+        margin, lanesNum = calcMargin(lines, windowSize, ipmFrame.shape[1])
         if margin == 0:
             margin = oldMargin
             lanesNum = oldLanesNum
