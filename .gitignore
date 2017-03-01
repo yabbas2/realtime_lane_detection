@@ -1,3 +1,6 @@
 *.pyc
 .idea/
 *.avi
+*.jpg
+*.png
+*.mp4
