@@ -16,10 +16,11 @@ def determinePtsAndDst(args, ext):
         pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
     elif args['video'].endswith("sample4"+ext):
         # pts = np.array([[230, 211], [342, 211], [373, 238], [160, 238]], dtype="float32")
-        # pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
-        pts = np.array([[290, 200], [334, 200], [440, 290], [214, 290]], dtype="float32")
+        pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
     elif args['video'].endswith("sample5"+ext):
-        pts = np.array([[241, 208], [345, 208], [450, 297], [23, 297]], dtype="float32")
+        # pts = np.array([[241, 208], [345, 208], [450, 297], [23, 297]], dtype="float32")
+        pts = np.array([[260, 196], [354, 196], [442, 280], [204, 280]], dtype="float32")
+
     else:
         pts = np.zeros((4, 2), dtype="float32")
     return pts, dst
