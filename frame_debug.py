@@ -39,6 +39,7 @@ def draw(frameToShow, lines, lineMargin, lanesNum, afps, fps):
 print("[INFO] application starts")
 
 frame = cv2.imread(args['video'])
+print(frame[100][100][0], frame[100][100][1], frame[100][100][2])
 pts, dst = determinePtsAndDst(args, ".png")
 start = time.time()
 ipmFrame, homo = fourPointTransform(frame, pts, dst)
