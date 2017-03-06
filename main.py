@@ -20,12 +20,6 @@ video.start()
 fps = int(video.getInfo())
 pts, dst = determinePtsAndDst(args, ".mp4")
 afps = 0
-counter = 0
-windowSize = 20
-lanesNum = "none"
-oldMargin = 0
-oldLanesNum = "none"
-margin = 0
 while True:
     start = time.time()
     if not video.getStreamStatus():
@@ -34,22 +28,12 @@ while True:
     frame = video.readFrame()
     if frame is None:
         continue
-    counter += 1
     ipmFrame, homo = fourPointTransform(frame, pts, dst)
     lines = lineSegmentDetector(ipmFrame)
-    if counter == fps:
-        margin, lanesNum = calcMargin(lines, windowSize, ipmFrame.shape[1])
-        if margin == 0:
-            margin = oldMargin
-            lanesNum = oldLanesNum
-        else:
-            oldMargin = margin
-            oldLanesNum = lanesNum
-        # print(margin)
-        counter = 0
-    lines = filterAndAverage(lines, 0, ipmFrame.shape[1], windowSize, margin, ipmFrame.shape[:2])
-    lines, arrow = doInverse(lines, homo, args)
-    video.setInfo(lines, arrow, margin, lanesNum, afps)
+    lines = eliminateFalseDetection(lines)
+    left_points, right_points = combineLineSegments(lines, ipmFrame)
+    left_points, right_points = enhanceCurveFitting(left_points, right_points, homo, ipmFrame)
     end = time.time()
     afps = int(1 / (end - start))
-    # print('[INFO]   Time is: %s' % (end - start))
+    video.setInfo(left_points, right_points, afps)
+    print('[INFO]   Time is: %s' % (end-start))
