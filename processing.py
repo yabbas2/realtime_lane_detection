@@ -139,24 +139,24 @@ def draw(points, image):
 
 def enhanceCurveFitting(left_points, right_points, homo, ipmFrame):
     if left_points.size > 4:
-        left_points = curveFit(left_points[:, 0], left_points[:, 1], 1, ipmFrame.shape[0], 10)
+        left_points = curveFit(left_points[:, 0], left_points[:, 1], 1, ipmFrame.shape[0], 50)
         left_points = doInverse(left_points, homo)
     elif left_points.size == 4:
         deltaY = abs(left_points[0, 1] - left_points[1, 1])
         if deltaY > 200:
-            left_points = curveFit(left_points[:, 0], left_points[:, 1], 2, ipmFrame.shape[0], 10)
+            left_points = curveFit(left_points[:, 0], left_points[:, 1], 2, ipmFrame.shape[0], 50)
             left_points = doInverse(left_points, homo)
         else:
             left_points = []
     else:
         left_points = []
     if right_points.size > 4:
-        right_points = curveFit(right_points[:, 0], right_points[:, 1], 2, ipmFrame.shape[0], 10)
+        right_points = curveFit(right_points[:, 0], right_points[:, 1], 2, ipmFrame.shape[0], 50)
         right_points = doInverse(right_points, homo)
     elif right_points.size == 4:
         deltaY = abs(right_points[0, 1] - right_points[1, 1])
         if deltaY > 200:
-            right_points = curveFit(right_points[:, 0], right_points[:, 1], 2, ipmFrame.shape[0], 10)
+            right_points = curveFit(right_points[:, 0], right_points[:, 1], 2, ipmFrame.shape[0], 50)
             right_points = doInverse(right_points, homo)
         else:
             right_points = []
