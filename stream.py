@@ -56,9 +56,9 @@ class stream(threading.Thread):
     def draw(self):
         if self.locker:
             if len(self.right_points) != 0:
-                cv2.polylines(self.frameToShow, np.int32([self.right_points]), False, (0, 0, 255), 2, cv2.LINE_AA)
+                cv2.polylines(self.frameToShow, np.int32([self.right_points]), False, (0, 255, 0), 2, cv2.LINE_AA)
             if len(self.left_points) != 0:
-                cv2.polylines(self.frameToShow, np.int32([self.left_points]), False, (0, 0, 255), 2, cv2.LINE_AA)
+                cv2.polylines(self.frameToShow, np.int32([self.left_points]), False, (0, 255, 0), 2, cv2.LINE_AA)
             cv2.rectangle(self.frameToShow, (0, 0), (200, 50), (0, 0, 0), 1, cv2.LINE_AA)
             cv2.putText(self.frameToShow, "status: ", (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.4
                         , (255, 0, 0), 1, cv2.LINE_AA)
