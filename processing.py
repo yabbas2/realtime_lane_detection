@@ -31,7 +31,7 @@ def fourPointTransform(normalFrame, pts, dst):
     height, width = normalFrame.shape[:2]
     HomographyToInv = cv2.getPerspectiveTransform(pts, dst)
     HomographyToOriginal = cv2.getPerspectiveTransform(dst, pts)
-    ipmFrame = cv2.warpPerspective(normalFrame, HomographyToInv, (height, width))
+    ipmFrame = cv2.warpPerspective(normalFrame, HomographyToInv, (height, width+100))
     return ipmFrame, HomographyToOriginal
 
 
@@ -51,10 +51,12 @@ def doInverse(points, HomographyToOriginal):
     size = len(points)
     outputPoints = list()
     for pt in points:
-        Z = 1 / (HomographyToOriginal[2][0] * pt + HomographyToOriginal[2][1] * pt + HomographyToOriginal[2][2])
-        ptR = np.float32(((HomographyToOriginal[0][0] * pt + HomographyToOriginal[0][1] * pt +
+        Z = 1 / (HomographyToOriginal[2][0] * pt[0] + HomographyToOriginal[2][1] * pt[1] + HomographyToOriginal[2][2])
+        ptx = np.float32(((HomographyToOriginal[0][0] * pt[0] + HomographyToOriginal[0][1] * pt[1] +
                            HomographyToOriginal[0][2]) * Z))
-        outputPoints.append(ptR)
+        pty = np.float32(((HomographyToOriginal[1][0] * pt[0] + HomographyToOriginal[1][1] * pt[1] +
+                           HomographyToOriginal[1][2]) * Z))
+        outputPoints.append([ptx, pty])
     assert size == len(outputPoints)
     return np.array(outputPoints)
 
@@ -78,10 +80,8 @@ def eliminateFalseDetection(lines):
 
 
 def combineLineSegments(lines, image):
-    left_points_x = []
-    left_points_y = []
-    right_points_x = []
-    right_points_y = []
+    left_points = []
+    right_points = []
     threshold_position = int(image.shape[1] / 2)
     USED = 1
     threshold_angle = 2
@@ -111,31 +111,27 @@ def combineLineSegments(lines, image):
                         image[int((avg_y1 + avg_y2) / 2)][int((avg_x1 + avg_x2) / 2)][1] in range(110, 255) and \
                         image[int((avg_y1 + avg_y2) / 2)][int((avg_x1 + avg_x2) / 2)][2] in range(110, 255):
                     if avg_x1 < threshold_position and avg_x2 < threshold_position:
-                        left_points_x.append(avg_x1)
-                        left_points_x.append(avg_x2)
-                        left_points_y.append(avg_y1)
-                        left_points_y.append(avg_y2)
+                        left_points.append((avg_x1, avg_y1))
+                        left_points.append((avg_x2, avg_y2))
                     else:
-                        right_points_x.append(avg_x1)
-                        right_points_x.append(avg_x2)
-                        right_points_y.append(avg_y1)
-                        right_points_y.append(avg_y2)
+                        right_points.append((avg_x1, avg_y1))
+                        right_points.append((avg_x2, avg_y2))
                     lines[i][4] = USED
                     lines[j][4] = USED
 
-    return left_points_x, left_points_y, right_points_x, right_points_y
+    return np.array(left_points), np.array(right_points)
 
 
 def curveFit(points_x, points_y, degree, height, pointsNum):
+    points = []
     coeffs = poly.polyfit(points_y, points_x, degree)
     ffit = poly.Polynomial(coeffs)
     points_y = np.linspace(0, height, pointsNum)
     points_x = ffit(points_y)
-    return points_x, points_y
-
-
-def draw(points_x, points_y, image):
-    points = []
     for i in range(0, len(points_y), 1):
         points.append([points_x[i], points_y[i]])
+    return points
+
+
+def draw(points, image):
     cv2.polylines(image, np.int32([points]), False, (0, 0, 255), 2, cv2.LINE_AA)
