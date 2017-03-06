@@ -72,9 +72,9 @@ def eliminateFalseDetection(lines):
             length = math.sqrt(math.pow((x2 - x1), 2) + math.pow((y2 - y1), 2))
             if int(theta) in threshold_angle and length >= threshold_length:
                 if y1 > y2:
-                    filtered_lines.append([x1, y1, x2, y2])
+                    filtered_lines.append([x1, y1, x2, y2, 0])
                 else:
-                    filtered_lines.append([x2, y2, x1, y1])
+                    filtered_lines.append([x2, y2, x1, y1, 0])
     return filtered_lines
 
 
@@ -82,22 +82,25 @@ def combineLineSegments(lines, image):
     left_lines = []
     right_lines = []
     threshold_position = int(image.shape[1] / 2)
+    USED = 1
     threshold_angle = 2
     threshold_distance = 30
-    for lineI in lines:
-        Ix1, Iy1, Ix2, Iy2 = lineI[0], lineI[1], lineI[2], lineI[3]
+    for i in range(0, len(lines), 1):
+        if lines[i][4] == USED:
+            continue
+        Ix1, Iy1, Ix2, Iy2 = lines[i][0], lines[i][1], lines[i][2], lines[i][3]
         Itheta = int(cv2.fastAtan2((Iy2 - Iy1), (Ix2 - Ix1)))
         if Itheta > 180:
             Itheta -= 180
-        for lineJ in lines:
-            if lineI == lineJ:
+        for j in range(0, len(lines), 1):
+            if lines[i] == lines[j] or lines[j][4] == USED:
                 continue
-            Jx1, Jy1, Jx2, Jy2 = lineJ[0], lineJ[1], lineJ[2], lineJ[3]
+            Jx1, Jy1, Jx2, Jy2 = lines[j][0], lines[j][1], lines[j][2], lines[j][3]
             Jtheta = int(cv2.fastAtan2((Jy2 - Jy1), (Jx2 - Jx1)))
             if Jtheta > 180:
                 Jtheta -= 180
             if abs(Jx1 - Ix1) <= threshold_distance and abs(Jx2 - Ix2) <= threshold_distance and \
-                            abs(Itheta - Jtheta) <= threshold_angle:
+                    abs(Itheta - Jtheta) <= threshold_angle:
                 avg_x1 = (Jx1 + Ix1) / 2
                 avg_x2 = (Jx2 + Ix2) / 2
                 avg_y1 = Jy1
@@ -111,7 +114,8 @@ def combineLineSegments(lines, image):
                         left_lines.append([avg_x1, avg_y1, avg_x2, avg_y2, avg_theta])
                     else:
                         right_lines.append([avg_x1, avg_y1, avg_x2, avg_y2, avg_theta])
-                    # lines.remove(lineJ)
+                    lines[i][4] = USED
+                    lines[j][4] = USED
 
     left_points = []
     right_points = []
