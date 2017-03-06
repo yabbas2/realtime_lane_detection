@@ -1,5 +1,6 @@
 import threading
 import cv2
+import numpy as np
 
 
 class stream(threading.Thread):
@@ -8,14 +9,11 @@ class stream(threading.Thread):
         self.stream = cv2.VideoCapture(src)
         self.fps = self.stream.get(cv2.CAP_PROP_FPS)
         self.afps = 0
-        self.negCount = 0
         self.stop = False
+        self.left_points = []
+        self.right_points = []
         self.normalFrame = None
         self.frameToShow = None
-        self.lines = []
-        self.arrow = []
-        self.lanesNum = "none"
-        self.lineMargin = 0
         self.locker = True
         self.streamStatus = True
 
@@ -46,43 +44,29 @@ class stream(threading.Thread):
     def getInfo(self):
         return self.fps
 
-    def setInfo(self, detectedLanes, arrow, margin, lanesNumber, afps):
+    def setInfo(self, lps, rps, afps):
         self.locker = False
-        lines = detectedLanes
-        if len(lines) != 0 or self.negCount == self.fps:
-            self.lines = detectedLanes
-            self.arrow = arrow
-            self.lanesNum = lanesNumber
-            self.lineMargin = margin
-            self.afps = afps
-            self.negCount = 0
-        else:
-            self.negCount += 1
+        if len(lps) != 0:
+            self.left_points = lps
+        if len(rps) != 0:
+            self.right_points = rps
+        self.afps = afps
         self.locker = True
 
     def draw(self):
-        if len(self.lines) != 0 and self.locker:
-            if self.lanesNum is not None:
-                for line in self.lines:
-                    cv2.line(self.frameToShow, (int(line[0]), int(line[1])), (int(line[2]), int(line[3])), (255, 0, 0),
-                             3, cv2.LINE_AA)
+        if self.locker:
+            if len(self.right_points) != 0:
+                cv2.polylines(self.frameToShow, np.int32([self.right_points]), False, (0, 0, 255), 2, cv2.LINE_AA)
+            if len(self.left_points) != 0:
+                cv2.polylines(self.frameToShow, np.int32([self.left_points]), False, (0, 0, 255), 2, cv2.LINE_AA)
             cv2.rectangle(self.frameToShow, (0, 0), (200, 50), (0, 0, 0), 1, cv2.LINE_AA)
             cv2.putText(self.frameToShow, "status: ", (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.4
                         , (255, 0, 0), 1, cv2.LINE_AA)
             cv2.putText(self.frameToShow, "AFPS: ", (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.4
                         , (255, 0, 0), 1, cv2.LINE_AA)
-            if self.lineMargin == 0:
-                cv2.putText(self.frameToShow, "searching for lanes..", (60, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.4
-                            , (0, 0, 255), 1, cv2.LINE_AA)
-            if self.lineMargin > 0:
-                cv2.putText(self.frameToShow, self.lanesNum+"-lane road", (60, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.4
-                            , (0, 255, 0), 1, cv2.LINE_AA)
             if self.afps >= self.fps:
                 cv2.putText(self.frameToShow, str(self.afps), (60, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.4
                             , (0, 255, 0), 1, cv2.LINE_AA)
             else:
                 cv2.putText(self.frameToShow, str(self.afps), (60, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.4
                             , (0, 0, 255), 1, cv2.LINE_AA)
-            if len(self.arrow) != 0 and self.lineMargin > 0:
-                cv2.arrowedLine(self.frameToShow, (int(self.arrow[0]), int(self.arrow[1]))
-                                , (int(self.arrow[2]), int(self.arrow[3])), (0, 255, 0), 5, cv2.LINE_AA, 0, 0.3)
