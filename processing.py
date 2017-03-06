@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import numpy.polynomial.polynomial as poly
 import math
 
 
@@ -48,16 +49,14 @@ def lineSegmentDetector(inputFrame):
 
 def doInverse(points, HomographyToOriginal):
     size = len(points)
-    outputLines = list()
-    for row in points:
-        Z = 1 / (HomographyToOriginal[2][0] * row[0] + HomographyToOriginal[2][1] * row[1] + HomographyToOriginal[2][2])
-        px1 = np.float32(((HomographyToOriginal[0][0] * row[0] + HomographyToOriginal[0][1] * row[1] +
+    outputPoints = list()
+    for pt in points:
+        Z = 1 / (HomographyToOriginal[2][0] * pt + HomographyToOriginal[2][1] * pt + HomographyToOriginal[2][2])
+        ptR = np.float32(((HomographyToOriginal[0][0] * pt + HomographyToOriginal[0][1] * pt +
                            HomographyToOriginal[0][2]) * Z))
-        py1 = np.float32(((HomographyToOriginal[1][0] * row[0] + HomographyToOriginal[1][1] * row[1] +
-                           HomographyToOriginal[1][2]) * Z))
-        outputLines.append([px1, py1])
-    assert size == len(outputLines)
-    return np.array(outputLines)
+        outputPoints.append(ptR)
+    assert size == len(outputPoints)
+    return np.array(outputPoints)
 
 
 def eliminateFalseDetection(lines):
@@ -79,8 +78,10 @@ def eliminateFalseDetection(lines):
 
 
 def combineLineSegments(lines, image):
-    left_lines = []
-    right_lines = []
+    left_points_x = []
+    left_points_y = []
+    right_points_x = []
+    right_points_y = []
     threshold_position = int(image.shape[1] / 2)
     USED = 1
     threshold_angle = 2
@@ -105,53 +106,36 @@ def combineLineSegments(lines, image):
                 avg_x2 = (Jx2 + Ix2) / 2
                 avg_y1 = Jy1
                 avg_y2 = Jy2
-                avg_theta = (Jtheta + Itheta) / 2
-                # print(image[int(avg_y1)][int(avg_x1)])
+                # print(image[image[int((avg_y1 + avg_y2) / 2)][int((avg_x1 + avg_x2) / 2)])
                 if image[int((avg_y1 + avg_y2) / 2)][int((avg_x1 + avg_x2) / 2)][0] in range(110, 255) and \
                         image[int((avg_y1 + avg_y2) / 2)][int((avg_x1 + avg_x2) / 2)][1] in range(110, 255) and \
                         image[int((avg_y1 + avg_y2) / 2)][int((avg_x1 + avg_x2) / 2)][2] in range(110, 255):
                     if avg_x1 < threshold_position and avg_x2 < threshold_position:
-                        left_lines.append([avg_x1, avg_y1, avg_x2, avg_y2, avg_theta])
+                        left_points_x.append(avg_x1)
+                        left_points_x.append(avg_x2)
+                        left_points_y.append(avg_y1)
+                        left_points_y.append(avg_y2)
                     else:
-                        right_lines.append([avg_x1, avg_y1, avg_x2, avg_y2, avg_theta])
+                        right_points_x.append(avg_x1)
+                        right_points_x.append(avg_x2)
+                        right_points_y.append(avg_y1)
+                        right_points_y.append(avg_y2)
                     lines[i][4] = USED
                     lines[j][4] = USED
 
-    left_points = []
-    right_points = []
-    if len(left_lines) > 1:
-        sum_theta = 0
-        for line in left_lines:
-            sum_theta += ((line[3] - line[1]) / (line[2] - line[0]))
-        avg_theta = int(sum_theta / len(left_lines))
-        if abs(avg_theta - math.tan(left_lines[0][4])) <= math.tan(threshold_angle):
-            # slope = (left_lines[0][3]-left_lines[0][1]) / (left_lines[0][2]-left_lines[0][0])
-            new_x1 = (0 - left_lines[0][1]) / avg_theta + left_lines[0][0]
-            new_x2 = (image.shape[0] - left_lines[0][1]) / avg_theta + left_lines[0][0]
-            left_points = [[new_x1, 0], [new_x2, image.shape[0]]]
-        else:
-            for line in left_lines:
-                left_points.append([line[0], line[1]])
-                left_points.append([line[2], line[3]])
-    elif len(left_lines) == 1:
-        left_points.append([left_lines[0][0], left_lines[0][1]])
-        left_points.append([left_lines[0][2], left_lines[0][3]])
+    return left_points_x, left_points_y, right_points_x, right_points_y
 
-    if len(right_lines) > 1:
-        sum_theta = 0
-        for line in right_lines:
-            sum_theta += ((line[3] - line[1]) / (line[2] - line[0]))
-        avg_theta = int(sum_theta / len(right_lines))
-        if abs(avg_theta - math.tan(right_lines[0][4])) <= math.tan(threshold_angle):
-            new_x1 = (0 - right_lines[0][1]) / avg_theta + right_lines[0][0]
-            new_x2 = (image.shape[0] - right_lines[0][1]) / avg_theta + right_lines[0][0]
-            right_points = [[new_x1, 0], [new_x2, image.shape[0]]]
-        else:
-            for line in right_lines:
-                right_points.append([line[0], line[1]])
-                right_points.append([line[2], line[3]])
-    elif len(right_lines) == 1:
-        right_points.append([right_lines[0][0], right_lines[0][1]])
-        right_points.append([right_lines[0][2], right_lines[0][3]])
 
-    return left_points, right_points
+def curveFit(points_x, points_y, degree, height, pointsNum):
+    coeffs = poly.polyfit(points_y, points_x, degree)
+    ffit = poly.Polynomial(coeffs)
+    points_y = np.linspace(0, height, pointsNum)
+    points_x = ffit(points_y)
+    return points_x, points_y
+
+
+def draw(points_x, points_y, image):
+    points = []
+    for i in range(0, len(points_y), 1):
+        points.append([points_x[i], points_y[i]])
+    cv2.polylines(image, np.int32([points]), False, (0, 0, 255), 2, cv2.LINE_AA)
