@@ -3,15 +3,6 @@ import numpy.polynomial.polynomial as poly
 import argparse
 import time
 
-
-def draw(image, lines):
-    for line in lines:
-        cv2.line(image, (int(line[0]), int(line[1])), (int(line[2]), int(line[3])), (0, 0, 255), 3, cv2.LINE_AA)
-
-
-def draw2(image, points):
-    cv2.polylines(image, np.int32([points]), False, (0, 0, 255), 3, cv2.LINE_AA)
-
 arg = argparse.ArgumentParser()
 arg.add_argument('-v', '--video', type=str, help="video source")
 arg.add_argument('-r', '--res', type=str, help="video resolution")
@@ -32,11 +23,16 @@ while True:
     ipmFrame, homo = fourPointTransform(normalFrame, pts, dst)
     lines = lineSegmentDetector(ipmFrame)
     lines = eliminateFalseDetection(lines)
-    left_points, right_points = combineLineSegments(lines, int(ipmFrame.shape[1]/2), ipmFrame)
-    left_points = doInverse(left_points, homo)
-    right_points = doInverse(right_points, homo)
-    draw2(normalFrame, left_points)
-    draw2(normalFrame, right_points)
+    # draw(ipmFrame, lines)
+    left_points, right_points = combineLineSegments(lines, ipmFrame)
+    if left_points.size > 0:
+        left_points = curveFit(left_points[:, 0], left_points[:, 1], 2, ipmFrame.shape[0], 10)
+        left_points = doInverse(left_points, homo)
+        draw(left_points, normalFrame)
+    if right_points.size > 0:
+        right_points = curveFit(right_points[:, 0], right_points[:, 1], 2, ipmFrame.shape[0], 10)
+        right_points = doInverse(right_points, homo)
+        draw(right_points, normalFrame)
     end = time.time()
     print(end-start)
     cv2.imshow('video', normalFrame)
