@@ -6,7 +6,7 @@ import math
 
 def determinePtsAndDst(args, ext):
     [width, height] = [int(args['res'].split('x')[0]), int(args['res'].split('x')[1])]
-    dst = np.array([[0, 0], [height, 0], [height, width], [0, width]], dtype="float32")
+    dst = np.array([[0, 0], [360, 0], [360, 640], [0, 640]], dtype="float32")
     if args['video'].endswith("sample1" + ext):
         pts = np.array([[253, 219], [352, 219], [444, 288], [60, 288]], dtype="float32")
     elif args['video'].endswith("sample2" + ext):
@@ -17,7 +17,8 @@ def determinePtsAndDst(args, ext):
         pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
     elif args['video'].endswith("sample4" + ext):
         # pts = np.array([[230, 211], [342, 211], [373, 238], [160, 238]], dtype="float32")
-        pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
+        # pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
+        pts = np.array([[559, 426], [682, 426], [873, 606], [423, 606]], dtype="float32")
     elif args['video'].endswith("sample5" + ext):
         # pts = np.array([[241, 208], [345, 208], [450, 297], [23, 297]], dtype="float32")
         pts = np.array([[260, 196], [354, 196], [442, 280], [204, 280]], dtype="float32")
@@ -31,7 +32,7 @@ def fourPointTransform(normalFrame, pts, dst):
     height, width = normalFrame.shape[:2]
     HomographyToInv = cv2.getPerspectiveTransform(pts, dst)
     HomographyToOriginal = cv2.getPerspectiveTransform(dst, pts)
-    ipmFrame = cv2.warpPerspective(normalFrame, HomographyToInv, (height, width+100))
+    ipmFrame = cv2.warpPerspective(normalFrame, HomographyToInv, (height-200, height))
     return ipmFrame, HomographyToOriginal
 
 
@@ -48,8 +49,10 @@ def lineSegmentDetector(inputFrame):
 
 
 def doInverse(points, HomographyToOriginal):
-    size = len(points)
     outputPoints = list()
+    size = len(points)
+    if size == 0:
+        return np.array(outputPoints)
     for pt in points:
         Z = 1 / (HomographyToOriginal[2][0] * pt[0] + HomographyToOriginal[2][1] * pt[1] + HomographyToOriginal[2][2])
         ptx = np.float32(((HomographyToOriginal[0][0] * pt[0] + HomographyToOriginal[0][1] * pt[1] +
@@ -137,27 +140,23 @@ def draw(points, image):
     cv2.polylines(image, np.int32([points]), False, (0, 0, 255), 2, cv2.LINE_AA)
 
 
-def enhanceCurveFitting(left_points, right_points, homo, ipmFrame):
+def enhanceCurveFitting(left_points, right_points, ipmFrame):
     if left_points.size > 4:
         left_points = curveFit(left_points[:, 0], left_points[:, 1], 1, ipmFrame.shape[0], 50)
-        left_points = doInverse(left_points, homo)
     elif left_points.size == 4:
         deltaY = abs(left_points[0, 1] - left_points[1, 1])
         if deltaY > 200:
             left_points = curveFit(left_points[:, 0], left_points[:, 1], 2, ipmFrame.shape[0], 50)
-            left_points = doInverse(left_points, homo)
         else:
             left_points = []
     else:
         left_points = []
     if right_points.size > 4:
         right_points = curveFit(right_points[:, 0], right_points[:, 1], 2, ipmFrame.shape[0], 50)
-        right_points = doInverse(right_points, homo)
     elif right_points.size == 4:
         deltaY = abs(right_points[0, 1] - right_points[1, 1])
         if deltaY > 200:
             right_points = curveFit(right_points[:, 0], right_points[:, 1], 2, ipmFrame.shape[0], 50)
-            right_points = doInverse(right_points, homo)
         else:
             right_points = []
     else:
