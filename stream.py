@@ -8,6 +8,9 @@ class stream(threading.Thread):
         threading.Thread.__init__(self)
         self.stream = cv2.VideoCapture(src)
         self.fps = self.stream.get(cv2.CAP_PROP_FPS)
+        self.height = self.stream.get(cv2.CAP_PROP_FRAME_HEIGHT)
+        self.width = self.stream.get(cv2.CAP_PROP_FRAME_WIDTH)
+        self.frameCount = self.stream.get(cv2.CAP_PROP_FRAME_COUNT)
         self.afps = 0
         self.stop = False
         self.left_points = []
@@ -42,7 +45,7 @@ class stream(threading.Thread):
             return None
 
     def getInfo(self):
-        return self.fps
+        return self.fps, self.width, self.height, self.frameCount
 
     def setInfo(self, lps, rps, afps):
         self.locker = False
