@@ -4,25 +4,22 @@ import numpy.polynomial.polynomial as poly
 import math
 
 
-def determinePtsAndDst(args, ext):
-    [width, height] = [int(args['res'].split('x')[0]), int(args['res'].split('x')[1])]
-    dst = np.array([[0, 0], [360, 0], [360, 640], [0, 640]], dtype="float32")
-    if args['video'].endswith("sample1" + ext):
+def determinePtsAndDst(width, height, videoFile):
+    dst = np.array([[0, 0], [height, 0], [height, width], [0, width]], dtype="float32")
+    if videoFile == "sample1":
         pts = np.array([[253, 219], [352, 219], [444, 288], [60, 288]], dtype="float32")
-    elif args['video'].endswith("sample2" + ext):
+    elif videoFile == "sample2":
         # pts = np.array([[197, 212], [326, 212], [348, 230], [106, 230]], dtype="float32")
         pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
-    elif args['video'].endswith("sample3" + ext):
+    elif videoFile == "sample3":
         # pts = np.array([[220, 200], [322, 200], [361, 230], [85, 230]], dtype="float32")
         pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
-    elif args['video'].endswith("sample4" + ext):
+    elif videoFile == "sample4":
         # pts = np.array([[230, 211], [342, 211], [373, 238], [160, 238]], dtype="float32")
-        # pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
-        pts = np.array([[559, 426], [682, 426], [873, 606], [423, 606]], dtype="float32")
-    elif args['video'].endswith("sample5" + ext):
+        pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
+    elif videoFile == "sample5":
         # pts = np.array([[241, 208], [345, 208], [450, 297], [23, 297]], dtype="float32")
         pts = np.array([[260, 196], [354, 196], [442, 280], [204, 280]], dtype="float32")
-
     else:
         pts = np.zeros((4, 2), dtype="float32")
     return pts, dst
@@ -32,7 +29,7 @@ def fourPointTransform(normalFrame, pts, dst):
     height, width = normalFrame.shape[:2]
     HomographyToInv = cv2.getPerspectiveTransform(pts, dst)
     HomographyToOriginal = cv2.getPerspectiveTransform(dst, pts)
-    ipmFrame = cv2.warpPerspective(normalFrame, HomographyToInv, (height-200, height))
+    ipmFrame = cv2.warpPerspective(normalFrame, HomographyToInv, (height, width+200))
     return ipmFrame, HomographyToOriginal
 
 
@@ -41,7 +38,6 @@ def lineSegmentDetector(inputFrame):
     out = cv2.GaussianBlur(out, (27, 27), 0)
     LSD = cv2.createLineSegmentDetector(cv2.LSD_REFINE_STD)
     lines, w, prec, nfa = LSD.detect(out)
-    # lines = np.array(lines)
     # inputFrame = LSD.drawSegments(inputFrame, lines)
     if lines is None:
         return []
@@ -136,7 +132,7 @@ def curveFit(points_x, points_y, degree, height, pointsNum):
     return points
 
 
-def draw(points, image):
+def debug_draw(points, image):
     cv2.polylines(image, np.int32([points]), False, (0, 0, 255), 2, cv2.LINE_AA)
 
 
