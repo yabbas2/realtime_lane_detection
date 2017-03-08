@@ -16,12 +16,13 @@ def determinePtsAndDst(width, height, videoFile):
         pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
     elif videoFile == "sample4":
         # pts = np.array([[230, 211], [342, 211], [373, 238], [160, 238]], dtype="float32")
-        pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
+        # pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
+        pts = np.array([[(350, 260), (460, 260), (560, 345), (280, 345)]], dtype="float32")
     elif videoFile == "sample5":
         # pts = np.array([[241, 208], [345, 208], [450, 297], [23, 297]], dtype="float32")
         pts = np.array([[260, 196], [354, 196], [442, 280], [204, 280]], dtype="float32")
     else:
-        pts = np.zeros((4, 2), dtype="float32")
+        raise ValueError("unknown video file!")
     return pts, dst
 
 
@@ -29,7 +30,7 @@ def fourPointTransform(normalFrame, pts, dst):
     height, width = normalFrame.shape[:2]
     HomographyToInv = cv2.getPerspectiveTransform(pts, dst)
     HomographyToOriginal = cv2.getPerspectiveTransform(dst, pts)
-    ipmFrame = cv2.warpPerspective(normalFrame, HomographyToInv, (height, width+200))
+    ipmFrame = cv2.warpPerspective(normalFrame, HomographyToInv, (height, width))
     return ipmFrame, HomographyToOriginal
 
 
@@ -138,23 +139,15 @@ def debug_draw(points, image):
 
 def enhanceCurveFitting(left_points, right_points, ipmFrame):
     if left_points.size > 4:
-        left_points = curveFit(left_points[:, 0], left_points[:, 1], 1, ipmFrame.shape[0], 50)
+        left_points = curveFit(left_points[:, 0], left_points[:, 1], 2, ipmFrame.shape[0], 50)
     elif left_points.size == 4:
-        deltaY = abs(left_points[0, 1] - left_points[1, 1])
-        if deltaY > 200:
-            left_points = curveFit(left_points[:, 0], left_points[:, 1], 2, ipmFrame.shape[0], 50)
-        else:
-            left_points = []
+        left_points = curveFit(left_points[:, 0], left_points[:, 1], 1, ipmFrame.shape[0], 50)
     else:
         left_points = []
     if right_points.size > 4:
         right_points = curveFit(right_points[:, 0], right_points[:, 1], 2, ipmFrame.shape[0], 50)
     elif right_points.size == 4:
-        deltaY = abs(right_points[0, 1] - right_points[1, 1])
-        if deltaY > 200:
-            right_points = curveFit(right_points[:, 0], right_points[:, 1], 2, ipmFrame.shape[0], 50)
-        else:
-            right_points = []
+        right_points = curveFit(right_points[:, 0], right_points[:, 1], 1, ipmFrame.shape[0], 50)
     else:
         right_points = []
     return left_points, right_points
