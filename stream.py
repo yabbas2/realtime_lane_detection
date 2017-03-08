@@ -12,7 +12,6 @@ class stream(threading.Thread):
         self.width = self.stream.get(cv2.CAP_PROP_FRAME_WIDTH)
         self.frameCount = self.stream.get(cv2.CAP_PROP_FRAME_COUNT)
         self.afps = 0
-        self.stop = False
         self.left_points = []
         self.right_points = []
         self.normalFrame = None
@@ -40,7 +39,7 @@ class stream(threading.Thread):
 
     def readFrame(self):
         if self.normalFrame is not None:
-            return self.normalFrame.copy()
+            return self.normalFrame
         else:
             return None
 
