@@ -16,8 +16,8 @@ def determinePtsAndDst(width, height, videoFile):
         pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
     elif videoFile == "sample4":
         # pts = np.array([[230, 211], [342, 211], [373, 238], [160, 238]], dtype="float32")
-        pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
-        # pts = np.array([[(350, 260), (460, 260), (560, 345), (280, 345)]], dtype="float32")
+        # pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
+        pts = np.array([[(350, 260), (460, 260), (560, 345), (280, 345)]], dtype="float32")
     elif videoFile == "sample5":
         # pts = np.array([[241, 208], [345, 208], [450, 297], [23, 297]], dtype="float32")
         pts = np.array([[260, 196], [354, 196], [442, 280], [204, 280]], dtype="float32")
@@ -63,7 +63,7 @@ def doInverse(points, HomographyToOriginal):
 
 def eliminateFalseDetection(lines):
     threshold_length = 60
-    threshold_angle = range(80, 100)
+    threshold_angle = range(70, 110)
     filtered_lines = []
     for line in lines:
         for x1, y1, x2, y2 in line:
@@ -73,9 +73,9 @@ def eliminateFalseDetection(lines):
             length = math.sqrt(math.pow((x2 - x1), 2) + math.pow((y2 - y1), 2))
             if int(theta) in threshold_angle and length >= threshold_length:
                 if y1 > y2:
-                    filtered_lines.append([x1, y1, x2, y2, 0])
+                    filtered_lines.append([x1, y1, x2, y2, theta, 0])
                 else:
-                    filtered_lines.append([x2, y2, x1, y1, 0])
+                    filtered_lines.append([x2, y2, x1, y1, theta, 0])
     return filtered_lines
 
 
@@ -86,20 +86,16 @@ def combineLineSegments(lines, image):
     USED = 1
     threshold_angle = 2
     threshold_distance = 30
-    for i in range(0, len(lines), 1):
-        if lines[i][4] == USED:
+    for lineI in lines:
+        if lineI[5] == USED:
             continue
-        Ix1, Iy1, Ix2, Iy2 = lines[i][0], lines[i][1], lines[i][2], lines[i][3]
-        Itheta = int(cv2.fastAtan2((Iy2 - Iy1), (Ix2 - Ix1)))
-        if Itheta > 180:
-            Itheta -= 180
-        for j in range(0, len(lines), 1):
-            if lines[i] == lines[j] or lines[j][4] == USED:
+        Ix1, Iy1, Ix2, Iy2 = lineI[0], lineI[1], lineI[2], lineI[3]
+        Itheta = lineI[4]
+        for lineJ in lines:
+            if lineI == lineJ or lineJ[5] == USED:
                 continue
-            Jx1, Jy1, Jx2, Jy2 = lines[j][0], lines[j][1], lines[j][2], lines[j][3]
-            Jtheta = int(cv2.fastAtan2((Jy2 - Jy1), (Jx2 - Jx1)))
-            if Jtheta > 180:
-                Jtheta -= 180
+            Jx1, Jy1, Jx2, Jy2 = lineJ[0], lineJ[1], lineJ[2], lineJ[3]
+            Jtheta = lineJ[4]
             if abs(Jx1 - Ix1) <= threshold_distance and abs(Jx2 - Ix2) <= threshold_distance and \
                     abs(Itheta - Jtheta) <= threshold_angle:
                 avg_x1 = (Jx1 + Ix1) / 2
@@ -116,8 +112,8 @@ def combineLineSegments(lines, image):
                     else:
                         right_points.append((avg_x1, avg_y1))
                         right_points.append((avg_x2, avg_y2))
-                    lines[i][4] = USED
-                    lines[j][4] = USED
+                    lineI[5] = USED
+                    lineJ[5] = USED
 
     return np.array(left_points), np.array(right_points)
 
