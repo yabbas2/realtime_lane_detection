@@ -7,7 +7,7 @@ import math
 def determinePtsAndDst(width, height, videoFile):
     dst = np.array([[0, 0], [height, 0], [height, width], [0, width]], dtype="float32")
     if videoFile == "sample1":
-        pts = np.array([[253, 219], [352, 219], [444, 288], [60, 288]], dtype="float32")
+        pts = np.array([[357, 280], [528, 282], [778, 478], [146, 478]], dtype="float32")
     elif videoFile == "sample2":
         # pts = np.array([[197, 212], [326, 212], [348, 230], [106, 230]], dtype="float32")
         pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
@@ -133,17 +133,17 @@ def debug_draw(points, image):
     cv2.polylines(image, np.int32([points]), False, (0, 0, 255), 2, cv2.LINE_AA)
 
 
-def enhanceCurveFitting(left_points, right_points, ipmFrame):
+def enhanceCurveFitting(left_points, right_points, height):
     if left_points.size > 4:
-        left_points = curveFit(left_points[:, 0], left_points[:, 1], 2, ipmFrame.shape[0], 50)
+        left_points = curveFit(left_points[:, 0], left_points[:, 1], 2, height, 50)
     elif left_points.size == 4:
-        left_points = curveFit(left_points[:, 0], left_points[:, 1], 1, ipmFrame.shape[0], 50)
+        left_points = curveFit(left_points[:, 0], left_points[:, 1], 1, height, 50)
     else:
         left_points = []
     if right_points.size > 4:
-        right_points = curveFit(right_points[:, 0], right_points[:, 1], 2, ipmFrame.shape[0], 50)
+        right_points = curveFit(right_points[:, 0], right_points[:, 1], 2, height, 50)
     elif right_points.size == 4:
-        right_points = curveFit(right_points[:, 0], right_points[:, 1], 1, ipmFrame.shape[0], 50)
+        right_points = curveFit(right_points[:, 0], right_points[:, 1], 1, height, 50)
     else:
         right_points = []
     return left_points, right_points
