@@ -21,18 +21,29 @@ while True:
         break
     start = time.time()
     ipmFrame, homo = fourPointTransform(normalFrame, pts, dst)
+    magdy = np.zeros(ipmFrame.shape, dtype=np.uint8)
     lines = lineSegmentDetector(ipmFrame)
     lines = eliminateFalseDetection(lines)
-    # for line in lines:
-    #    cv2.line(ipmFrame, (int(line[0]), int(line[1])), (int(line[2]), int(line[3])), (255, 0, 0), 1, cv2.LINE_AA)
-    left_points, right_points = combineLineSegments(lines, ipmFrame)
+    right_region = rightRegionGrowing(lines, magdy)
+    left_region = leftRegionGrowing(lines, magdy)
+    for line in lines:
+        cv2.line(magdy, (int(line[0]), int(line[1])), (int(line[2]), int(line[3])), (255, 255, 255), 1, cv2.LINE_AA)
+    for line in left_region:
+        cv2.line(magdy, (int(line[0]), int(line[1])), (int(line[2]), int(line[3])), (0, 255, 255), 1, cv2.LINE_AA)
+    for line in right_region:
+        cv2.line(magdy, (int(line[0]), int(line[1])), (int(line[2]), int(line[3])), (255, 255, 0), 1, cv2.LINE_AA)
+    left_points, right_points = linesToPoints(left_region, right_region)
+    for point in left_points:
+        cv2.circle(magdy, (int(point[0]), int(point[1])), 4, (0, 255, 0), 1, cv2.LINE_AA)
+    for point in right_points:
+        cv2.circle(magdy, (int(point[0]), int(point[1])), 4, (0, 255, 0), 1, cv2.LINE_AA)
     left_points, right_points = enhanceCurveFitting(left_points, right_points, ipmFrame.shape[0])
-    left_points = doInverse(left_points, homo)
-    right_points = doInverse(right_points, homo)
-    debug_draw(left_points, normalFrame)
-    debug_draw(right_points, normalFrame)
+    # left_points = doInverse(left_points, homo)
+    # right_points = doInverse(right_points, homo)
+    debug_draw(left_points, magdy)
+    debug_draw(right_points, magdy)
     end = time.time()
     print(end-start)
-    cv2.imshow('video', normalFrame)
+    cv2.imshow('video', magdy)
 stream.release()
 cv2.destroyAllWindows()
