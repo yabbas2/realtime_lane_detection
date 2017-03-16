@@ -108,6 +108,8 @@ def leftRegionGrowing(lines, image):
         if line[0] < (image.shape[1] / 2):
             seed_line = line
             break
+    if seed_line == 0:
+        return []
     seed_line[6] = USED
     left_region.append(seed_line)
     sum_angle = seed_line[4]
@@ -143,6 +145,8 @@ def rightRegionGrowing(lines, image):
         if line[0] > (image.shape[1] / 2):
             seed_line = line
             break
+    if seed_line == 0:
+        return []
     seed_line[6] = USED
     right_region.append(seed_line)
     sum_angle = seed_line[4]
@@ -185,13 +189,13 @@ def debug_draw(points, image):
 def enhanceCurveFitting(left_points, right_points, height):
     if left_points.size > 8:
         left_points = curveFit(left_points[:, 0], left_points[:, 1], 2, height, 50)
-    elif left_points.size == 8:
+    elif left_points.size <= 8:
         left_points = curveFit(left_points[:, 0], left_points[:, 1], 1, height, 50)
     else:
         left_points = []
     if right_points.size > 8:
         right_points = curveFit(right_points[:, 0], right_points[:, 1], 2, height, 50)
-    elif right_points.size == 8:
+    elif right_points.size <= 8:
         right_points = curveFit(right_points[:, 0], right_points[:, 1], 1, height, 50)
     else:
         right_points = []
