@@ -16,8 +16,8 @@ def determinePtsAndDst(width, height, videoFile):
         pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
     elif videoFile == "sample4":
         # pts = np.array([[230, 211], [342, 211], [373, 238], [160, 238]], dtype="float32")
-        # pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
-        pts = np.array([[(350, 260), (460, 260), (560, 345), (280, 345)]], dtype="float32")
+        pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
+        # pts = np.array([[(350, 260), (460, 260), (560, 345), (280, 345)]], dtype="float32")
     elif videoFile == "sample5":
         # pts = np.array([[241, 208], [345, 208], [450, 297], [23, 297]], dtype="float32")
         pts = np.array([[260, 196], [354, 196], [442, 280], [204, 280]], dtype="float32")
@@ -189,13 +189,13 @@ def debug_draw(points, image):
 def enhanceCurveFitting(left_points, right_points, height):
     if left_points.size > 8:
         left_points = curveFit(left_points[:, 0], left_points[:, 1], 2, height, 50)
-    elif left_points.size <= 8:
+    elif left_points.size in range(2, 9):
         left_points = curveFit(left_points[:, 0], left_points[:, 1], 1, height, 50)
     else:
         left_points = []
     if right_points.size > 8:
         right_points = curveFit(right_points[:, 0], right_points[:, 1], 2, height, 50)
-    elif right_points.size <= 8:
+    elif right_points.size in range(2, 9):
         right_points = curveFit(right_points[:, 0], right_points[:, 1], 1, height, 50)
     else:
         right_points = []
