@@ -99,7 +99,7 @@ def linesToPoints(left_lines, right_lines):
 
 def leftRegionGrowing(lines, image):
     left_region = []
-    threshold_angle = 10
+    threshold_angle = 1
     threshold_x = 80
     USED = 1
     seed_line = 0
@@ -112,24 +112,32 @@ def leftRegionGrowing(lines, image):
         return []
     seed_line[6] = USED
     left_region.append(seed_line)
-    sum_angle = seed_line[4]
+    theta = seed_line[4]
+    Sx = np.cos(theta)
+    Sy = np.sin(theta)
     sum_x = (seed_line[0] + seed_line[2]) / 2
     region_x = sum_x / len(left_region)
-    region_angle = sum_angle / len(left_region)
+    region_angle = np.arctan(Sy/Sx)
     for line in left_lines:
         if line[6] == USED:
             continue
         x1, y1, x2, y2 = line[0], line[1], line[2], line[3]
         theta = line[4]
+        Sxt = np.cos(theta)
+        Syt = np.sin(theta)
+        angle = np.arctan(Syt/Sxt)
         length = line[5]
         avg_x = (x1 + x2) / 2
-        if abs(region_angle - theta) <= threshold_angle and abs(region_x - avg_x) <= threshold_x:
+        if abs(region_angle - angle) <= threshold_angle and abs(region_x - avg_x) <= threshold_x:
             line[6] = USED
             left_region.append(line)
             sum_x += avg_x
-            sum_angle += theta
+            Sx = Sx + Sxt
+            Sy = Sy + Syt
+            region_angle = np.arctan(Sy / Sx)
+            # sum_angle += theta
             region_x = sum_x / len(left_region)
-            region_angle = sum_angle / len(left_region)
+            # region_angle = sum_angle / len(left_region)
 
     return left_region
 
