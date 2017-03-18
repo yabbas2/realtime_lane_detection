@@ -189,11 +189,11 @@ def debug_draw(points, image):
 def enhanceCurveFitting(left_points, right_points, height):
     if left_points.size > 8:
         left_points = curveFit(left_points[:, 0], left_points[:, 1], 2, height, 50)
-    elif left_points.size <= 8:
+    elif left_points.size <= 8 and left_points.size != 0:
         left_points = curveFit(left_points[:, 0], left_points[:, 1], 1, height, 50)
     else:
         left_points = []
-    if right_points.size > 8:
+    if right_points.size > 8 and right_points.size != 0:
         right_points = curveFit(right_points[:, 0], right_points[:, 1], 2, height, 50)
     elif right_points.size <= 8:
         right_points = curveFit(right_points[:, 0], right_points[:, 1], 1, height, 50)

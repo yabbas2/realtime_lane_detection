@@ -38,8 +38,8 @@ while True:
     for point in right_points:
         cv2.circle(magdy, (int(point[0]), int(point[1])), 4, (0, 255, 0), 1, cv2.LINE_AA)
     left_points, right_points = enhanceCurveFitting(left_points, right_points, ipmFrame.shape[0])
-    # left_points = doInverse(left_points, homo)
-    # right_points = doInverse(right_points, homo)
+    left_points = doInverse(left_points, homo)
+    right_points = doInverse(right_points, homo)
     debug_draw(left_points, magdy)
     debug_draw(right_points, magdy)
     end = time.time()
