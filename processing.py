@@ -7,7 +7,8 @@ import math
 def determinePtsAndDst(width, height, videoFile):
     dst = np.array([[0, 0], [height, 0], [height, width-200], [0, width-200]], dtype="float32")
     if videoFile == "sample1":
-        pts = np.array([[357, 280], [528, 282], [778, 478], [146, 478]], dtype="float32")
+        #pts = np.array([[357, 280], [528, 282], [778, 478], [146, 478]], dtype="float32")
+        pts = np.array([[347, 268], [524, 268], [743, 367], [1, 367]], dtype="float32")
     elif videoFile == "sample2":
         # pts = np.array([[197, 212], [326, 212], [348, 230], [106, 230]], dtype="float32")
         pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
@@ -97,6 +98,65 @@ def linesToPoints(left_lines, right_lines):
     return np.array(left_points), np.array(right_points)
 
 
+def RegionGrowing(lines, image):
+    height, width = image.shape[:2]
+    lines_with_regions = []
+    seed_line = 0
+    threshold_angle = 30
+    threshold_x = 120
+    USED = 1
+    region = 0
+    region_counter = 0
+    lines = sorted(lines, key=lambda l: l[1], reverse=True)
+    for line in lines:
+        if line[6] != USED:
+            seed_line = line
+            region += 1
+            region_counter = 0
+        else:
+            continue
+        seed_line[6] = USED
+        region_counter += 1
+        lines_with_regions.append([seed_line[0], seed_line[1], seed_line[2], seed_line[3], seed_line[4], seed_line[5], USED, region])
+        sum_angle = seed_line[4]
+        sum_x = (seed_line[0] + seed_line[2]) / 2
+        region_x = sum_x / region_counter
+        region_angle = sum_angle / region_counter
+        for line in lines:
+            if line[6] == USED:
+                continue
+            x1, y1, x2, y2 = line[0], line[1], line[2], line[3]
+            theta = line[4]
+            length = line[5]
+            avg_x = (x1 + x2) / 2
+            if abs(region_angle - theta) <= threshold_angle and abs(region_x - avg_x) <= threshold_x:
+                line[6] = USED
+                lines_with_regions.append([int(x1), int(y1), int(x2), int(y2), int(theta), int(length), USED, region])
+                region_counter += 1
+                sum_x += avg_x
+                sum_angle += theta
+                region_x = sum_x / region_counter
+                region_angle = sum_angle / region_counter
+    points = []
+    points_tmp = []
+    print(region)
+    for i in range(1, region+1):
+        points.clear()
+        for line in lines_with_regions:
+            if i == line[7]:
+                points.append((line[0], line[1]))
+                points.append((line[2], line[3]))
+            else:
+                continue
+        points_tmp = enhanceCurveFitting(np.array(points), height)
+        debug_draw(points_tmp, image)
+
+
+
+
+
+
+
 def leftRegionGrowing(lines, image):
     left_region = []
     threshold_angle = 10
@@ -135,6 +195,7 @@ def leftRegionGrowing(lines, image):
 
 
 def rightRegionGrowing(lines, image):
+
     right_region = []
     threshold_angle = 10
     threshold_x = 80
@@ -186,7 +247,7 @@ def debug_draw(points, image):
     cv2.polylines(image, np.int32([points]), False, (0, 0, 255), 2, cv2.LINE_AA)
 
 
-def enhanceCurveFitting(left_points, right_points, height):
+'''def enhanceCurveFitting(left_points, right_points, height):
     if left_points.size > 8:
         left_points = curveFit(left_points[:, 0], left_points[:, 1], 2, height, 50)
     elif left_points.size in range(2, 9):
@@ -199,4 +260,31 @@ def enhanceCurveFitting(left_points, right_points, height):
         right_points = curveFit(right_points[:, 0], right_points[:, 1], 1, height, 50)
     else:
         right_points = []
-    return left_points, right_points
+    return left_points, right_points'''
+def enhanceCurveFitting(points, height):
+    if len(points) > 8:
+        points = curveFit(points[:, 0], points[:, 1], 2, height, 2)
+    elif len(points) in range(2, 9):
+        points = curveFit(points[:, 0], points[:, 1], 1, height, 2)
+    else:
+        points = []
+    return points
+'''if i == 2:
+            l1 += 255
+            l2 += 255
+            l3 += 255
+        elif i == 1:
+            l1 = 0
+            l2 = 0
+            l3 = 255
+        elif i == 3:
+            l1= 0
+            l2= 255
+            l3 = 0
+        else:
+            l1 = 255
+            l2 = 0
+            l3 = 0
+        for line in lines_with_regions:
+            if i == line[7]:
+                cv2.line(image, (int(line[0]), int(line[1])), (int(line[2]), int(line[3])), (l1, l2, l3), 1,cv2.LINE_AA)'''

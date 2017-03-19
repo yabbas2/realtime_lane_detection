@@ -24,7 +24,8 @@ while True:
     magdy = np.zeros(ipmFrame.shape, dtype=np.uint8)
     lines = lineSegmentDetector(ipmFrame)
     lines = eliminateFalseDetection(lines)
-    right_region = rightRegionGrowing(lines, magdy)
+    RegionGrowing(lines, magdy)
+    '''right_region = rightRegionGrowing(lines, magdy)
     left_region = leftRegionGrowing(lines, magdy)
     for line in lines:
         cv2.line(magdy, (int(line[0]), int(line[1])), (int(line[2]), int(line[3])), (255, 255, 255), 1, cv2.LINE_AA)
@@ -37,11 +38,11 @@ while True:
         cv2.circle(magdy, (int(point[0]), int(point[1])), 4, (0, 255, 0), 1, cv2.LINE_AA)
     for point in right_points:
         cv2.circle(magdy, (int(point[0]), int(point[1])), 4, (0, 255, 0), 1, cv2.LINE_AA)
-    left_points, right_points = enhanceCurveFitting(left_points, right_points, ipmFrame.shape[0])
+    left_points, right_points = enhanceCurveFitting(left_points, right_points, ipmFrame.shape[0])'''
     # left_points = doInverse(left_points, homo)
     # right_points = doInverse(right_points, homo)
-    debug_draw(left_points, magdy)
-    debug_draw(right_points, magdy)
+    #debug_draw(left_points, magdy)
+    #debug_draw(right_points, magdy)
     end = time.time()
     print(end-start)
     cv2.imshow('video', magdy)
