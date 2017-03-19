@@ -99,7 +99,7 @@ def linesToPoints(left_lines, right_lines):
 
 def leftRegionGrowing(lines, image):
     left_region = []
-    threshold_angle = 1
+    threshold_angle = 3
     threshold_x = 80
     USED = 1
     seed_line = 0
@@ -115,8 +115,9 @@ def leftRegionGrowing(lines, image):
     theta = seed_line[4]
     Sx = np.cos(theta)
     Sy = np.sin(theta)
-    sum_x = (seed_line[0] + seed_line[2]) / 2
-    region_x = sum_x / len(left_region)
+    # sum_x = (seed_line[0] + seed_line[2]) / 2
+    # region_x = sum_x / len(left_region)
+    region_x = seed_line[2]
     region_angle = np.arctan(Sy/Sx)
     for line in left_lines:
         if line[6] == USED:
@@ -131,12 +132,13 @@ def leftRegionGrowing(lines, image):
         if abs(region_angle - angle) <= threshold_angle and abs(region_x - avg_x) <= threshold_x:
             line[6] = USED
             left_region.append(line)
-            sum_x += avg_x
+            # sum_x += avg_x
             Sx = Sx + Sxt
             Sy = Sy + Syt
             region_angle = np.arctan(Sy / Sx)
             # sum_angle += theta
-            region_x = sum_x / len(left_region)
+            # region_x = sum_x / len(left_region)
+            region_x = x2
             # region_angle = sum_angle / len(left_region)
 
     return left_region
@@ -208,3 +210,36 @@ def enhanceCurveFitting(left_points, right_points, height):
     else:
         right_points = []
     return left_points, right_points
+
+
+def getAvgLineOfTwoLines(lines):
+    distThreshold = 20
+    filteredLines = []
+    for line in lines:
+        inFlag = 0
+        x1 = line[0]
+        y1 = line[1]
+        x2 = line[2]
+        y2 = line[3]
+        for lineC in lines:
+            x1c = lineC[0]
+            y1c = lineC[1]
+            x2c = lineC[2]
+            y2c = lineC[3]
+            if x1 == x1c and x2c == x2c:
+                continue
+            if abs(x1 - x1c) <= distThreshold and abs(x2 - x2c) <= distThreshold:
+                x1avg = int((x1+x1c)/2)
+                y1avg = int((y1+y1c)/2)
+                x2avg = int((x2+x2c)/2)
+                y2avg = int((y2+y2c)/2)
+                thetaAvg = int((line[4]+lineC[4])/2)
+                lengthAvg = int((line[5]+lineC[5])/2)
+                if not [x1avg, y1avg, x2avg, y2avg, thetaAvg, lengthAvg, 0] in filteredLines:
+                    filteredLines.append([x1avg, y1avg, x2avg, y2avg, thetaAvg, lengthAvg, 0])
+                inFlag = 1
+                break
+        if not inFlag:
+            filteredLines.append(line)
+    return filteredLines
+
