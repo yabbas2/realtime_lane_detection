@@ -10,7 +10,7 @@ def determinePtsAndDst(width, height, videoFile):
         pts = np.array([[357, 280], [528, 282], [778, 478], [146, 478]], dtype="float32")
     elif videoFile == "sample2":
         # pts = np.array([[197, 212], [326, 212], [348, 230], [106, 230]], dtype="float32")
-        pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
+        pts = np.array([[250, 225], [360, 225], [425, 300], [200, 300]], dtype="float32")
     elif videoFile == "sample3":
         # pts = np.array([[220, 200], [322, 200], [361, 230], [85, 230]], dtype="float32")
         pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
@@ -118,7 +118,16 @@ def leftRegionGrowing(lines, image):
     # sum_x = (seed_line[0] + seed_line[2]) / 2
     # region_x = sum_x / len(left_region)
     region_x = seed_line[2]
+    x1 = seed_line[0]
+    y1 = seed_line[1]
+    x2 = seed_line[2]
+    y2 = seed_line[3]
     region_angle = np.arctan(Sy/Sx)
+    if x2 == x1:
+        m = 99
+    else:
+        m = (y2 - y1) / (x2 - x1)
+    c = y1 - m * x2
     for line in left_lines:
         if line[6] == USED:
             continue
@@ -129,7 +138,7 @@ def leftRegionGrowing(lines, image):
         angle = np.arctan(Syt/Sxt)
         length = line[5]
         avg_x = (x1 + x2) / 2
-        if abs(region_angle - angle) <= threshold_angle and abs(region_x - avg_x) <= threshold_x:
+        if abs(region_angle - angle) <= threshold_angle and abs(((y1-c)/m)-x1) < 20:
             line[6] = USED
             left_region.append(line)
             # sum_x += avg_x
@@ -139,6 +148,13 @@ def leftRegionGrowing(lines, image):
             # sum_angle += theta
             # region_x = sum_x / len(left_region)
             region_x = x2
+            if x2 == x1:
+                m = 99
+            else:
+                m = (y2-y1)/(x2-x1)
+            c = y1 - m*x2
+
+
             # region_angle = sum_angle / len(left_region)
 
     return left_region
