@@ -17,7 +17,7 @@ while True:
     (grabbed, normalFrame) = stream.read()
     if not grabbed:
         break
-    if cv2.waitKey(int(fps)) & 0xFF == ord('q'):
+    if cv2.waitKey(1) & 0xFF == ord('q'):
         break
     start = time.time()
     ipmFrame, homo = fourPointTransform(normalFrame, pts, dst)

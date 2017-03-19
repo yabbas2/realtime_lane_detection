@@ -99,14 +99,19 @@ def linesToPoints(left_lines, right_lines):
 
 def leftRegionGrowing(lines, image):
     left_region = []
-    threshold_angle = 3
-    threshold_x = 80
+    threshold_angle = 5
+    threshold_x = 100
     USED = 1
     seed_line = 0
+    height = image.shape[0]
+    width = image.shape[1]
+    seedThreshold = width/2
     left_lines = sorted(lines, key=lambda l: l[1], reverse=True)
     for line in left_lines:
-        if line[0] < (image.shape[1] / 2):
+        if line[0] < width/2 and width/2 - line[0] < seedThreshold:
+            seedThreshold = width/2 - line[0]
             seed_line = line
+        if line[1] < height/2:
             break
     if seed_line == 0:
         return []
@@ -153,7 +158,6 @@ def leftRegionGrowing(lines, image):
             else:
                 m = (y2-y1)/(x2-x1)
             c = y1 - m*x2
-
 
             # region_angle = sum_angle / len(left_region)
 
@@ -229,7 +233,7 @@ def enhanceCurveFitting(left_points, right_points, height):
 
 
 def getAvgLineOfTwoLines(lines):
-    distThreshold = 20
+    distThreshold = 40
     filteredLines = []
     for line in lines:
         inFlag = 0
@@ -244,7 +248,7 @@ def getAvgLineOfTwoLines(lines):
             y2c = lineC[3]
             if x1 == x1c and x2c == x2c:
                 continue
-            if abs(x1 - x1c) <= distThreshold and abs(x2 - x2c) <= distThreshold:
+            if abs(x1 - x1c) <= distThreshold and abs(x2 - x2c) <= distThreshold and abs(y1 - y1c) <= distThreshold and abs(y2 - y2c) <= distThreshold:
                 x1avg = int((x1+x1c)/2)
                 y1avg = int((y1+y1c)/2)
                 x2avg = int((x2+x2c)/2)
