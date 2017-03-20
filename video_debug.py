@@ -38,12 +38,26 @@ while True:
     for point in right_points:
         cv2.circle(magdy, (int(point[0]), int(point[1])), 4, (0, 255, 0), 1, cv2.LINE_AA)
     left_points, right_points = enhanceCurveFitting(left_points, right_points, ipmFrame.shape[0])
-    left_points = doInverse(left_points, homo)
-    right_points = doInverse(right_points, homo)
-    debug_draw(left_points, normalFrame)
-    debug_draw(right_points, normalFrame)
+
+
+
+    
+    if isDashed(left_points, leftSeedLine):
+        print("Left is DASHEEEEEEED")
+    else:
+        print("Left is NOOOOOOOOOT DASHEEEEEEED")
+
+    if isDashed(right_points, rightSeedLine):
+        print("Right is DASHEEEEEEED")
+    else:
+        print("Right is NOOOOOOOOOT DASHEEEEEEED")
+
+    # left_points = doInverse(left_points, homo)
+    # right_points = doInverse(right_points, homo)
+    debug_draw(left_points, magdy)
+    debug_draw(right_points, magdy)
     end = time.time()
     print(end-start)
-    cv2.imshow('video', normalFrame)
+    cv2.imshow('video', magdy)
 stream.release()
 cv2.destroyAllWindows()

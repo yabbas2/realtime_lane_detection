@@ -208,3 +208,31 @@ def enhanceCurveFitting(left_points, right_points, height):
     else:
         right_points = []
     return left_points, right_points
+
+
+def isDashed (lines, seedLine):
+    yThreshold = 20
+    dashed = 0
+    solid = 0
+    lines = sorted(lines, key=lambda l: l[1], reverse=True)
+    # x1 = seedLine[0]
+    y1 = seedLine[1]
+    # x2 = seedLine[2]
+    y2 = seedLine[3]
+    for line in lines:
+        # x1c = line[0]
+        y1c = line[1]
+        # x2c = line[2]
+        y2c = line[3]
+        if abs(y1 - y1c) < yThreshold:
+            continue
+        elif abs(y2 - y1c) < yThreshold:
+            solid += 1
+        else:
+            dashed += 1
+        y1 = y1c
+        y2 = y2c
+    if solid > dashed or dashed == 0:
+        return False
+    else:
+        return True
