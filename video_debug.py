@@ -39,6 +39,17 @@ while True:
     for point in right_points:
         cv2.circle(magdy, (int(point[0]), int(point[1])), 4, (0, 255, 0), 1, cv2.LINE_AA)
     left_points, right_points = enhanceCurveFitting(left_points, right_points, ipmFrame.shape[0])
+
+    if isDashed(left_points, left_seed_line):
+        print("Left is DASHEEEEEEED")
+    else:
+        print("Left is NOOOOOOOOOT DASHEEEEEEED")
+
+    if isDashed(right_points, right_seed_line):
+        print("Right is DASHEEEEEEED")
+    else:
+        print("Right is NOOOOOOOOOT DASHEEEEEEED")
+
     # left_points = doInverse(left_points, homo)
     # right_points = doInverse(right_points, homo)
     debug_draw(left_points, magdy)

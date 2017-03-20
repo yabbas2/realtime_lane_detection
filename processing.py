@@ -143,30 +143,38 @@ def findSeedLines(lines, width):
 
 def leftRegionGrowing(lines, seed_line):
     left_region = []
-    threshold_angle = 10
+    threshold_angle = 1
     threshold_x = 80
     USED = 1
     left_lines = sorted(lines, key=lambda l: l[1], reverse=True)
     seed_line[6] = USED
     left_region.append(seed_line)
-    sum_angle = seed_line[4]
+    theta = seed_line[4]
+    Sx = np.cos(theta)
+    Sy = np.sin(theta)
     sum_x = (seed_line[0] + seed_line[2]) / 2
     region_x = sum_x / len(left_region)
-    region_angle = sum_angle / len(left_region)
+    region_angle = np.arctan(Sy/Sx)
     for line in left_lines:
         if line[6] == USED:
             continue
         x1, y1, x2, y2 = line[0], line[1], line[2], line[3]
         theta = line[4]
+        Sxt = np.cos(theta)
+        Syt = np.sin(theta)
+        angle = np.arctan(Syt/Sxt)
         length = line[5]
         avg_x = (x1 + x2) / 2
-        if abs(region_angle - theta) <= threshold_angle and abs(region_x - avg_x) <= threshold_x:
+        if abs(region_angle - angle) <= threshold_angle and abs(region_x - avg_x) <= threshold_x:
             line[6] = USED
             left_region.append(line)
             sum_x += avg_x
-            sum_angle += theta
+            Sx = Sx + Sxt
+            Sy = Sy + Syt
+            region_angle = np.arctan(Sy / Sx)
+            # sum_angle += theta
             region_x = sum_x / len(left_region)
-            region_angle = sum_angle / len(left_region)
+            # region_angle = sum_angle / len(left_region)
 
     return left_region
 
@@ -208,7 +216,7 @@ def enhanceCurveFitting(left_points, right_points, height):
         left_points = curveFit(left_points[:, 0], left_points[:, 1], 1, height, 50)
     else:
         left_points = []
-    if right_points.size > 8:
+    if right_points.size > 8 and right_points.size != 0:
         right_points = curveFit(right_points[:, 0], right_points[:, 1], 2, height, 50)
     elif right_points.size in range(2, 9):
         right_points = curveFit(right_points[:, 0], right_points[:, 1], 1, height, 50)
@@ -230,3 +238,31 @@ def curveFit(points_x, points_y, degree, height, pointsNum):
 
 def debug_draw(points, image):
     cv2.polylines(image, np.int32([points]), False, (0, 0, 255), 2, cv2.LINE_AA)
+
+
+def isDashed(lines, seedLine):
+    yThreshold = 20
+    dashed = 0
+    solid = 0
+    lines = sorted(lines, key=lambda l: l[1], reverse=True)
+    # x1 = seedLine[0]
+    y1 = seedLine[1]
+    # x2 = seedLine[2]
+    y2 = seedLine[3]
+    for line in lines:
+        # x1c = line[0]
+        y1c = line[1]
+        # x2c = line[2]
+        y2c = line[3]
+        if abs(y1 - y1c) < yThreshold:
+            continue
+        elif abs(y2 - y1c) < yThreshold:
+            solid += 1
+        else:
+            dashed += 1
+        y1 = y1c
+        y2 = y2c
+    if solid > dashed or dashed == 0:
+        return False
+    else:
+        return True
