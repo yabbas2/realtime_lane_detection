@@ -111,10 +111,10 @@ def findSeedLines(lines, width):
             counter += 1
         if counter == 5:
             break
-    for lineI in left_lines:
+    for lineI in left_temp:
         if FOUND:
             break
-        for lineJ in left_lines:
+        for lineJ in left_temp:
             if abs(lineI[0]-lineJ[0]) <= 20 and abs(lineI[1]-lineJ[1]) <= 5:
                 left_seed_line = lineI
                 FOUND = 1
@@ -129,52 +129,52 @@ def findSeedLines(lines, width):
             counter += 1
         if counter == 5:
             break
-    for lineI in right_lines:
+    for lineI in right_temp:
         if FOUND:
             break
-        for lineJ in right_lines:
+        for lineJ in right_temp:
             if abs(lineI[0] - lineJ[0]) <= 20 and abs(lineI[1] - lineJ[1]) <= 5:
                 right_seed_line = lineI
                 FOUND = 1
                 break
+    if left_seed_line == 0:
+        for line in lines:
+            if line[0] < width / 2:
+                left_seed_line = line
+    if right_seed_line == 0:
+        for line in lines:
+            if line[0] > width / 2:
+                right_seed_line = line
 
     return left_seed_line, right_seed_line
 
 
 def leftRegionGrowing(lines, seed_line):
     left_region = []
-    threshold_angle = 1
+    threshold_angle = 10
     threshold_x = 80
     USED = 1
     left_lines = sorted(lines, key=lambda l: l[1], reverse=True)
     seed_line[6] = USED
     left_region.append(seed_line)
-    theta = seed_line[4]
-    Sx = np.cos(theta)
-    Sy = np.sin(theta)
+    sum_angle = seed_line[4]
     sum_x = (seed_line[0] + seed_line[2]) / 2
     region_x = sum_x / len(left_region)
-    region_angle = np.arctan(Sy/Sx)
+    region_angle = sum_angle / len(left_region)
     for line in left_lines:
         if line[6] == USED:
             continue
         x1, y1, x2, y2 = line[0], line[1], line[2], line[3]
-        theta = line[4]
-        Sxt = np.cos(theta)
-        Syt = np.sin(theta)
-        angle = np.arctan(Syt/Sxt)
+        angle = line[4]
         length = line[5]
         avg_x = (x1 + x2) / 2
         if abs(region_angle - angle) <= threshold_angle and abs(region_x - avg_x) <= threshold_x:
             line[6] = USED
             left_region.append(line)
             sum_x += avg_x
-            Sx = Sx + Sxt
-            Sy = Sy + Syt
-            region_angle = np.arctan(Sy / Sx)
-            # sum_angle += theta
             region_x = sum_x / len(left_region)
-            # region_angle = sum_angle / len(left_region)
+            sum_angle += angle
+            region_angle = sum_angle / len(left_region)
 
     return left_region
 
