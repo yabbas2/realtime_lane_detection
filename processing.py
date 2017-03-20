@@ -251,7 +251,7 @@ def curveFit(points_x, points_y, degree, height, pointsNum):
     points = []
     coeffs = poly.polyfit(points_y, points_x, degree)
     ffit = poly.Polynomial(coeffs)
-    points_y = np.linspace(0, height, pointsNum)
+    points_y = np.linspace(100, height-100, pointsNum)
     points_x = ffit(points_y)
     for i in range(0, len(points_y), 1):
         points.append([points_x[i], points_y[i]])
