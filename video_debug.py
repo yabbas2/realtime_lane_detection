@@ -8,6 +8,8 @@ arg.add_argument('-v', '--video', type=str, help="video source")
 args = vars(arg.parse_args())
 rightLaneStatus = 0
 leftLaneStatus = 0
+left_counter = 0
+right_counter = 0
 old_left_points = []
 old_right_points = []
 stream = cv2.VideoCapture(args['video'])
@@ -43,14 +45,18 @@ while True:
         cv2.circle(magdy, (int(point[0]), int(point[1])), 4, (0, 255, 0), 1, cv2.LINE_AA)
     left_points, right_points = enhanceCurveFitting(left_points, right_points, ipmFrame.shape[0])
 
-    if removeSuddenChange(old_left_points, left_points):
+    if removeSuddenChange(old_left_points, left_points) or left_counter >= 10:
         old_left_points = left_points
+        left_counter = 0
     else:
         left_points = old_left_points
-    if removeSuddenChange(old_right_points, right_points):
+        left_counter += 1
+    if removeSuddenChange(old_right_points, right_points) or right_counter >= 10:
         old_right_points = right_points
+        right_counter = 0
     else:
         right_points = old_right_points
+        right_counter += 1
 
     if left_seed_line != 0:
         cv2.line(magdy, (int(left_seed_line[0]), int(left_seed_line[1])), (int(left_seed_line[2]), int(left_seed_line[3])), (255, 0, 255), 1, cv2.LINE_AA)
@@ -86,12 +92,12 @@ while True:
         if rightLaneStatus < -10:
             rightLaneStatus = -10
 
-    # left_points = doInverse(left_points, homo)
-    # right_points = doInverse(right_points, homo)
-    debug_draw(left_points, magdy, lstatus)
-    debug_draw(right_points, magdy, rstatus)
+    left_points = doInverse(left_points, homo)
+    right_points = doInverse(right_points, homo)
+    debug_draw(left_points, normalFrame, lstatus)
+    debug_draw(right_points, normalFrame, rstatus)
     end = time.time()
     print(end-start)
-    cv2.imshow('video', magdy)
+    cv2.imshow('video', normalFrame)
 stream.release()
 cv2.destroyAllWindows()
