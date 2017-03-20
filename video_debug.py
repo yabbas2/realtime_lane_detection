@@ -60,20 +60,18 @@ while True:
         if leftLaneStatus < -10:
             leftLaneStatus = -10
 
-
     if isDashed(right_region, right_seed_line):
         rightLaneStatus += 1
     else:
         rightLaneStatus -= 1
     if rightLaneStatus > 0:
-        rstatus ="d"
+        rstatus = "d"
         if rightLaneStatus > 10:
             rightLaneStatus = 10
     elif rightLaneStatus < 0:
         rstatus = "s"
         if rightLaneStatus < -10:
             rightLaneStatus = -10
-
 
     # left_points = doInverse(left_points, homo)
     # right_points = doInverse(right_points, homo)

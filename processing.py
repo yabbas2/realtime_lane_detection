@@ -115,6 +115,8 @@ def findSeedLines(lines, width):
         if FOUND:
             break
         for lineJ in left_temp:
+            if lineI == lineJ:
+                continue
             if abs(lineI[0]-lineJ[0]) <= 20 and abs(lineI[1]-lineJ[1]) <= 5:
                 left_seed_line = lineI
                 FOUND = 1
@@ -133,6 +135,8 @@ def findSeedLines(lines, width):
         if FOUND:
             break
         for lineJ in right_temp:
+            if lineI == lineJ:
+                continue
             if abs(lineI[0] - lineJ[0]) <= 20 and abs(lineI[1] - lineJ[1]) <= 5:
                 right_seed_line = lineI
                 FOUND = 1
@@ -211,15 +215,15 @@ def rightRegionGrowing(lines, seed_line, width):
 
 def enhanceCurveFitting(left_points, right_points, height):
     if left_points.size > 8:
-        left_points = curveFit(left_points[:, 0], left_points[:, 1], 2, height, 50)
+        left_points = curveFit(left_points[:, 0], left_points[:, 1], 2, height, 20)
     elif left_points.size in range(2, 9):
-        left_points = curveFit(left_points[:, 0], left_points[:, 1], 1, height, 50)
+        left_points = curveFit(left_points[:, 0], left_points[:, 1], 1, height, 20)
     else:
         left_points = []
     if right_points.size > 8 and right_points.size != 0:
-        right_points = curveFit(right_points[:, 0], right_points[:, 1], 2, height, 50)
+        right_points = curveFit(right_points[:, 0], right_points[:, 1], 2, height, 20)
     elif right_points.size in range(2, 9):
-        right_points = curveFit(right_points[:, 0], right_points[:, 1], 1, height, 50)
+        right_points = curveFit(right_points[:, 0], right_points[:, 1], 1, height, 20)
     else:
         right_points = []
     return left_points, right_points
