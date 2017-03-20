@@ -24,8 +24,9 @@ while True:
     magdy = np.zeros(ipmFrame.shape, dtype=np.uint8)
     lines = lineSegmentDetector(ipmFrame)
     lines = eliminateFalseDetection(lines)
-    right_region = rightRegionGrowing(lines, magdy)
-    left_region = leftRegionGrowing(lines, magdy)
+    left_seed_line, right_seed_line = findSeedLines(lines, ipmFrame.shape[1])
+    left_region = leftRegionGrowing(lines, left_seed_line)
+    right_region = rightRegionGrowing(lines, right_seed_line, ipmFrame.shape[1])
     for line in lines:
         cv2.line(magdy, (int(line[0]), int(line[1])), (int(line[2]), int(line[3])), (255, 255, 255), 1, cv2.LINE_AA)
     for line in left_region:

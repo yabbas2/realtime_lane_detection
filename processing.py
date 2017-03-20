@@ -97,19 +97,56 @@ def linesToPoints(left_lines, right_lines):
     return np.array(left_points), np.array(right_points)
 
 
-def leftRegionGrowing(lines, image):
+def findSeedLines(lines, width):
+    left_seed_line = 0
+    right_seed_line = 0
+    lines = sorted(lines, key=lambda l: l[1], reverse=True)
+    left_lines = lines.copy()
+    left_temp = []
+    counter = 0
+    FOUND = 0
+    for line in left_lines:
+        if line[0] < width / 2:
+            left_temp.append(line)
+            counter += 1
+        if counter == 5:
+            break
+    for lineI in left_lines:
+        if FOUND:
+            break
+        for lineJ in left_lines:
+            if abs(lineI[0]-lineJ[0]) <= 20 and abs(lineI[1]-lineJ[1]) <= 5:
+                left_seed_line = lineI
+                FOUND = 1
+                break
+    right_lines = lines.copy()
+    right_temp = []
+    counter = 0
+    FOUND = 0
+    for line in right_lines:
+        if line[0] > width / 2:
+            right_temp.append(line)
+            counter += 1
+        if counter == 5:
+            break
+    for lineI in right_lines:
+        if FOUND:
+            break
+        for lineJ in right_lines:
+            if abs(lineI[0] - lineJ[0]) <= 20 and abs(lineI[1] - lineJ[1]) <= 5:
+                right_seed_line = lineI
+                FOUND = 1
+                break
+
+    return left_seed_line, right_seed_line
+
+
+def leftRegionGrowing(lines, seed_line):
     left_region = []
     threshold_angle = 10
     threshold_x = 80
     USED = 1
-    seed_line = 0
     left_lines = sorted(lines, key=lambda l: l[1], reverse=True)
-    for line in left_lines:
-        if line[0] < (image.shape[1] / 2):
-            seed_line = line
-            break
-    if seed_line == 0:
-        return []
     seed_line[6] = USED
     left_region.append(seed_line)
     sum_angle = seed_line[4]
@@ -134,23 +171,16 @@ def leftRegionGrowing(lines, image):
     return left_region
 
 
-def rightRegionGrowing(lines, image):
+def rightRegionGrowing(lines, seed_line, width):
     right_region = []
     threshold_angle = 10
     threshold_x = 80
     USED = 1
-    seed_line = 0
     right_lines = sorted(lines, key=lambda l: l[1], reverse=True)
-    for line in right_lines:
-        if line[0] > (image.shape[1] / 2):
-            seed_line = line
-            break
-    if seed_line == 0:
-        return []
     seed_line[6] = USED
     right_region.append(seed_line)
     sum_angle = seed_line[4]
-    sum_x = image.shape[1] - (seed_line[0] + seed_line[2]) / 2
+    sum_x = width - (seed_line[0] + seed_line[2]) / 2
     region_x = sum_x / len(right_region)
     region_angle = sum_angle / len(right_region)
     for line in right_lines:
@@ -159,7 +189,7 @@ def rightRegionGrowing(lines, image):
         x1, y1, x2, y2 = line[0], line[1], line[2], line[3]
         theta = line[4]
         length = line[5]
-        avg_x = image.shape[1] - (x1 + x2) / 2
+        avg_x = width - (x1 + x2) / 2
         if abs(region_angle - theta) <= threshold_angle and abs(region_x - avg_x) <= threshold_x:
             line[6] = USED
             right_region.append(line)
@@ -169,21 +199,6 @@ def rightRegionGrowing(lines, image):
             region_angle = sum_angle / len(right_region)
 
     return right_region
-
-
-def curveFit(points_x, points_y, degree, height, pointsNum):
-    points = []
-    coeffs = poly.polyfit(points_y, points_x, degree)
-    ffit = poly.Polynomial(coeffs)
-    points_y = np.linspace(0, height, pointsNum)
-    points_x = ffit(points_y)
-    for i in range(0, len(points_y), 1):
-        points.append([points_x[i], points_y[i]])
-    return points
-
-
-def debug_draw(points, image):
-    cv2.polylines(image, np.int32([points]), False, (0, 0, 255), 2, cv2.LINE_AA)
 
 
 def enhanceCurveFitting(left_points, right_points, height):
@@ -200,3 +215,18 @@ def enhanceCurveFitting(left_points, right_points, height):
     else:
         right_points = []
     return left_points, right_points
+
+
+def curveFit(points_x, points_y, degree, height, pointsNum):
+    points = []
+    coeffs = poly.polyfit(points_y, points_x, degree)
+    ffit = poly.Polynomial(coeffs)
+    points_y = np.linspace(0, height, pointsNum)
+    points_x = ffit(points_y)
+    for i in range(0, len(points_y), 1):
+        points.append([points_x[i], points_y[i]])
+    return points
+
+
+def debug_draw(points, image):
+    cv2.polylines(image, np.int32([points]), False, (0, 0, 255), 2, cv2.LINE_AA)
