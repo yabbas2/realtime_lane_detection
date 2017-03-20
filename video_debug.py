@@ -6,7 +6,8 @@ import time
 arg = argparse.ArgumentParser()
 arg.add_argument('-v', '--video', type=str, help="video source")
 args = vars(arg.parse_args())
-
+rightLaneStatus = 0
+leftLaneStatus = 0
 stream = cv2.VideoCapture(args['video'])
 sample = re.findall("[a-z A-Z0-9\\\-_?&()#@/]+(sample[0-9]+).[a-z0-9]+", args['video'])
 width = stream.get(cv2.CAP_PROP_FRAME_WIDTH)
@@ -43,20 +44,41 @@ while True:
     cv2.line(magdy, (int(left_seed_line[0]), int(left_seed_line[1])), (int(left_seed_line[2]), int(left_seed_line[3])), (255, 0, 255), 1, cv2.LINE_AA)
     cv2.line(magdy, (int(right_seed_line[0]), int(right_seed_line[1])), (int(right_seed_line[2]), int(right_seed_line[3])), (55, 0, 255), 1, cv2.LINE_AA)
 
+    lstatus = "magdy"
+    rstatus = "magdy"
+
     if isDashed(left_region, left_seed_line):
-        print("Left is DASHEEEEEEED")
+        leftLaneStatus += 1
     else:
-        print("Left is NOOOOOOOOOT DASHEEEEEEED")
+        leftLaneStatus -= 1
+    if leftLaneStatus > 0:
+        lstatus = "d"
+        if leftLaneStatus > 10:
+            leftLaneStatus = 10
+    elif leftLaneStatus < 0:
+        lstatus = "s"
+        if leftLaneStatus < -10:
+            leftLaneStatus = -10
+
 
     if isDashed(right_region, right_seed_line):
-        print("Right is DASHEEEEEEED")
+        rightLaneStatus += 1
     else:
-        print("Right is NOOOOOOOOOT DASHEEEEEEED")
+        rightLaneStatus -= 1
+    if rightLaneStatus > 0:
+        rstatus ="d"
+        if rightLaneStatus > 10:
+            rightLaneStatus = 10
+    elif rightLaneStatus < 0:
+        rstatus = "s"
+        if rightLaneStatus < -10:
+            rightLaneStatus = -10
+
 
     # left_points = doInverse(left_points, homo)
     # right_points = doInverse(right_points, homo)
-    debug_draw(left_points, magdy)
-    debug_draw(right_points, magdy)
+    debug_draw(left_points, magdy, lstatus)
+    debug_draw(right_points, magdy, rstatus)
     end = time.time()
     print(end-start)
     cv2.imshow('video', magdy)

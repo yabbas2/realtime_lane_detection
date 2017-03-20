@@ -236,23 +236,22 @@ def curveFit(points_x, points_y, degree, height, pointsNum):
     return points
 
 
-def debug_draw(points, image):
-    cv2.polylines(image, np.int32([points]), False, (0, 0, 255), 2, cv2.LINE_AA)
+def debug_draw(points, image, status):
+    if status == "s":
+        cv2.polylines(image, np.int32([points]), False, (0, 0, 255), 2, cv2.LINE_AA)
+    elif status == "d":
+        cv2.polylines(image, np.int32([points]), False, (255, 127, 127), 2, cv2.LINE_AA)
 
 
 def isDashed(lines, seedLine):
-    yThreshold = 20
+    yThreshold = 150
     dashed = 0
     solid = 0
     lines = sorted(lines, key=lambda l: l[1], reverse=True)
-    # x1 = seedLine[0]
     y1 = seedLine[1]
-    # x2 = seedLine[2]
     y2 = seedLine[3]
     for line in lines:
-        # x1c = line[0]
         y1c = line[1]
-        # x2c = line[2]
         y2c = line[3]
         if abs(y1 - y1c) < yThreshold:
             continue
