@@ -8,6 +8,8 @@ arg.add_argument('-v', '--video', type=str, help="video source")
 args = vars(arg.parse_args())
 rightLaneStatus = 0
 leftLaneStatus = 0
+old_left_points = []
+old_right_points = []
 stream = cv2.VideoCapture(args['video'])
 sample = re.findall("[a-z A-Z0-9\\\-_?&()#@/]+(sample[0-9]+).[a-z0-9]+", args['video'])
 width = stream.get(cv2.CAP_PROP_FRAME_WIDTH)
@@ -27,7 +29,7 @@ while True:
     lines = eliminateFalseDetection(lines)
     left_seed_line, right_seed_line = findSeedLines(lines, ipmFrame.shape[1])
     left_region = leftRegionGrowing(lines, left_seed_line)
-    right_region = rightRegionGrowing(lines, right_seed_line, ipmFrame.shape[1])
+    right_region = rightRegionGrowing(lines, right_seed_line)
     for line in lines:
         cv2.line(magdy, (int(line[0]), int(line[1])), (int(line[2]), int(line[3])), (255, 255, 255), 1, cv2.LINE_AA)
     for line in left_region:
@@ -41,8 +43,19 @@ while True:
         cv2.circle(magdy, (int(point[0]), int(point[1])), 4, (0, 255, 0), 1, cv2.LINE_AA)
     left_points, right_points = enhanceCurveFitting(left_points, right_points, ipmFrame.shape[0])
 
-    cv2.line(magdy, (int(left_seed_line[0]), int(left_seed_line[1])), (int(left_seed_line[2]), int(left_seed_line[3])), (255, 0, 255), 1, cv2.LINE_AA)
-    cv2.line(magdy, (int(right_seed_line[0]), int(right_seed_line[1])), (int(right_seed_line[2]), int(right_seed_line[3])), (55, 0, 255), 1, cv2.LINE_AA)
+    if removeSuddenChange(old_left_points, left_points):
+        old_left_points = left_points
+    else:
+        left_points = old_left_points
+    if removeSuddenChange(old_right_points, right_points):
+        old_right_points = right_points
+    else:
+        right_points = old_right_points
+
+    if left_seed_line != 0:
+        cv2.line(magdy, (int(left_seed_line[0]), int(left_seed_line[1])), (int(left_seed_line[2]), int(left_seed_line[3])), (255, 0, 255), 1, cv2.LINE_AA)
+    if right_seed_line != 0:
+        cv2.line(magdy, (int(right_seed_line[0]), int(right_seed_line[1])), (int(right_seed_line[2]), int(right_seed_line[3])), (55, 0, 255), 1, cv2.LINE_AA)
 
     lstatus = "magdy"
     rstatus = "magdy"

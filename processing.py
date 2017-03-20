@@ -21,6 +21,8 @@ def determinePtsAndDst(width, height, videoFile):
     elif videoFile == "sample5":
         # pts = np.array([[241, 208], [345, 208], [450, 297], [23, 297]], dtype="float32")
         pts = np.array([[260, 196], [354, 196], [442, 280], [204, 280]], dtype="float32")
+    elif videoFile == "sample6":
+        pts = np.array([[350, 270], [560, 270], [700, 385], [260, 385]], dtype="float32")
     else:
         raise ValueError("unknown video file!")
     return pts, dst
@@ -145,55 +147,65 @@ def findSeedLines(lines, width):
         for line in lines:
             if line[0] < width / 2:
                 left_seed_line = line
+                break
     if right_seed_line == 0:
         for line in lines:
             if line[0] > width / 2:
                 right_seed_line = line
+                break
 
     return left_seed_line, right_seed_line
 
 
 def leftRegionGrowing(lines, seed_line):
+    if seed_line == 0:
+        return []
     left_region = []
     threshold_angle = 10
-    threshold_x = 80
+    threshold_x = 40
     USED = 1
     left_lines = sorted(lines, key=lambda l: l[1], reverse=True)
     seed_line[6] = USED
     left_region.append(seed_line)
     sum_angle = seed_line[4]
-    sum_x = (seed_line[0] + seed_line[2]) / 2
-    region_x = sum_x / len(left_region)
+    region_x = seed_line[2]
     region_angle = sum_angle / len(left_region)
     for line in left_lines:
         if line[6] == USED:
             continue
         x1, y1, x2, y2 = line[0], line[1], line[2], line[3]
-        angle = line[4]
+        theta = line[4]
         length = line[5]
-        avg_x = (x1 + x2) / 2
-        if abs(region_angle - angle) <= threshold_angle and abs(region_x - avg_x) <= threshold_x:
-            line[6] = USED
-            left_region.append(line)
-            sum_x += avg_x
-            region_x = sum_x / len(left_region)
-            sum_angle += angle
-            region_angle = sum_angle / len(left_region)
+        avg_x = x1
+        if abs(region_angle - theta) <= threshold_angle:
+            if abs(region_x - avg_x) <= threshold_x:
+                line[6] = USED
+                left_region.append(line)
+                sum_angle += theta
+                region_x = x2
+                region_angle = sum_angle / len(left_region)
+            elif abs(region_x - x2) <= 20:  # note: we can check for delta y too.
+                line[6] = USED
+                left_region.append(line)
+                sum_angle += theta
+                region_x = x2
+                region_angle = sum_angle / len(left_region)
 
     return left_region
 
 
-def rightRegionGrowing(lines, seed_line, width):
+def rightRegionGrowing(lines, seed_line):
+    if seed_line == 0:
+        return []
     right_region = []
     threshold_angle = 10
-    threshold_x = 80
+    threshold_x = 40
     USED = 1
     right_lines = sorted(lines, key=lambda l: l[1], reverse=True)
     seed_line[6] = USED
     right_region.append(seed_line)
     sum_angle = seed_line[4]
-    sum_x = width - (seed_line[0] + seed_line[2]) / 2
-    region_x = sum_x / len(right_region)
+    region_x = seed_line[2]
     region_angle = sum_angle / len(right_region)
     for line in right_lines:
         if line[6] == USED:
@@ -201,14 +213,20 @@ def rightRegionGrowing(lines, seed_line, width):
         x1, y1, x2, y2 = line[0], line[1], line[2], line[3]
         theta = line[4]
         length = line[5]
-        avg_x = width - (x1 + x2) / 2
-        if abs(region_angle - theta) <= threshold_angle and abs(region_x - avg_x) <= threshold_x:
-            line[6] = USED
-            right_region.append(line)
-            sum_x += avg_x
-            sum_angle += theta
-            region_x = sum_x / len(right_region)
-            region_angle = sum_angle / len(right_region)
+        avg_x = x1
+        if abs(region_angle - theta) <= threshold_angle:
+            if abs(region_x - avg_x) <= threshold_x:
+                line[6] = USED
+                right_region.append(line)
+                sum_angle += theta
+                region_x = x2
+                region_angle = sum_angle / len(right_region)
+            elif abs(region_x - x2) <= 20:  # note: we can check for delta y too.
+                line[6] = USED
+                right_region.append(line)
+                sum_angle += theta
+                region_x = x2
+                region_angle = sum_angle / len(right_region)
 
     return right_region
 
@@ -241,6 +259,8 @@ def curveFit(points_x, points_y, degree, height, pointsNum):
 
 
 def debug_draw(points, image, status):
+    if len(points) == 0:
+        return
     if status == "s":
         cv2.polylines(image, np.int32([points]), False, (0, 0, 255), 2, cv2.LINE_AA)
     elif status == "d":
@@ -248,6 +268,8 @@ def debug_draw(points, image, status):
 
 
 def isDashed(lines, seedLine):
+    if len(lines) == 0 or seedLine == 0:
+        return False
     yThreshold = 150
     dashed = 0
     solid = 0
@@ -269,3 +291,18 @@ def isDashed(lines, seedLine):
         return False
     else:
         return True
+
+
+def removeSuddenChange(old_points, new_points):
+    if len(old_points) == 0:
+        return True
+    if len(new_points) == 0:
+        return False
+    old_points = sorted(old_points, key=lambda p: p[1], reverse=True)
+    new_points = sorted(new_points, key=lambda p: p[1], reverse=True)
+    low_diff = abs(old_points[0][0] - new_points[0][0])
+    high_diff = abs(old_points[len(old_points)-1][0] - new_points[len(new_points)-1][0])
+    if low_diff <= 100 and high_diff <= 100:
+        return True
+    else:
+        return False
