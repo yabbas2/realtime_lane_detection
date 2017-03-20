@@ -302,7 +302,7 @@ def removeSuddenChange(old_points, new_points):
     new_points = sorted(new_points, key=lambda p: p[1], reverse=True)
     low_diff = abs(old_points[0][0] - new_points[0][0])
     high_diff = abs(old_points[len(old_points)-1][0] - new_points[len(new_points)-1][0])
-    if low_diff <= 100 and high_diff <= 100:
+    if low_diff <= 50 and high_diff <= 50:
         return True
     else:
         return False
