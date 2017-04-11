@@ -10,7 +10,7 @@ def determinePtsAndDst(width, height, videoFile):
         pts = np.array([[357, 280], [528, 282], [778, 478], [146, 478]], dtype="float32")
     elif videoFile == "sample2":
         # pts = np.array([[197, 212], [326, 212], [348, 230], [106, 230]], dtype="float32")
-        pts = np.array([[250, 225], [360, 225], [425, 300], [200, 300]], dtype="float32")
+        pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
     elif videoFile == "sample3":
         # pts = np.array([[220, 200], [322, 200], [361, 230], [85, 230]], dtype="float32")
         pts = np.array([[250, 222], [370, 222], [440, 290], [214, 290]], dtype="float32")
@@ -21,6 +21,8 @@ def determinePtsAndDst(width, height, videoFile):
     elif videoFile == "sample5":
         # pts = np.array([[241, 208], [345, 208], [450, 297], [23, 297]], dtype="float32")
         pts = np.array([[260, 196], [354, 196], [442, 280], [204, 280]], dtype="float32")
+    elif videoFile == "sample6":
+        pts = np.array([[350, 270], [560, 270], [700, 385], [260, 385]], dtype="float32")
     else:
         raise ValueError("unknown video file!")
     return pts, dst
@@ -97,91 +99,113 @@ def linesToPoints(left_lines, right_lines):
     return np.array(left_points), np.array(right_points)
 
 
-def leftRegionGrowing(lines, image):
-    left_region = []
-    threshold_angle = 5
-    threshold_x = 100
-    USED = 1
-    seed_line = 0
-    height = image.shape[0]
-    width = image.shape[1]
-    seedThreshold = width/2
-    left_lines = sorted(lines, key=lambda l: l[1], reverse=True)
+def findSeedLines(lines, width):
+    left_seed_line = 0
+    right_seed_line = 0
+    lines = sorted(lines, key=lambda l: l[1], reverse=True)
+    left_lines = lines.copy()
+    left_temp = []
+    counter = 0
+    FOUND = 0
     for line in left_lines:
-        if line[0] < width/2 and width/2 - line[0] < seedThreshold:
-            seedThreshold = width/2 - line[0]
-            seed_line = line
-        if line[1] < height/2:
+        if line[0] < width / 2:
+            left_temp.append(line)
+            counter += 1
+        if counter == 5:
             break
+    for lineI in left_temp:
+        if FOUND:
+            break
+        for lineJ in left_temp:
+            if lineI == lineJ:
+                continue
+            if abs(lineI[0]-lineJ[0]) <= 20 and abs(lineI[1]-lineJ[1]) <= 5:
+                left_seed_line = lineI
+                FOUND = 1
+                break
+    right_lines = lines.copy()
+    right_temp = []
+    counter = 0
+    FOUND = 0
+    for line in right_lines:
+        if line[0] > width / 2:
+            right_temp.append(line)
+            counter += 1
+        if counter == 5:
+            break
+    for lineI in right_temp:
+        if FOUND:
+            break
+        for lineJ in right_temp:
+            if lineI == lineJ:
+                continue
+            if abs(lineI[0] - lineJ[0]) <= 20 and abs(lineI[1] - lineJ[1]) <= 5:
+                right_seed_line = lineI
+                FOUND = 1
+                break
+    if left_seed_line == 0:
+        for line in lines:
+            if line[0] < width / 2:
+                left_seed_line = line
+                break
+    if right_seed_line == 0:
+        for line in lines:
+            if line[0] > width / 2:
+                right_seed_line = line
+                break
+
+    return left_seed_line, right_seed_line
+
+
+def leftRegionGrowing(lines, seed_line):
     if seed_line == 0:
         return []
+    left_region = []
+    threshold_angle = 10
+    threshold_x = 40
+    USED = 1
+    left_lines = sorted(lines, key=lambda l: l[1], reverse=True)
     seed_line[6] = USED
     left_region.append(seed_line)
-    theta = seed_line[4]
-    Sx = np.cos(theta)
-    Sy = np.sin(theta)
-    # sum_x = (seed_line[0] + seed_line[2]) / 2
-    # region_x = sum_x / len(left_region)
+    sum_angle = seed_line[4]
     region_x = seed_line[2]
-    x1 = seed_line[0]
-    y1 = seed_line[1]
-    x2 = seed_line[2]
-    y2 = seed_line[3]
-    region_angle = np.arctan(Sy/Sx)
-    if x2 == x1:
-        m = 99
-    else:
-        m = (y2 - y1) / (x2 - x1)
-    c = y1 - m * x2
+    region_angle = sum_angle / len(left_region)
     for line in left_lines:
         if line[6] == USED:
             continue
         x1, y1, x2, y2 = line[0], line[1], line[2], line[3]
         theta = line[4]
-        Sxt = np.cos(theta)
-        Syt = np.sin(theta)
-        angle = np.arctan(Syt/Sxt)
         length = line[5]
-        avg_x = (x1 + x2) / 2
-        if abs(region_angle - angle) <= threshold_angle and abs(((y1-c)/m)-x1) < 20:
-            line[6] = USED
-            left_region.append(line)
-            # sum_x += avg_x
-            Sx = Sx + Sxt
-            Sy = Sy + Syt
-            region_angle = np.arctan(Sy / Sx)
-            # sum_angle += theta
-            # region_x = sum_x / len(left_region)
-            region_x = x2
-            if x2 == x1:
-                m = 99
-            else:
-                m = (y2-y1)/(x2-x1)
-            c = y1 - m*x2
-
-            # region_angle = sum_angle / len(left_region)
+        avg_x = x1
+        if abs(region_angle - theta) <= threshold_angle:
+            if abs(region_x - avg_x) <= threshold_x:
+                line[6] = USED
+                left_region.append(line)
+                sum_angle += theta
+                region_x = x2
+                region_angle = sum_angle / len(left_region)
+            elif abs(region_x - x2) <= 20:  # note: we can check for delta y too.
+                line[6] = USED
+                left_region.append(line)
+                sum_angle += theta
+                region_x = x2
+                region_angle = sum_angle / len(left_region)
 
     return left_region
 
 
-def rightRegionGrowing(lines, image):
-    right_region = []
-    threshold_angle = 10
-    threshold_x = 80
-    USED = 1
-    seed_line = 0
-    right_lines = sorted(lines, key=lambda l: l[1], reverse=True)
-    for line in right_lines:
-        if line[0] > (image.shape[1] / 2):
-            seed_line = line
-            break
+def rightRegionGrowing(lines, seed_line):
     if seed_line == 0:
         return []
+    right_region = []
+    threshold_angle = 10
+    threshold_x = 40
+    USED = 1
+    right_lines = sorted(lines, key=lambda l: l[1], reverse=True)
     seed_line[6] = USED
     right_region.append(seed_line)
     sum_angle = seed_line[4]
-    sum_x = image.shape[1] - (seed_line[0] + seed_line[2]) / 2
-    region_x = sum_x / len(right_region)
+    region_x = seed_line[2]
     region_angle = sum_angle / len(right_region)
     for line in right_lines:
         if line[6] == USED:
@@ -189,77 +213,96 @@ def rightRegionGrowing(lines, image):
         x1, y1, x2, y2 = line[0], line[1], line[2], line[3]
         theta = line[4]
         length = line[5]
-        avg_x = image.shape[1] - (x1 + x2) / 2
-        if abs(region_angle - theta) <= threshold_angle and abs(region_x - avg_x) <= threshold_x:
-            line[6] = USED
-            right_region.append(line)
-            sum_x += avg_x
-            sum_angle += theta
-            region_x = sum_x / len(right_region)
-            region_angle = sum_angle / len(right_region)
+        avg_x = x1
+        if abs(region_angle - theta) <= threshold_angle:
+            if abs(region_x - avg_x) <= threshold_x:
+                line[6] = USED
+                right_region.append(line)
+                sum_angle += theta
+                region_x = x2
+                region_angle = sum_angle / len(right_region)
+            elif abs(region_x - x2) <= 20:  # note: we can check for delta y too.
+                line[6] = USED
+                right_region.append(line)
+                sum_angle += theta
+                region_x = x2
+                region_angle = sum_angle / len(right_region)
 
     return right_region
+
+
+def enhanceCurveFitting(left_points, right_points, height):
+    if left_points.size > 8:
+        left_points = curveFit(left_points[:, 0], left_points[:, 1], 2, height, 20)
+    elif left_points.size in range(2, 9):
+        left_points = curveFit(left_points[:, 0], left_points[:, 1], 1, height, 20)
+    else:
+        left_points = []
+    if right_points.size > 8 and right_points.size != 0:
+        right_points = curveFit(right_points[:, 0], right_points[:, 1], 2, height, 20)
+    elif right_points.size in range(2, 9):
+        right_points = curveFit(right_points[:, 0], right_points[:, 1], 1, height, 20)
+    else:
+        right_points = []
+    return left_points, right_points
 
 
 def curveFit(points_x, points_y, degree, height, pointsNum):
     points = []
     coeffs = poly.polyfit(points_y, points_x, degree)
     ffit = poly.Polynomial(coeffs)
-    points_y = np.linspace(0, height, pointsNum)
+    points_y = np.linspace(100, height-100, pointsNum)
     points_x = ffit(points_y)
     for i in range(0, len(points_y), 1):
         points.append([points_x[i], points_y[i]])
     return points
 
 
-def debug_draw(points, image):
-    cv2.polylines(image, np.int32([points]), False, (0, 0, 255), 2, cv2.LINE_AA)
+def debug_draw(points, image, status):
+    if len(points) == 0:
+        return
+    if status == "s":
+        cv2.polylines(image, np.int32([points]), False, (0, 0, 255), 2, cv2.LINE_AA)
+    elif status == "d":
+        cv2.polylines(image, np.int32([points]), False, (255, 127, 127), 2, cv2.LINE_AA)
 
 
-def enhanceCurveFitting(left_points, right_points, height):
-    if left_points.size > 8:
-        left_points = curveFit(left_points[:, 0], left_points[:, 1], 2, height, 50)
-    elif left_points.size in range(2, 9):
-        left_points = curveFit(left_points[:, 0], left_points[:, 1], 1, height, 50)
-    else:
-        left_points = []
-    if right_points.size > 8 and right_points.size != 0:
-        right_points = curveFit(right_points[:, 0], right_points[:, 1], 2, height, 50)
-    elif right_points.size in range(2, 9):
-        right_points = curveFit(right_points[:, 0], right_points[:, 1], 1, height, 50)
-    else:
-        right_points = []
-    return left_points, right_points
-
-
-def getAvgLineOfTwoLines(lines):
-    distThreshold = 40
-    filteredLines = []
+def isDashed(lines, seedLine):
+    if len(lines) == 0 or seedLine == 0:
+        return False
+    yThreshold = 150
+    dashed = 0
+    solid = 0
+    lines = sorted(lines, key=lambda l: l[1], reverse=True)
+    y1 = seedLine[1]
+    y2 = seedLine[3]
     for line in lines:
-        inFlag = 0
-        x1 = line[0]
-        y1 = line[1]
-        x2 = line[2]
-        y2 = line[3]
-        for lineC in lines:
-            x1c = lineC[0]
-            y1c = lineC[1]
-            x2c = lineC[2]
-            y2c = lineC[3]
-            if x1 == x1c and x2c == x2c:
-                continue
-            if abs(x1 - x1c) <= distThreshold and abs(x2 - x2c) <= distThreshold and abs(y1 - y1c) <= distThreshold and abs(y2 - y2c) <= distThreshold:
-                x1avg = int((x1+x1c)/2)
-                y1avg = int((y1+y1c)/2)
-                x2avg = int((x2+x2c)/2)
-                y2avg = int((y2+y2c)/2)
-                thetaAvg = int((line[4]+lineC[4])/2)
-                lengthAvg = int((line[5]+lineC[5])/2)
-                if not [x1avg, y1avg, x2avg, y2avg, thetaAvg, lengthAvg, 0] in filteredLines:
-                    filteredLines.append([x1avg, y1avg, x2avg, y2avg, thetaAvg, lengthAvg, 0])
-                inFlag = 1
-                break
-        if not inFlag:
-            filteredLines.append(line)
-    return filteredLines
+        y1c = line[1]
+        y2c = line[3]
+        if abs(y1 - y1c) < yThreshold:
+            continue
+        elif abs(y2 - y1c) < yThreshold:
+            solid += 1
+        else:
+            dashed += 1
+        y1 = y1c
+        y2 = y2c
+    if solid > dashed or dashed == 0:
+        return False
+    else:
+        return True
 
+
+def removeSuddenChange(old_points, new_points):
+    if len(old_points) == 0:
+        return True
+    if len(new_points) == 0:
+        return False
+    old_points = sorted(old_points, key=lambda p: p[1], reverse=True)
+    new_points = sorted(new_points, key=lambda p: p[1], reverse=True)
+    low_diff = abs(old_points[0][0] - new_points[0][0])
+    high_diff = abs(old_points[len(old_points)-1][0] - new_points[len(new_points)-1][0])
+    if low_diff <= 50 and high_diff <= 50:
+        return True
+    else:
+        return False
