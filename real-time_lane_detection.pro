@@ -24,9 +24,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    opencv_opengl_viewer.cpp \
+    multivideoviewer.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    opencv_opengl_viewer.h \
+    multivideoviewer.h
 
 unix {
 CONFIG += c++11

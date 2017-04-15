@@ -10,6 +10,7 @@
 #include <QtCore>
 #include <QtGui>
 #include <QDebug>
+#include "multivideoviewer.h"
 
 class MainWindow : public QMainWindow
 {
@@ -18,6 +19,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+private:
+    MultiVideoViewer *mulVidWidget;
 };
 
 #endif // MAINWINDOW_H

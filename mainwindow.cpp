@@ -4,8 +4,12 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     QMetaObject::connectSlotsByName(this);
-    this->resize(400, 300);
+    this->resize(854, 480);
     this->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", Q_NULLPTR));
+
+    mulVidWidget = new MultiVideoViewer(this);
+    mulVidWidget->setFixedSize(this->size());
+
 }
 
 MainWindow::~MainWindow()
