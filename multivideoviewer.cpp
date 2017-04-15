@@ -9,12 +9,6 @@ MultiVideoViewer::MultiVideoViewer(QWidget *parent) :
     videos[3] = new CVGLViewer(this);
     videos[4] = new CVGLViewer(this);
 
-    videos[0]->setFixedSize(200, 200);
-    videos[1]->setFixedSize(200, 200);
-    videos[2]->setFixedSize(200, 200);
-    videos[3]->setFixedSize(200, 200);
-    videos[4]->setFixedSize(200, 200);
-
     h_main_layout = new QHBoxLayout;
     h_sec_layouts[0] = new QHBoxLayout;
     h_sec_layouts[1] = new QHBoxLayout;
@@ -27,11 +21,10 @@ MultiVideoViewer::MultiVideoViewer(QWidget *parent) :
 
     this->setLayout(h_main_layout);
 
-    init_container();
+    initContainer();
 }
 
-
-void MultiVideoViewer::init_container()
+void MultiVideoViewer::initContainer()
 {
     for (int i = 0, j = 0; i < 4 && j < 5; ++i, ++j)
     {
@@ -41,4 +34,13 @@ void MultiVideoViewer::init_container()
         if (i == 1 && j == 1)
             v_sec_layouts[i]->addWidget(videos[++j]);
     }
+}
+
+void MultiVideoViewer::setVideoSize(int w1, int h1, int w2, int h2)
+{
+    videos[0]->setFixedSize(w1, h1);
+    videos[1]->setFixedSize(w1, h1);
+    videos[2]->setFixedSize(w1, h1);
+    videos[3]->setFixedSize(w2, h2);
+    videos[4]->setFixedSize(w2, h2);
 }

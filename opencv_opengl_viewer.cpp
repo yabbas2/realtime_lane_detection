@@ -2,10 +2,11 @@
 #include <QOpenGLFunctions>
 #include <opencv2/opencv.hpp>
 
-CVGLViewer::CVGLViewer(QWidget *parent) :
-QOpenGLWidget(parent)
+CVGLViewer::CVGLViewer(QWidget *parent, int width, int height) :
+    QOpenGLWidget(parent)
 {
     mBgColor = QColor::fromRgb(150, 150, 150);
+    this->setFixedSize(width, height);
 }
 
 void CVGLViewer::initializeGL()

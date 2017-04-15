@@ -10,7 +10,7 @@ class CVGLViewer : public QOpenGLWidget, protected QOpenGLFunctions_2_0
 {
     Q_OBJECT
 public:
-    explicit CVGLViewer(QWidget *parent = 0);
+    explicit CVGLViewer(QWidget *parent = 0, int width = 10, int height = 10);
 
 signals:
     void imageSizeChanged( int outW, int outH );
