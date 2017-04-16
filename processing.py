@@ -3,6 +3,20 @@ import numpy as np
 import numpy.polynomial.polynomial as poly
 import math
 
+left_kalmans = []
+right_kalmans = []
+for i in range(0, 20):
+    left_kalmans.append(cv2.KalmanFilter(4, 2))
+for i in range(0, 20):
+    right_kalmans.append(cv2.KalmanFilter(4, 2))
+for kalman in left_kalmans:
+    kalman.measurementMatrix = np.array([[1, 0, 0, 0], [0, 1, 0, 0]], np.float32)
+    kalman.transitionMatrix = np.array([[1, 0, 1, 0], [0, 1, 0, 1], [0, 0, 1, 0], [0, 0, 0, 1]], np.float32)
+    kalman.processNoiseCov = np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], np.float32) * 0.0003
+for kalman in right_kalmans:
+    kalman.measurementMatrix = np.array([[1, 0, 0, 0], [0, 1, 0, 0]], np.float32)
+    kalman.transitionMatrix = np.array([[1, 0, 1, 0], [0, 1, 0, 1], [0, 0, 1, 0], [0, 0, 0, 1]], np.float32)
+    kalman.processNoiseCov = np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], np.float32) * 0.0003
 
 def determinePtsAndDst(width, height, videoFile):
     dst = np.array([[0, 0], [height, 0], [height, width-200], [0, width-200]], dtype="float32")
@@ -306,3 +320,30 @@ def removeSuddenChange(old_points, new_points):
         return True
     else:
         return False
+
+
+def kalman(points, s):
+    global left_kalmans
+    global right_kalmans
+    if s == "l":
+        kalmans = left_kalmans
+    else:
+        kalmans = right_kalmans
+    points = points.tolist()
+    predicted_points = []
+    mp = np.array((2, 1), np.float32)  # measurement
+
+    if kalmans[0].statePre[0][0] == 0:
+        for i in range(0, 20):
+            for ii in range(0, 50):
+                mp = np.array([[np.float32(points[i][0])], [np.float32(points[i][1])]])
+                kalmans[i].correct(mp)
+                tp = kalmans[i].predict()
+
+    for i in range(0, 20):
+        x, y = points[i][0], points[i][1]
+        mp = np.array([[np.float32(x)], [np.float32(y)]])
+        kalmans[i].correct(mp)
+        tp = kalmans[i].predict()
+        predicted_points.append((tp[0], tp[1]))
+    return np.array(predicted_points)

@@ -18,6 +18,10 @@ width = stream.get(cv2.CAP_PROP_FRAME_WIDTH)
 height = stream.get(cv2.CAP_PROP_FRAME_HEIGHT)
 fps = stream.get(cv2.CAP_PROP_FPS)
 pts, dst = determinePtsAndDst(width, height, ''.join(sample))
+
+prev_left_points = np.array([])
+prev_right_points = np.array([])
+
 while True:
     (grabbed, normalFrame) = stream.read()
     if not grabbed:
@@ -91,9 +95,12 @@ while True:
         rstatus = "s"
         if rightLaneStatus < -10:
             rightLaneStatus = -10
-
     left_points = doInverse(left_points, homo)
     right_points = doInverse(right_points, homo)
+
+    left_points = kalman(left_points, "l")
+    right_points = kalman(right_points, "r")
+
     debug_draw(left_points, normalFrame, lstatus)
     debug_draw(right_points, normalFrame, rstatus)
     end = time.time()
