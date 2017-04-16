@@ -10,7 +10,7 @@
 #include <QtCore>
 #include <QtGui>
 #include <QDebug>
-#include "multivideoviewer.h"
+#include "front-end/multivideoviewer.h"
 
 class MainWindow : public QMainWindow
 {

@@ -6,6 +6,9 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
+#define VideosNum       5
+#define LayoutsNum      4
+
 class MultiVideoViewer : public QWidget
 {
     Q_OBJECT
@@ -13,14 +16,16 @@ class MultiVideoViewer : public QWidget
 public:
     explicit MultiVideoViewer(QWidget *parent = 0);
     void setVideoSize(int w1, int h1, int w2, int h2);
+    CVGLViewer *getVideoWidget(int index);
+    enum videoType {normal, final_rgb, final_bw, ipm_rgb, ipm_bw};
 
 protected:
-    CVGLViewer *videos[5];
+    CVGLViewer *videos[VideosNum];
 
 private:
     QHBoxLayout *h_main_layout;
-    QHBoxLayout *h_sec_layouts[4];
-    QVBoxLayout *v_sec_layouts[4];
+    QHBoxLayout *h_sec_layouts[LayoutsNum];
+    QVBoxLayout *v_sec_layouts[LayoutsNum];
 
     void initContainer();
 };
