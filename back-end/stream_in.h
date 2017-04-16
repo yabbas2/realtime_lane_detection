@@ -1,11 +1,12 @@
-#ifndef STREAMIN_H
-#define STREAMIN_H
+#ifndef STREAM_IN_H
+#define STREAM_IN_H
 
 #include <opencv2/opencv.hpp>
 #include <QObject>
 #include <QThread>
 #include <QDebug>
 #include <QString>
+#include <QTimer>
 
 class StreamIn : public QObject
 {
@@ -14,18 +15,22 @@ class StreamIn : public QObject
 public:
     explicit StreamIn(QObject *parent = 0);
     ~StreamIn();
-    void initStreamIn(QString source, QThread &thread);
+    void initStreamIn(QString source);
     cv::Mat *getFrame();
+    void getVideoInfo(int &w, int &h, int &fps);
 
 signals:
     void endStream();
-protected slots:
+
+private slots:
     void startStreamIn();
     void stopStreamIn();
 
 private:
     cv::Mat inputFrame;
     cv::VideoCapture cap;
+    QTimer timer;
+
 };
 
-#endif /* STREAMIN_H */
+#endif /* STREAM_IN_H */

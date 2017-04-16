@@ -12,6 +12,11 @@ MainWindow::MainWindow(QWidget *parent)
     mulVidWidget->setVideoSize(200, 200, 200, 200);
 }
 
+MultiVideoViewer *MainWindow::getMultiVideoViewerWidget()
+{
+    return mulVidWidget;
+}
+
 MainWindow::~MainWindow()
 {
 

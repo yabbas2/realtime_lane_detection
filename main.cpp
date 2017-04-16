@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include <QApplication>
-#include "back-end/stream_in.h"
+#include "back-end/stream.h"
 #include <QThread>
 
 int main(int argc, char *argv[])
@@ -9,11 +9,9 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    StreamIn *stream_in = new StreamIn;
-    QThread streamInThread;
-    stream_in->initStreamIn("/dev/video0", streamInThread);
-    stream_in->moveToThread(&streamInThread);
-    streamInThread.start();
+    Stream st;
+    st.connectToFrontEnd(&w);
+    st.changeStreamInSource("/home/yousef/projects/real-time_lane_detection/Data/samplesVideos/sample1.mp4");
 
     return a.exec();
 }

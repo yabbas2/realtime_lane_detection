@@ -27,12 +27,16 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     front-end/opencv_opengl_viewer.cpp \
     front-end/multivideoviewer.cpp \
-    back-end/stream_in.cpp
+    back-end/stream_in.cpp \
+    back-end/stream_out.cpp \
+    back-end/stream.cpp
 
 HEADERS  += mainwindow.h \
     front-end/opencv_opengl_viewer.h \
     front-end/multivideoviewer.h \
-    back-end/stream_in.h
+    back-end/stream_in.h \
+    back-end/stream_out.h \
+    back-end/stream.h
 
 unix {
 CONFIG += c++11
