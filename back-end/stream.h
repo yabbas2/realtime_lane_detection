@@ -33,7 +33,6 @@ private:
     StreamOut stream_out;
     cv::Mat *normalFrame;
     cv::Mat *finalFrameRGB;
-    cv::Mat *finalFrameBW;
     cv::Mat *ipmFrameRGB;
     cv::Mat *ipmFrameBW;
     MultiVideoViewer *multiViewer;

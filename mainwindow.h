@@ -15,6 +15,7 @@
 #include <QStringListModel>
 #include <QComboBox>
 #include <QSlider>
+#include <QGridLayout>
 #include "front-end/side_bar.h"
 
 class MainWindow : public QMainWindow
@@ -29,7 +30,8 @@ public:
 private:
     MultiVideoViewer *mulVidWidget;
     Side_bar *sidebar;
-
+    QWidget *cen;
+    QGridLayout *grid_main_layout;
 };
 
 #endif // MAINWINDOW_H

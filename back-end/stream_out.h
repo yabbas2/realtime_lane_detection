@@ -9,7 +9,6 @@ class StreamOut
 public:
     StreamOut();
     void drawFinalRGB(cv::Mat *frame);
-    void drawFinalBW(cv::Mat *frame);
     void drawIpmRGB(cv::Mat *frame);
     void drawIpmBW(cv::Mat *frame);
     void setDrawingData(std::vector<cv::Vec2i> *lp);

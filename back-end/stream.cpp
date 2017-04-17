@@ -19,7 +19,6 @@ void Stream::showFrames()
     normalFrame = stream_in.getFrame();
     multiViewer->getVideoWidget(MultiVideoViewerWidget::normal)->showImage(*normalFrame);
     multiViewer->getVideoWidget(MultiVideoViewerWidget::final_rgb)->showImage(*normalFrame);
-    multiViewer->getVideoWidget(MultiVideoViewerWidget::final_bw)->showImage(*normalFrame);
     multiViewer->getVideoWidget(MultiVideoViewerWidget::ipm_rgb)->showImage(*normalFrame);
     multiViewer->getVideoWidget(MultiVideoViewerWidget::ipm_bw)->showImage(*normalFrame);
 }

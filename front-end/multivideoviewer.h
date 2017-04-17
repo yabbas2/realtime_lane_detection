@@ -5,12 +5,13 @@
 #include "opencv_opengl_viewer.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QSpacerItem>
 
-#define VideosNum       5
-#define LayoutsNum      4
+#define VideosNum       4
+#define LayoutsNum      2
 
 namespace MultiVideoViewerWidget {
-    enum videoType{normal, final_rgb, final_bw, ipm_rgb, ipm_bw};
+    enum videoType{normal, final_rgb, ipm_rgb, ipm_bw};
 }
 
 
@@ -28,11 +29,8 @@ protected:
     CVGLViewer *videos[VideosNum];
 
 private:
-    QHBoxLayout *h_main_layout;
+    QVBoxLayout *v_main_layout;
     QHBoxLayout *h_sec_layouts[LayoutsNum];
-    QVBoxLayout *v_sec_layouts[LayoutsNum];
-
-    void initContainer();
 };
 
 #endif // MULTIVIDEOVIEWER_H

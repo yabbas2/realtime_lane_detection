@@ -63,8 +63,6 @@ Side_bar::Side_bar(QWidget *parent) :
     pause_video->setText("pause");
     connect(input, SIGNAL(activated(QString)), this, SLOT(comboBox(QString)));
 
-
-
     gaussian_mask_gb = new QGroupBox(w);
     v_gaussian_mask_gb = new QVBoxLayout;
     gaussian_mask_slider = new QSlider(gaussian_mask_gb);
@@ -134,16 +132,6 @@ Side_bar::Side_bar(QWidget *parent) :
     reg_grow_gb->setLayout(h_reg_grow_gb);
     reg_grow_ang_dial = new QDial(reg_grow_gb);
     reg_grow_ang_label = new QLabel(reg_grow_gb);
-    reg_grow_ang_dial->setNotchesVisible(true);
-    reg_grow_ang_dial->setValue(10);
-    reg_grow_ang_dial->setMaximum(20);
-    reg_grow_ang_dial->setMinimum(1);
-    reg_grow_ang_label->setText("Angle difference: 10");
-    h_reg_grow_gb->addLayout(v_layout_reg_grow_labels);
-    h_reg_grow_gb->addLayout(v_layout_reg_grow_sliders);
-    v_layout_reg_grow_labels->addWidget(reg_grow_ang_label);
-    v_layout_reg_grow_sliders->addWidget(reg_grow_ang_dial);
-    connect(reg_grow_ang_dial, SIGNAL(valueChanged(int)), this, SLOT(changeSliderValue()));
     reg_grow_x_slider = new QSlider(reg_grow_gb);
     reg_grow_x_label = new QLabel(reg_grow_gb);
     reg_grow_x_label->setText("\nX difference: 40");
@@ -155,6 +143,16 @@ Side_bar::Side_bar(QWidget *parent) :
     v_layout_reg_grow_sliders->addWidget(reg_grow_x_slider);
     v_layout_reg_grow_labels->addWidget(reg_grow_x_label);
     connect(reg_grow_x_slider, SIGNAL(valueChanged(int)), this, SLOT(changeSliderValue()));
+    reg_grow_ang_dial->setNotchesVisible(true);
+    reg_grow_ang_dial->setValue(10);
+    reg_grow_ang_dial->setMaximum(20);
+    reg_grow_ang_dial->setMinimum(1);
+    reg_grow_ang_label->setText("Angle difference: 10");
+    h_reg_grow_gb->addLayout(v_layout_reg_grow_labels);
+    h_reg_grow_gb->addLayout(v_layout_reg_grow_sliders);
+    v_layout_reg_grow_labels->addWidget(reg_grow_ang_label);
+    v_layout_reg_grow_sliders->addWidget(reg_grow_ang_dial);
+    connect(reg_grow_ang_dial, SIGNAL(valueChanged(int)), this, SLOT(changeSliderValue()));
 
     curve_fit_gb = new QGroupBox(w);
     h_curve_fit_gb = new QHBoxLayout;

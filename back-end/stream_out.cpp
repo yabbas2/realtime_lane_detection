@@ -11,11 +11,6 @@ void StreamOut::drawFinalRGB(cv::Mat *frame)
 
 }
 
-void StreamOut::drawFinalBW(cv::Mat *frame)
-{
-
-}
-
 void StreamOut::drawIpmRGB(cv::Mat *frame)
 {
 

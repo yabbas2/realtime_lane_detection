@@ -5,7 +5,7 @@
 CVGLViewer::CVGLViewer(QWidget *parent, int width, int height) :
     QOpenGLWidget(parent)
 {
-    mBgColor = QColor::fromRgb(150, 150, 150);
+    mBgColor = QColor::fromRgb(235, 235, 235);
     this->setFixedSize(width, height);
 }
 
