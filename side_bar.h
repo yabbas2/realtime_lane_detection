@@ -57,8 +57,7 @@ private:
     QStringList *input_list;
     QHBoxLayout *h_lsd_gb;
     QHBoxLayout *h_layout_g;
-    QHBoxLayout *h_layout_reg_grow_ang;
-    QHBoxLayout *h_reg_grow_x;
+    QHBoxLayout *h_reg_grow_gb;
     QHBoxLayout *h_input;
     QHBoxLayout *h_input_extra_buttons;
     QHBoxLayout *h_curve_fit_gb;
@@ -70,10 +69,11 @@ private:
     QVBoxLayout *v_gaussian_mask_gb;
     QVBoxLayout *v_layout_lsd_labels;
     QVBoxLayout *v_layout_lsd_sliders;
-    QVBoxLayout *v_reg_grow_gb;
     QVBoxLayout *v_curve_fit_labels;
     QVBoxLayout *v_curve_fit_sliders;
     QVBoxLayout *v_decision_make_gb;
+    QVBoxLayout *v_layout_reg_grow_labels;
+    QVBoxLayout *v_layout_reg_grow_sliders;
     QLabel *gaussian_mask_label;
     QLabel *lsd_thrs_len_label;
     QLabel *lsd_thrs_ang_label;

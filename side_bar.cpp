@@ -126,11 +126,12 @@ Side_bar::Side_bar(QWidget *parent) :
     connect(lsd_thrs_ang_min_dial, SIGNAL(valueChanged(int)), this, SLOT(changeSliderValue()));
 
     reg_grow_gb = new QGroupBox(w);
-    v_reg_grow_gb = new QVBoxLayout;
-    h_layout_reg_grow_ang = new QHBoxLayout;
+    h_reg_grow_gb = new QHBoxLayout;
+    v_layout_reg_grow_labels = new QVBoxLayout;
+    v_layout_reg_grow_sliders = new QVBoxLayout;
     reg_grow_gb->setTitle("Region Growing Thresholds");
     v_main->addWidget(reg_grow_gb);
-    reg_grow_gb->setLayout(v_reg_grow_gb);
+    reg_grow_gb->setLayout(h_reg_grow_gb);
     reg_grow_ang_dial = new QDial(reg_grow_gb);
     reg_grow_ang_label = new QLabel(reg_grow_gb);
     reg_grow_ang_dial->setNotchesVisible(true);
@@ -138,22 +139,21 @@ Side_bar::Side_bar(QWidget *parent) :
     reg_grow_ang_dial->setMaximum(20);
     reg_grow_ang_dial->setMinimum(1);
     reg_grow_ang_label->setText("Angle difference: 10");
-    v_reg_grow_gb->addLayout(h_layout_reg_grow_ang);
-    h_layout_reg_grow_ang->addWidget(reg_grow_ang_label);
-    h_layout_reg_grow_ang->addWidget(reg_grow_ang_dial);
+    h_reg_grow_gb->addLayout(v_layout_reg_grow_labels);
+    h_reg_grow_gb->addLayout(v_layout_reg_grow_sliders);
+    v_layout_reg_grow_labels->addWidget(reg_grow_ang_label);
+    v_layout_reg_grow_sliders->addWidget(reg_grow_ang_dial);
     connect(reg_grow_ang_dial, SIGNAL(valueChanged(int)), this, SLOT(changeSliderValue()));
     reg_grow_x_slider = new QSlider(reg_grow_gb);
     reg_grow_x_label = new QLabel(reg_grow_gb);
-    h_reg_grow_x = new QHBoxLayout;
-    reg_grow_x_label->setText("X difference: 40");
+    reg_grow_x_label->setText("\nX difference: 40");
     reg_grow_x_slider->setOrientation(Qt::Horizontal);
     reg_grow_x_slider->setTickPosition(QSlider::TicksAbove);
     reg_grow_x_slider->setValue(40);
     reg_grow_x_slider->setMaximum(60);
     reg_grow_x_slider->setMinimum(1);
-    h_reg_grow_x->addWidget(reg_grow_x_label);
-    h_reg_grow_x->addWidget(reg_grow_x_slider);
-    v_reg_grow_gb->addLayout(h_reg_grow_x);
+    v_layout_reg_grow_sliders->addWidget(reg_grow_x_slider);
+    v_layout_reg_grow_labels->addWidget(reg_grow_x_label);
     connect(reg_grow_x_slider, SIGNAL(valueChanged(int)), this, SLOT(changeSliderValue()));
 
     curve_fit_gb = new QGroupBox(w);
@@ -214,6 +214,14 @@ Side_bar::Side_bar(QWidget *parent) :
     reg_grow_gb->setFixedWidth(GroupBoxFixedWidth);
     lsd_gb->setFixedWidth(GroupBoxFixedWidth);
 
+    gaussian_mask_label->setFixedWidth((gaussian_mask_label->width()));
+    lsd_thrs_ang_label->setFixedWidth((lsd_thrs_ang_label->width()));
+    lsd_thrs_len_label->setFixedWidth((lsd_thrs_len_label->width()));
+    reg_grow_ang_label->setFixedWidth((reg_grow_ang_label->width()));
+    reg_grow_x_label->setFixedWidth((reg_grow_x_label->width()));
+    curve_fit_no_pts_label->setFixedWidth((curve_fit_no_pts_label->width()));
+    curve_fit_y_label->setFixedWidth((curve_fit_y_label->width()));
+    decision_make_y_label->setFixedWidth((decision_make_y_label->width()));
 }
 void Side_bar::comboBox(QString item)
 {
@@ -260,7 +268,7 @@ void Side_bar::changeSliderValue()
     else if (sender() == reg_grow_ang_dial)
         reg_grow_ang_label->setText("Angle difference: " + QString::number(reg_grow_ang_dial->value()));
     else if (sender() == reg_grow_x_slider)
-        reg_grow_x_label->setText("X difference: " + QString::number(reg_grow_x_slider->value()));
+        reg_grow_x_label->setText("\nX difference: " + QString::number(reg_grow_x_slider->value()));
     else if (sender() == curve_fit_no_pts_slider)
         curve_fit_no_pts_label->setText("Points no.: " + QString::number(curve_fit_no_pts_slider->value()));
     else if (sender() == curve_fit_y_slider)
