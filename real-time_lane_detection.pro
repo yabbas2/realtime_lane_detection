@@ -24,15 +24,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    side_bar.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    side_bar.h
 
-unix {
-CONFIG += c++11
-CONFIG += link_pkgconfig
-PKGCONFIG += opencv
-}
+#unix {
+#CONFIG += c++11
+#CONFIG += link_pkgconfig
+#PKGCONFIG += opencv
+#}
 
 win32 {
 CONFIG += c++11

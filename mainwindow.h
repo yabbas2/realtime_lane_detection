@@ -10,6 +10,11 @@
 #include <QtCore>
 #include <QtGui>
 #include <QDebug>
+#include <QListView>
+#include <QStringListModel>
+#include <QComboBox>
+#include <QSlider>
+#include "side_bar.h"
 
 class MainWindow : public QMainWindow
 {
@@ -18,6 +23,8 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+private:
+    Side_bar *sidebar;
 };
 
 #endif // MAINWINDOW_H
