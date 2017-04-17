@@ -11,6 +11,11 @@
 #include <QtGui>
 #include <QDebug>
 #include "front-end/multivideoviewer.h"
+#include <QListView>
+#include <QStringListModel>
+#include <QComboBox>
+#include <QSlider>
+#include "front-end/side_bar.h"
 
 class MainWindow : public QMainWindow
 {
@@ -23,6 +28,8 @@ public:
 
 private:
     MultiVideoViewer *mulVidWidget;
+    Side_bar *sidebar;
+
 };
 
 #endif // MAINWINDOW_H

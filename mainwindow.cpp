@@ -2,6 +2,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
+
 {
     QMetaObject::connectSlotsByName(this);
     this->resize(854, 480);
@@ -10,6 +11,9 @@ MainWindow::MainWindow(QWidget *parent)
     mulVidWidget = new MultiVideoViewer(this);
     mulVidWidget->setFixedSize(this->size());
     mulVidWidget->setVideoSize(200, 200, 200, 200);
+
+    sidebar = new Side_bar(this);
+    sidebar->setFixedSize(300, 480);
 }
 
 MultiVideoViewer *MainWindow::getMultiVideoViewerWidget()
