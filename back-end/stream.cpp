@@ -21,11 +21,13 @@ void Stream::showFrames()
     multiViewer->getVideoWidget(MultiVideoViewerWidget::final_rgb)->showImage(*normalFrame);
     multiViewer->getVideoWidget(MultiVideoViewerWidget::ipm_rgb)->showImage(*normalFrame);
     multiViewer->getVideoWidget(MultiVideoViewerWidget::ipm_bw)->showImage(*normalFrame);
+    fsViewer->getVideoWidget()->showImage(*normalFrame);
 }
 
 void Stream::connectToFrontEnd(MainWindow *w)
 {
     multiViewer = w->getMultiVideoViewerWidget();
+    fsViewer = w->getFullScreenVideoViewerWidget();
 }
 
 void Stream::setPointsToDraw(std::vector<cv::Vec2i> *pts)

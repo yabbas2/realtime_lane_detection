@@ -2,11 +2,12 @@
 #include <QOpenGLFunctions>
 #include <opencv2/opencv.hpp>
 
-CVGLViewer::CVGLViewer(QWidget *parent, int width, int height) :
+CVGLViewer::CVGLViewer( int index, QWidget *parent, int width, int height) :
     QOpenGLWidget(parent)
 {
     mBgColor = QColor::fromRgb(235, 235, 235);
     this->setFixedSize(width, height);
+    this->index = index;
 }
 
 void CVGLViewer::initializeGL()
@@ -99,6 +100,7 @@ bool CVGLViewer::showImage(const cv::Mat& image)
 
 void CVGLViewer::mousePressEvent(QMouseEvent *event)
 {
+    qDebug() << "clicked on video:" << this->index;
     if (event->button() == Qt::MouseButton::LeftButton)
-        emit mouseClicked();
+        emit mouseClicked(this->index);
 }

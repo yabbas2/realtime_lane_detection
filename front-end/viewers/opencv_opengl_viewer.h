@@ -5,16 +5,18 @@
 #include <QOpenGLFunctions_2_0>
 #include <opencv2/core/core.hpp>
 #include <QMouseEvent>
+#include <QDebug>
 
 class CVGLViewer : public QOpenGLWidget, protected QOpenGLFunctions_2_0
 {
     Q_OBJECT
 public:
-    explicit CVGLViewer(QWidget *parent = 0, int width = 10, int height = 10);
+    explicit CVGLViewer(int index, QWidget *parent = 0, int width = 10, int height = 10);
+    int index;
 
 signals:
     void imageSizeChanged( int outW, int outH );
-    void mouseClicked();
+    void mouseClicked(int index);
 
 public slots:
     bool showImage(const cv::Mat& image);

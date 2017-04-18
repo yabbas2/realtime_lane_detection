@@ -1,16 +1,17 @@
 #ifndef STREAM_H
 #define STREAM_H
 
-#include "stream_in.h"
-#include "stream_out.h"
-#include "front-end/multivideoviewer.h"
 #include <QString>
 #include <QDebug>
 #include <QObject>
 #include <QTimer>
 #include <opencv2/opencv.hpp>
-#include "mainwindow.h"
 #include <vector>
+#include "mainwindow.h"
+#include "front-end/viewers/fullscreenvideoviewer.h"
+#include "stream_in.h"
+#include "stream_out.h"
+#include "front-end/viewers/multivideoviewer.h"
 
 class Stream : public QObject
 {
@@ -36,6 +37,7 @@ private:
     cv::Mat *ipmFrameRGB;
     cv::Mat *ipmFrameBW;
     MultiVideoViewer *multiViewer;
+    fullScreenVideoViewer *fsViewer;
     QTimer timer;
     int width, height, fps;
 };
