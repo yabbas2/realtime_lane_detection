@@ -8,10 +8,6 @@ arg.add_argument('-v', '--video', type=str, help="video source")
 args = vars(arg.parse_args())
 rightLaneStatus = 0
 leftLaneStatus = 0
-left_counter = 0
-right_counter = 0
-old_left_points = []
-old_right_points = []
 stream = cv2.VideoCapture(args['video'])
 sample = re.findall("[a-z A-Z0-9\\\-_?&()#@/]+(sample[0-9]+).[a-z0-9]+", args['video'])
 width = stream.get(cv2.CAP_PROP_FRAME_WIDTH)
@@ -58,19 +54,6 @@ while True:
         cv2.circle(magdy, (int(point[0]), int(point[1])), 4, (0, 255, 0), 1, cv2.LINE_AA)
     left_points, right_points = enhanceCurveFitting(left_points, right_points, ipmFrame.shape[0])
 
-    if removeSuddenChange(old_left_points, left_points) or left_counter >= 10:
-        old_left_points = left_points
-        left_counter = 0
-    else:
-        left_points = old_left_points
-        left_counter += 1
-    if removeSuddenChange(old_right_points, right_points) or right_counter >= 10:
-        old_right_points = right_points
-        right_counter = 0
-    else:
-        right_points = old_right_points
-        right_counter += 1
-
     if left_seed_line != 0:
         cv2.line(magdy, (int(left_seed_line[0]), int(left_seed_line[1])), (int(left_seed_line[2]), int(left_seed_line[3])), (255, 0, 255), 1, cv2.LINE_AA)
     if right_seed_line != 0:
@@ -107,17 +90,25 @@ while True:
     left_points = doInverse(left_points, homo)
     right_points = doInverse(right_points, homo)
 
+    if left_points.size == 0:
+        left_points = prev_left_points
+    if right_points.size == 0:
+        right_points = prev_right_points
+
     left_points = kalman(left_points, "l")
     right_points = kalman(right_points, "r")
+
+    prev_left_points = left_points
+    prev_right_points = right_points
 
     debug_draw(left_points, normalFrame, lstatus)
     debug_draw(right_points, normalFrame, rstatus)
     end = time.time()
     print(end-start)
 
-    cv2.imshow('ipm', ipmFrame)
-    cv2.imshow('m', magdy)
-    cv2.imshow('videonormal', normalFrame)
+    # cv2.imshow('ipm', ipmFrame)
+    cv2.imshow('used lines', magdy)
+    cv2.imshow('detected', normalFrame)
     cv2.imshow('mask', mask)
 stream.release()
 cv2.destroyAllWindows()
