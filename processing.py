@@ -347,3 +347,21 @@ def kalman(points, s):
         tp = kalmans[i].predict()
         predicted_points.append((tp[0], tp[1]))
     return np.array(predicted_points)
+
+def eliminateFalseDetection2(lines, mask, height, width):
+    filtered_lines = []
+    flag = 0
+    for line in lines:
+        x1 = line[0]
+        y1 = line[1]
+        for i in range(0, 50):
+            if (x1+i > width-1) or (x1-i < 0) or (y1+i > height-1) or (y1-i < 0):
+                break
+            if mask[int(y1)][int(x1)-i] == 0 or mask[int(y1)][int(x1)+i] == 0 or mask[int(y1)-i][int(x1)] == 0 or mask[int(y1)+i][int(x1)] == 0:
+                flag = 1
+                break
+        if not flag:
+            filtered_lines.append(line)
+        flag = 0
+    return filtered_lines
+

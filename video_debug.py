@@ -33,6 +33,15 @@ while True:
     magdy = np.zeros(ipmFrame.shape, dtype=np.uint8)
     lines = lineSegmentDetector(ipmFrame)
     lines = eliminateFalseDetection(lines)
+
+    hsv = cv2.cvtColor(ipmFrame, cv2.COLOR_BGR2HSV)
+    lower_blue = np.array([0, 175, 0])
+    upper_blue = np.array([200, 255, 200])
+    mask = cv2.inRange(hsv, lower_blue, upper_blue)
+    mask = cv2.bitwise_not(mask)
+    ipmFrame = cv2.bitwise_and(ipmFrame, ipmFrame, mask=mask)
+    lines = eliminateFalseDetection2(lines, mask, width, height)
+
     left_seed_line, right_seed_line = findSeedLines(lines, ipmFrame.shape[1])
     left_region = leftRegionGrowing(lines, left_seed_line)
     right_region = rightRegionGrowing(lines, right_seed_line)
@@ -105,6 +114,10 @@ while True:
     debug_draw(right_points, normalFrame, rstatus)
     end = time.time()
     print(end-start)
-    cv2.imshow('video', normalFrame)
+
+    cv2.imshow('ipm', ipmFrame)
+    cv2.imshow('m', magdy)
+    cv2.imshow('videonormal', normalFrame)
+    cv2.imshow('mask', mask)
 stream.release()
 cv2.destroyAllWindows()
