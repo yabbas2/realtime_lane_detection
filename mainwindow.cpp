@@ -5,7 +5,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 {
     QMetaObject::connectSlotsByName(this);
-    this->resize(mainWindowWidth, mainWindowHeight);
+    this->setFixedSize(mainWindowWidth, mainWindowHeight);
     this->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", Q_NULLPTR));
 
     grid_main_layout = new QGridLayout;
@@ -32,13 +32,13 @@ MainWindow::MainWindow(QWidget *parent)
     cen1->setVisible(true);
     cen2->setVisible(false);
 
-    mEffect = new QGraphicsOpacityEffect(cen1);
-    mEffect->setOpacity(1.0);
-    cen1->setGraphicsEffect(mEffect);
+//    mEffect = new QGraphicsOpacityEffect(cen1);
+//    mEffect->setOpacity(1.0);
+//    cen1->setGraphicsEffect(mEffect);
 
-    wEffect = new QGraphicsOpacityEffect(this);
-    wEffect->setOpacity(0.0);
-    cen2->setGraphicsEffect(wEffect);
+//    wEffect = new QGraphicsOpacityEffect(this);
+//    wEffect->setOpacity(0.0);
+//    cen2->setGraphicsEffect(wEffect);
 
     connect(mulVidWidget->getVideoWidget(0), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen()));
     connect(mulVidWidget->getVideoWidget(1), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen()));
@@ -58,14 +58,16 @@ fullScreenVideoViewer *MainWindow::getFullScreenVideoViewerWidget()
 
 void MainWindow::switchToFullScreen()
 {
-    qDebug() << "to full screen";
-    animation = new QPropertyAnimation(mEffect,"opacity");
-    animation->setDuration(2000);
-    animation->setStartValue(1.0);
-    animation->setEndValue(0.0);
-    animation->setEasingCurve(QEasingCurve::InBack);
-    connect(animation,SIGNAL(finished()),this,SLOT(ToFullScreenAnimationFinish()));
-    animation->start(QAbstractAnimation::DeleteWhenStopped);
+//    qDebug() << "to full screen";
+//    animation = new QPropertyAnimation(mEffect,"opacity");
+//    animation->setDuration(2000);
+//    animation->setStartValue(1.0);
+//    animation->setEndValue(0.0);
+//    animation->setEasingCurve(QEasingCurve::InBack);
+//    connect(animation,SIGNAL(finished()),this,SLOT(ToFullScreenAnimationFinish()));
+//    animation->start(QAbstractAnimation::DeleteWhenStopped);
+    cen1->setVisible(false);
+    cen2->setVisible(true);
 }
 
 void MainWindow::ToFullScreenAnimationFinish()
@@ -79,6 +81,7 @@ void MainWindow::ToFullScreenAnimationFinish()
     animation2->setEasingCurve(QEasingCurve::OutBack);
     animation2->start(QAbstractAnimation::DeleteWhenStopped);
     cen2->setVisible(true);
+    wEffect->setOpacity(1.0);
 }
 
 MainWindow::~MainWindow()
