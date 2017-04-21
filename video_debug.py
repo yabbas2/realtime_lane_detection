@@ -50,6 +50,21 @@ while True:
     for line in right_region:
         cv2.line(magdy, (int(line[0]), int(line[1])), (int(line[2]), int(line[3])), (255, 255, 0), 1, cv2.LINE_AA)
     left_points, right_points = linesToPoints(left_region, right_region)
+
+    if left_points.size < 8 and prev_left < 20:
+        left_points = prev_left_points
+        prev_left += 1
+    elif left_points.size != 0:
+        prev_left = 0
+        prev_left_points = left_points
+
+    if right_points.size < 8 and prev_right < 20:
+        right_points = prev_right_points
+        prev_right += 1
+    elif right_points.size != 0:
+        prev_right = 0
+        prev_right_points = right_points
+
     for point in left_points:
         cv2.circle(magdy, (int(point[0]), int(point[1])), 4, (0, 255, 0), 1, cv2.LINE_AA)
     for point in right_points:
@@ -70,12 +85,12 @@ while True:
         leftLaneStatus -= 1
     if leftLaneStatus > 0:
         lstatus = "d"
-        if leftLaneStatus > 10:
-            leftLaneStatus = 10
+        if leftLaneStatus > 30:
+            leftLaneStatus = 30
     elif leftLaneStatus < 0:
         lstatus = "s"
-        if leftLaneStatus < -10:
-            leftLaneStatus = -10
+        if leftLaneStatus < -30:
+            leftLaneStatus = -30
 
     if isDashed(right_region, right_seed_line):
         rightLaneStatus += 1
@@ -83,32 +98,32 @@ while True:
         rightLaneStatus -= 1
     if rightLaneStatus > 0:
         rstatus = "d"
-        if rightLaneStatus > 10:
-            rightLaneStatus = 10
+        if rightLaneStatus > 30:
+            rightLaneStatus = 30
     elif rightLaneStatus < 0:
         rstatus = "s"
-        if rightLaneStatus < -10:
-            rightLaneStatus = -10
+        if rightLaneStatus < -30:
+            rightLaneStatus = -30
     left_points = doInverse(left_points, homo)
     right_points = doInverse(right_points, homo)
 
-    if left_points.size == 0 and prev_left < 15:
-        left_points = prev_left_points
-        prev_left += 1
-    elif left_points.size != 0:
-        prev_left = 0
-    if right_points.size == 0 and prev_right < 15:
-        right_points = prev_right_points
-        prev_right += 1
-    elif right_points.size != 0:
-        prev_right = 0
+    # if left_points.size == 0 and prev_left < 15:
+    #     left_points = prev_left_points
+    #     prev_left += 1
+    # elif left_points.size != 0:
+    #     prev_left = 0
+    # if right_points.size == 0 and prev_right < 15:
+    #     right_points = prev_right_points
+    #     prev_right += 1
+    # elif right_points.size != 0:
+    #     prev_right = 0
 
     if left_points.size > 0:
         left_points = kalman(left_points, "l")
-        prev_left_points = left_points
+        # prev_left_points = left_points
     if right_points.size > 0:
         right_points = kalman(right_points, "r")
-        prev_right_points = right_points
+        # prev_right_points = right_points
 
     debug_draw(left_points, normalFrame, lstatus)
     debug_draw(right_points, normalFrame, rstatus)
