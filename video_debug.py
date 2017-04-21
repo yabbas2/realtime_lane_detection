@@ -17,6 +17,8 @@ pts, dst = determinePtsAndDst(width, height, ''.join(sample))
 
 prev_left_points = np.array([])
 prev_right_points = np.array([])
+prev_left = 0
+prev_right = 0
 
 while True:
     (grabbed, normalFrame) = stream.read()
@@ -90,16 +92,23 @@ while True:
     left_points = doInverse(left_points, homo)
     right_points = doInverse(right_points, homo)
 
-    if left_points.size == 0:
+    if left_points.size == 0 and prev_left < 15:
         left_points = prev_left_points
-    if right_points.size == 0:
+        prev_left += 1
+    elif left_points.size != 0:
+        prev_left = 0
+    if right_points.size == 0 and prev_right < 15:
         right_points = prev_right_points
+        prev_right += 1
+    elif right_points.size != 0:
+        prev_right = 0
 
-    left_points = kalman(left_points, "l")
-    right_points = kalman(right_points, "r")
-
-    prev_left_points = left_points
-    prev_right_points = right_points
+    if left_points.size > 0:
+        left_points = kalman(left_points, "l")
+        prev_left_points = left_points
+    if right_points.size > 0:
+        right_points = kalman(right_points, "r")
+        prev_right_points = right_points
 
     debug_draw(left_points, normalFrame, lstatus)
     debug_draw(right_points, normalFrame, rstatus)
