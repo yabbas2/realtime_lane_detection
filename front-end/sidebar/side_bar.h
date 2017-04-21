@@ -33,6 +33,7 @@ private:
     InputMethodWidget *inputMethod;
     LSDWidget *lsd;
     RegionGrowWidget *regionGrow;
+
 };
 
 #endif // SIDE_BAR_H

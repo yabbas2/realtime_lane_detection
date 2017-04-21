@@ -10,8 +10,8 @@
 #include <QDial>
 #include <QSpacerItem>
 
-#define GroupBoxFixedWidth  240
-#define GroupBoxFixedHeight  125
+#define RegGrowBoxFixedWidth  240
+#define RegGrowBoxFixedHeight  125
 
 class RegionGrowWidget : public QWidget
 {

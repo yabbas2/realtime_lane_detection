@@ -13,8 +13,8 @@
 #include <QSpacerItem>
 #include <QString>
 
-#define GroupBoxFixedWidth  240
-#define GroupBoxFixedHeight  110
+#define InputBoxFixedWidth  240
+#define InputBoxFixedHeight  110
 
 class InputMethodWidget : public QWidget
 {

@@ -4,7 +4,7 @@ RegionGrowWidget::RegionGrowWidget(QWidget *parent) :
     QWidget(parent)
 {
     reg_grow_gb = new QGroupBox(this);
-    reg_grow_gb->setFixedSize(GroupBoxFixedWidth, GroupBoxFixedHeight);
+    reg_grow_gb->setFixedSize(RegGrowBoxFixedWidth, RegGrowBoxFixedHeight);
     h_reg_grow_gb = new QHBoxLayout;
     v_layout_reg_grow_labels = new QVBoxLayout;
     v_layout_reg_grow_sliders = new QVBoxLayout;

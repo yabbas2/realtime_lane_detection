@@ -10,8 +10,8 @@
 #include <QDial>
 #include <QSpacerItem>
 
-#define GroupBoxFixedWidth  240
-#define GroupBoxFixedHeight  125
+#define LSDBoxFixedWidth  240
+#define LSDBoxFixedHeight  125
 
 class LSDWidget : public QWidget
 {

@@ -13,6 +13,8 @@
 #include "stream_out.h"
 #include "front-end/viewers/multivideoviewer.h"
 
+#define StreamingVideos     4
+
 class Stream : public QObject
 {
     Q_OBJECT
@@ -27,15 +29,14 @@ public slots:
 
 private slots:
     void showFrames();
+    void FullScreenFrame(int index);
 
 private:
     QString streamInSource;
     StreamIn stream_in;
     StreamOut stream_out;
-    cv::Mat *normalFrame;
-    cv::Mat *finalFrameRGB;
-    cv::Mat *ipmFrameRGB;
-    cv::Mat *ipmFrameBW;
+    cv::Mat frames[StreamingVideos];
+    cv::Mat *fsFrame;
     MultiVideoViewer *multiViewer;
     fullScreenVideoViewer *fsViewer;
     QTimer timer;

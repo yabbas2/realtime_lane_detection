@@ -1,12 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QMainWindow>
-#include <QtWidgets/QWidget>
+#include <QAction>
+#include <QApplication>
+#include <QMainWindow>
+#include <QWidget>
 #include <QtCore>
 #include <QtGui>
 #include <QDebug>
@@ -15,6 +13,9 @@
 #include <QComboBox>
 #include <QSlider>
 #include <QGridLayout>
+#include <QGraphicsOpacityEffect>
+#include <QList>
+#include <QPropertyAnimation>
 #include "front-end/sidebar/side_bar.h"
 #include "front-end/viewers/multivideoviewer.h"
 #include "front-end/viewers/fullscreenvideoviewer.h"
@@ -34,12 +35,26 @@ public:
     MultiVideoViewer *getMultiVideoViewerWidget();
     fullScreenVideoViewer *getFullScreenVideoViewerWidget();
 
+private slots:
+    void switchToFullScreen();
+
 private:
     MultiVideoViewer *mulVidWidget;
     fullScreenVideoViewer *fsVidWidget;
     Side_bar *sidebar;
-    QWidget *cen;
+    QWidget *cen1;
+    QWidget *cen2;
     QGridLayout *grid_main_layout;
+    QPropertyAnimation* animation;
+    QPropertyAnimation* animation2;
+    QGraphicsOpacityEffect *mEffect;
+    QGraphicsOpacityEffect *wEffect;
+
+signals:
+    void sidebar_disappear();
+
+private slots:
+    void ToFullScreenAnimationFinish();
 };
 
 #endif // MAINWINDOW_H

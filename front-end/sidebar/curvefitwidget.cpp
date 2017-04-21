@@ -4,7 +4,7 @@ CurveFitWidget::CurveFitWidget(QWidget *parent) :
     QWidget(parent)
 {
     curve_fit_gb = new QGroupBox(this);
-    curve_fit_gb->setFixedSize(GroupBoxFixedWidth, GroupBoxFixedHeight);
+    curve_fit_gb->setFixedSize(CurveFitBoxFixedWidth, CurveFitBoxFixedHeight);
     h_curve_fit_gb = new QHBoxLayout;
     curve_fit_gb->setTitle("Curve Fitting Parameters");
     curve_fit_gb->setLayout(h_curve_fit_gb);

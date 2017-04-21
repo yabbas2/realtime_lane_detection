@@ -9,8 +9,8 @@
 #include <QLabel>
 #include <QDebug>
 
-#define GroupBoxFixedWidth  240
-#define GroupBoxFixedHeight  90
+#define CurveFitBoxFixedWidth  240
+#define CurveFitBoxFixedHeight  90
 
 class CurveFitWidget : public QWidget
 {

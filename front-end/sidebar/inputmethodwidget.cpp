@@ -4,7 +4,7 @@ InputMethodWidget::InputMethodWidget(QWidget *parent) :
     QWidget(parent)
 {
     input_gb = new QGroupBox(this);
-    input_gb->setFixedSize(GroupBoxFixedWidth, GroupBoxFixedHeight);
+    input_gb->setFixedSize(InputBoxFixedWidth, InputBoxFixedHeight);
     browse_video = new QPushButton(input_gb);
     stop_video = new QPushButton(input_gb);
     start_camera = new QPushButton(input_gb);

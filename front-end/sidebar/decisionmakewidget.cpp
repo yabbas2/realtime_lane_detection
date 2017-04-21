@@ -4,7 +4,7 @@ DecisionMakeWidget::DecisionMakeWidget(QWidget *parent) :
     QWidget(parent)
 {
     decision_make_gb = new QGroupBox(this);
-    decision_make_gb->setFixedSize(GroupBoxFixedWidth, GroupBoxFixedHeight);
+    decision_make_gb->setFixedSize(DecMakeBoxFixedWidth, DecMakeBoxFixedHeight);
     decision_make_y_label = new QLabel(decision_make_gb);
     decision_make_y_slider = new QSlider(decision_make_gb);
     h_decision_make_y = new QHBoxLayout;

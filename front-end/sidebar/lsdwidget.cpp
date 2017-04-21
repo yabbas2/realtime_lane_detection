@@ -4,7 +4,7 @@ LSDWidget::LSDWidget(QWidget *parent) :
     QWidget(parent)
 {
     lsd_gb = new QGroupBox(this);
-    lsd_gb->setFixedSize(GroupBoxFixedWidth, GroupBoxFixedHeight);
+    lsd_gb->setFixedSize(LSDBoxFixedWidth, LSDBoxFixedHeight);
     h_lsd_gb = new QHBoxLayout;
     lsd_gb->setTitle("LSD Thresholds");
     lsd_thrs_len_slider = new QSlider(lsd_gb);

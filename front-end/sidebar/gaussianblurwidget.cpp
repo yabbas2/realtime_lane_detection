@@ -4,7 +4,7 @@ GaussianBlurWidget::GaussianBlurWidget(QWidget *parent) :
     QWidget(parent)
 {
     gaussian_mask_gb = new QGroupBox(this);
-    gaussian_mask_gb->setFixedSize(GroupBoxFixedWidth, GroupBoxFixedHeight);
+    gaussian_mask_gb->setFixedSize(GaussianBoxFixedWidth, GaussianBoxFixedHeight);
     v_gaussian_mask_gb = new QVBoxLayout;
     gaussian_mask_slider = new QSlider(gaussian_mask_gb);
     gaussian_mask_label = new QLabel(gaussian_mask_gb);

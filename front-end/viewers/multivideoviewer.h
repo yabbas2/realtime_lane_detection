@@ -25,6 +25,8 @@ public:
     void setVideoSize(const QSize &s1, const QSize &s2);
     CVGLViewer *getVideoWidget(int index);
 
+signals:
+    void clickOnVideo(int index);
 
 protected:
     CVGLViewer *videos[VideosNum];

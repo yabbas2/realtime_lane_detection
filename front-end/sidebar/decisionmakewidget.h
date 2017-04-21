@@ -8,8 +8,8 @@
 #include <QVBoxLayout>
 #include <QLabel>
 
-#define GroupBoxFixedWidth  240
-#define GroupBoxFixedHeight  65
+#define DecMakeBoxFixedWidth  240
+#define DecMakeBoxFixedHeight  65
 
 class DecisionMakeWidget : public QWidget
 {

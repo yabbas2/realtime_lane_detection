@@ -8,8 +8,8 @@
 #include <QVBoxLayout>
 #include <QLabel>
 
-#define GroupBoxFixedWidth  240
-#define GroupBoxFixedHeight  65
+#define GaussianBoxFixedWidth  240
+#define GaussianBoxFixedHeight  65
 
 class GaussianBlurWidget : public QWidget
 {
