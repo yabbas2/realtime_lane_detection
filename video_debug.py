@@ -19,8 +19,7 @@ prev_left_points = np.array([])
 prev_right_points = np.array([])
 prev_left = 0
 prev_right = 0
-
-
+prev_contours = 0
 
 while True:
     (grabbed, normalFrame) = stream.read()
@@ -143,16 +142,19 @@ while True:
     top_points = np.array(top_points, dtype="int32")
     bottom_points = np.array(bottom_points, dtype="int32")
 
-    debug_draw(top_points, normalFrame2, lstatus)
-    debug_draw(bottom_points, normalFrame2, lstatus)
-    debug_draw(left_points, normalFrame2, lstatus)
-    debug_draw(right_points, normalFrame2, lstatus)
+    debug_draw(top_points, normalFrame2)
+    debug_draw(bottom_points, normalFrame2)
+    debug_draw(left_points, normalFrame2)
+    debug_draw(right_points, normalFrame2)
 
     mask = cv2.inRange(normalFrame2, (255, 127, 127), (255, 127, 127))
     im2, contours, hierarchy = cv2.findContours(mask, 1, 2)
-    cv2.fillConvexPoly(normalFrame2, contours[0], (255, 127, 127))
+    if len(contours) == 0:
+        contours = prev_contours
+    if len(contours) != 0:
+        cv2.fillConvexPoly(normalFrame2, contours[0], (255, 127, 127))
     cv2.addWeighted(normalFrame2, 0.5, normalFrame, 1 - 0.5, 0, normalFrame)
-
+    prev_contours = contours
     end = time.time()
     print(end-start)
 

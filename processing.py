@@ -328,13 +328,13 @@ def removeShadow(hsvFrame, ipmFrame, lines):
     return filteredLines
 
 
-def debug_draw(points, image, status):
+def debug_draw(points, image):
     if len(points) == 0:
         return
-    if status == "s":
-        cv2.polylines(image, np.int32([points]), False, (0, 0, 255), 2, cv2.LINE_AA)
-    elif status == "d":
-        cv2.polylines(image, np.int32([points]), False, (255, 127, 127), 2, cv2.LINE_AA)
+    # if status == "s":
+    #     cv2.polylines(image, np.int32([points]), False, (0, 0, 255), 2, cv2.LINE_AA)
+    # elif status == "d":
+    cv2.polylines(image, np.int32([points]), False, (255, 127, 127), 2, cv2.LINE_AA)
 
 
 def isDashed(lines, seedLine):
