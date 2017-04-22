@@ -18,6 +18,7 @@ for kalman in right_kalmans:
     kalman.transitionMatrix = np.array([[1, 0, 1, 0], [0, 1, 0, 1], [0, 0, 1, 0], [0, 0, 0, 1]], np.float32)
     kalman.processNoiseCov = np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]], np.float32) * 0.0003
 
+
 def determinePtsAndDst(width, height, videoFile):
     dst = np.array([[0, 0], [height, 0], [height, width-200], [0, width-200]], dtype="float32")
     if videoFile == "sample1":
@@ -270,6 +271,61 @@ def curveFit(points_x, points_y, degree, height, pointsNum):
     for i in range(0, len(points_y), 1):
         points.append([points_x[i], points_y[i]])
     return points
+
+
+def removeShadowPoints(hsvFrame, ipmFrame, points):
+    filteredPoints = []
+    boundaries = [([0, 100, 0], [154, 255, 154])]
+    for (lower, upper) in boundaries:
+        # create NumPy arrays from the boundaries
+        lower = np.array(lower, dtype="uint8")
+        upper = np.array(upper, dtype="uint8")
+    mask = cv2.inRange(hsvFrame, lower, upper)
+    ipmFrame = cv2.bitwise_and(ipmFrame, ipmFrame, mask=mask)
+    im2, contours, hierarchy = cv2.findContours(mask, 1, 2)
+    cnts = sorted(contours, key=cv2.contourArea, reverse=True)
+    cv2.drawContours(hsvFrame, cnts, 0, (0, 255, 255), 2)
+    for x, y in points:
+        flag = 0
+        if(cnts == []):
+            return points
+        for cnt in cnts:
+            dist = cv2.pointPolygonTest(cnt, (x, y), True)
+            if( -17 <= dist <= 2):
+                flag = 1
+        if flag == 1:
+            continue
+        else:
+            filteredPoints.append([x, y])
+    return np.array(filteredPoints)
+
+
+def removeShadow(hsvFrame, ipmFrame, lines):
+    filteredLines = []
+    boundaries = [([0, 100, 0], [154, 255, 154])]
+    for (lower, upper) in boundaries:
+        # create NumPy arrays from the boundaries
+        lower = np.array(lower, dtype="uint8")
+        upper = np.array(upper, dtype="uint8")
+    mask = cv2.inRange(hsvFrame, lower, upper)
+    ipmFrame = cv2.bitwise_and(ipmFrame, ipmFrame, mask=mask)
+    im2, contours, hierarchy = cv2.findContours(mask, 1, 2)
+    cnts = sorted(contours, key=cv2.contourArea, reverse=True)
+    cv2.drawContours(hsvFrame, cnts, 0, (0, 255, 255), 2)
+    for line in lines:
+        flag = 0
+        if (cnts == []):
+            return lines
+        for cnt in cnts:
+            dist = cv2.pointPolygonTest(cnt, (line[0], line[1]), True)
+            dist2 = cv2.pointPolygonTest(cnt, (line[2], line[3]), True)
+            if (-17 <= dist or -17 <= dist2):
+                flag = 1
+        if flag == 1:
+            continue
+        else:
+            filteredLines.append([int(line[0]), int(line[1]), int(line[2]), int(line[3]), line[4], line[5], line[6]])
+    return filteredLines
 
 
 def debug_draw(points, image, status):

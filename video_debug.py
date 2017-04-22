@@ -20,6 +20,8 @@ prev_right_points = np.array([])
 prev_left = 0
 prev_right = 0
 
+
+
 while True:
     (grabbed, normalFrame) = stream.read()
     if not grabbed:
@@ -32,13 +34,15 @@ while True:
     lines = lineSegmentDetector(ipmFrame)
     lines = eliminateFalseDetection(lines)
 
-    hsv = cv2.cvtColor(ipmFrame, cv2.COLOR_BGR2HSV)
-    lower_blue = np.array([0, 175, 0])
-    upper_blue = np.array([200, 255, 200])
-    mask = cv2.inRange(hsv, lower_blue, upper_blue)
-    mask = cv2.bitwise_not(mask)
-    ipmFrame = cv2.bitwise_and(ipmFrame, ipmFrame, mask=mask)
-    lines = eliminateFalseDetection2(lines, mask, width, height)
+    hsvFrame = cv2.cvtColor(ipmFrame, cv2.COLOR_BGR2HSV)
+    # lower_blue = np.array([0, 100, 0])
+    # upper_blue = np.array([200, 255, 200])
+    # mask = cv2.inRange(hsvFrame, lower_blue, upper_blue)
+    # mask = cv2.bitwise_not(mask)
+    # mask = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
+    # ipmFrame = cv2.bitwise_and(ipmFrame, mask)
+    # lines = eliminateFalseDetection2(lines, mask, width, height)
+    lines = removeShadow(hsvFrame, ipmFrame, lines)
 
     left_seed_line, right_seed_line = findSeedLines(lines, ipmFrame.shape[1])
     left_region = leftRegionGrowing(lines, left_seed_line)
@@ -69,6 +73,10 @@ while True:
         cv2.circle(magdy, (int(point[0]), int(point[1])), 4, (0, 255, 0), 1, cv2.LINE_AA)
     for point in right_points:
         cv2.circle(magdy, (int(point[0]), int(point[1])), 4, (0, 255, 0), 1, cv2.LINE_AA)
+
+    # left_points = removeShadowPoints(hsvFrame, ipmFrame, left_points)
+    # right_points = removeShadowPoints(hsvFrame, ipmFrame, right_points)
+
     left_points, right_points = enhanceCurveFitting(left_points, right_points, ipmFrame.shape[0])
 
     if left_seed_line != 0:
@@ -125,14 +133,31 @@ while True:
         right_points = kalman(right_points, "r")
         # prev_right_points = right_points
 
+    bottom_points = list()
+    top_points = list()
+    top_points.append(right_points[0])
+    top_points.append(left_points[0])
+    bottom_points.append(left_points[0])
+    bottom_points.append(right_points[0])
+    top_points = np.array(top_points, dtype="int32")
+    bottom_points = np.array(bottom_points, dtype="int32")
+
     debug_draw(left_points, normalFrame, lstatus)
-    debug_draw(right_points, normalFrame, rstatus)
+    debug_draw(right_points, normalFrame, lstatus)
+    debug_draw(top_points, normalFrame, lstatus)
+    debug_draw(bottom_points, normalFrame, lstatus)
+
+    mask = cv2.inRange(normalFrame, (255, 127, 127), (255, 127, 127))
+    im2, contours, h = cv2.findContours(mask, 1, 2)
+    cv2.fillConvexPoly(normalFrame, contours[0], (0, 255, 0))
+
     end = time.time()
     print(end-start)
 
     # cv2.imshow('ipm', ipmFrame)
-    cv2.imshow('used lines', magdy)
+    # cv2.imshow('used lines', magdy)
     cv2.imshow('detected', normalFrame)
-    cv2.imshow('mask', mask)
+    # cv2.imshow('mask', mask)
+    # cv2.imshow('hsv', hsvFrame)
 stream.release()
 cv2.destroyAllWindows()
