@@ -29,6 +29,7 @@ while True:
     if cv2.waitKey(int(fps)) & 0xFF == ord('q'):
         break
     start = time.time()
+    normalFrame2 = normalFrame.copy()
     ipmFrame, homo = fourPointTransform(normalFrame, pts, dst)
     magdy = np.zeros(ipmFrame.shape, dtype=np.uint8)
     lines = lineSegmentDetector(ipmFrame)
@@ -142,14 +143,15 @@ while True:
     top_points = np.array(top_points, dtype="int32")
     bottom_points = np.array(bottom_points, dtype="int32")
 
-    debug_draw(left_points, normalFrame, lstatus)
-    debug_draw(right_points, normalFrame, lstatus)
-    debug_draw(top_points, normalFrame, lstatus)
-    debug_draw(bottom_points, normalFrame, lstatus)
+    debug_draw(top_points, normalFrame2, lstatus)
+    debug_draw(bottom_points, normalFrame2, lstatus)
+    debug_draw(left_points, normalFrame2, lstatus)
+    debug_draw(right_points, normalFrame2, lstatus)
 
-    mask = cv2.inRange(normalFrame, (255, 127, 127), (255, 127, 127))
-    im2, contours, h = cv2.findContours(mask, 1, 2)
-    cv2.fillConvexPoly(normalFrame, contours[0], (0, 255, 0))
+    mask = cv2.inRange(normalFrame2, (255, 127, 127), (255, 127, 127))
+    im2, contours, hierarchy = cv2.findContours(mask, 1, 2)
+    cv2.fillConvexPoly(normalFrame2, contours[0], (255, 127, 127))
+    cv2.addWeighted(normalFrame2, 0.5, normalFrame, 1 - 0.5, 0, normalFrame)
 
     end = time.time()
     print(end-start)
