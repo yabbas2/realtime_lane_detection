@@ -135,10 +135,12 @@ while True:
 
     bottom_points = list()
     top_points = list()
-    top_points.append(right_points[0])
-    top_points.append(left_points[0])
-    bottom_points.append(left_points[0])
-    bottom_points.append(right_points[0])
+    if len(right_points) != 0:
+        top_points.append(right_points[0])
+        bottom_points.append(right_points[0])
+    if len(left_points) != 0:
+        top_points.append(left_points[0])
+        bottom_points.append(left_points[0])
     top_points = np.array(top_points, dtype="int32")
     bottom_points = np.array(bottom_points, dtype="int32")
 
