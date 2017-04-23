@@ -36,9 +36,11 @@ public:
     ~MainWindow();
     MultiVideoViewer *getMultiVideoViewerWidget();
     fullScreenVideoViewer *getFullScreenVideoViewerWidget();
+    VideoWidget *getVideoWidget();
 
 private slots:
     void switchToFullScreen();
+    void switchToMain();
 
 private:
     MultiVideoViewer *mulVidWidget;

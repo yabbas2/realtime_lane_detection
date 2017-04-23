@@ -22,9 +22,11 @@ public:
 signals:
     void endStream();
 
-private slots:
-    void startStreamIn();
+public slots:
+    void loopStreamIn();
     void stopStreamIn();
+    void pauseStreamIn();
+    void startStreamIn();
 
 private:
     cv::Mat inputFrame;

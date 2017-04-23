@@ -12,6 +12,7 @@
 #include "stream_in.h"
 #include "stream_out.h"
 #include "front-end/viewers/multivideoviewer.h"
+#include "front-end/videowidget.h"
 
 #define StreamingVideos     4
 
@@ -30,6 +31,8 @@ public slots:
 private slots:
     void showFrames();
     void FullScreenFrame(int index);
+    void start_timers();
+    void stop_timers();
 
 private:
     QString streamInSource;
@@ -39,6 +42,7 @@ private:
     cv::Mat *fsFrame;
     MultiVideoViewer *multiViewer;
     fullScreenVideoViewer *fsViewer;
+    VideoWidget *videoWidget;
     QTimer timer;
     int width, height, fps;
 };

@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(mulVidWidget->getVideoWidget(1), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen()));
     connect(mulVidWidget->getVideoWidget(2), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen()));
     connect(mulVidWidget->getVideoWidget(3), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen()));
+    connect(vidWid, SIGNAL(switchToMain()), this, SLOT(switchToMain()));
 }
 
 MultiVideoViewer *MainWindow::getMultiVideoViewerWidget()
@@ -51,10 +52,21 @@ fullScreenVideoViewer *MainWindow::getFullScreenVideoViewerWidget()
     return fsVidWidget;
 }
 
+VideoWidget *MainWindow::getVideoWidget()
+{
+    return vidWid;
+}
+
 void MainWindow::switchToFullScreen()
 {
     cen1->setVisible(false);
     cen2->setVisible(true);
+}
+
+void MainWindow::switchToMain()
+{
+    cen1->setVisible(true);
+    cen2->setVisible(false);
 }
 
 MainWindow::~MainWindow()

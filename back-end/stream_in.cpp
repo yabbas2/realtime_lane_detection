@@ -19,23 +19,41 @@ void StreamIn::initStreamIn(QString source)
     }
     int msec = static_cast<int> (1000 / cap.get(cv::CAP_PROP_FPS));
     connect(this, SIGNAL(endStream()), this, SLOT(stopStreamIn()));
-    connect(&timer, SIGNAL(timeout()), this, SLOT(startStreamIn()));
+    connect(&timer, SIGNAL(timeout()), this, SLOT(loopStreamIn()));
     timer.start(msec + 1);
     qDebug() << "start streaming";
 }
 
-void StreamIn::startStreamIn()
+void StreamIn::loopStreamIn()
 {
     cap >> inputFrame;
     if (!cap.grab())
         emit endStream();
 }
 
+void StreamIn::startStreamIn()
+{
+    if (timer.isActive())
+        return;
+    timer.start(static_cast<int> (1000 / cap.get(cv::CAP_PROP_FPS)) + 1);
+    qDebug() << "start streaming";
+}
+
 void StreamIn::stopStreamIn()
 {
+    if (!timer.isActive())
+        return;
     timer.stop();
-    qDebug() << "end streaming";
+    qDebug() << "stop streaming";
     cap.release();
+}
+
+void StreamIn::pauseStreamIn()
+{
+    if (!timer.isActive())
+        return;
+    timer.stop();
+    qDebug() << "pause streaming";
 }
 
 void StreamIn::getVideoInfo(int &w, int &h, int &fps)
