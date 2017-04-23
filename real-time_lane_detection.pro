@@ -1,9 +1,4 @@
 #-------------------------------------------------
-#
-# Project created by QtCreator 2017-04-15T13:24:56
-#
-#-------------------------------------------------
-
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -37,7 +32,9 @@ SOURCES += main.cpp\
             front-end/sidebar/lsdwidget.cpp \
             front-end/sidebar/curvefitwidget.cpp \
             front-end/sidebar/decisionmakewidget.cpp \
-            front-end/sidebar/regiongrowwidget.cpp
+            front-end/sidebar/regiongrowwidget.cpp \
+            front-end/videocontrols.cpp \
+            front-end/videostatistics.cpp
 
 HEADERS  += mainwindow.h \
             front-end/viewers/opencv_opengl_viewer.h \
@@ -52,22 +49,25 @@ HEADERS  += mainwindow.h \
             front-end/sidebar/lsdwidget.h \
             front-end/sidebar/curvefitwidget.h \
             front-end/sidebar/decisionmakewidget.h \
-            front-end/sidebar/regiongrowwidget.h
+            front-end/sidebar/regiongrowwidget.h \
+            front-end/videocontrols.h \
+            front-end/videostatistics.h
 
 
 unix {
 CONFIG += c++11
 CONFIG += link_pkgconfig
 PKGCONFIG += opencv
-}
+}       
 
 win32 {
 CONFIG += c++11
-INCLUDEPATH += "C:/opencv/include"
-LIBS += -LC:/opencv/opencv_bin2/bin \
-    libopencv_core240d \
-    libopencv_highgui240d \
-    libopencv_imgproc240d \
-    libopencv_features2d240d \
-    libopencv_calib3d240d \
+INCLUDEPATH += C:/opencv/build/include
+LIBS += -LC:/opencv/build/bin \
+C:/opencv/build/x64/vc14/lib/opencv_world310.lib \
+C:/opencv/build/x64/vc14/lib/opencv_world310d.lib \
+-LC:/opencv/build/x64/vc14/bin \
+C:/opencv/build/x64/vc12/lib/opencv_world310.lib \
+C:/opencv/build/x64/vc12/lib/opencv_world310d.lib
+-LC:/opencv/build/x64/vc12/bin
 }
