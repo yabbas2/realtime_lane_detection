@@ -63,11 +63,12 @@ PKGCONFIG += opencv
 
 win32 {
 CONFIG += c++11
-INCLUDEPATH += "C:/opencv/include"
-LIBS += -LC:/opencv/opencv_bin2/bin \
-    libopencv_core240d \
-    libopencv_highgui240d \
-    libopencv_imgproc240d \
-    libopencv_features2d240d \
-    libopencv_calib3d240d \
+INCLUDEPATH += C:/opencv/build/include
+LIBS += -LC:/opencv/build/bin \
+C:/opencv/build/x64/vc14/lib/opencv_world310.lib \
+C:/opencv/build/x64/vc14/lib/opencv_world310d.lib \
+-LC:/opencv/build/x64/vc14/bin \
+C:/opencv/build/x64/vc12/lib/opencv_world310.lib \
+C:/opencv/build/x64/vc12/lib/opencv_world310d.lib
+-LC:/opencv/build/x64/vc12/bin
 }
