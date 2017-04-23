@@ -32,7 +32,7 @@ void Stream::showFrames()
         fsViewer->getVideoWidget()->showImage(*fsFrame);
 }
 
-void Stream::connectToFrontEnd(MainWindow *w)
+void Stream::connectFrontEndToStreamBackEnd(MainWindow *w)
 {
     multiViewer = w->getMultiVideoViewerWidget();
     fsViewer = w->getFullScreenVideoViewerWidget();

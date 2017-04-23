@@ -21,7 +21,7 @@ class Stream : public QObject
 
 public:
     Stream();
-    void connectToFrontEnd(MainWindow *w);
+    void connectFrontEndToStreamBackEnd(MainWindow *w);
     void setPointsToDraw(std::vector<cv::Vec2i> *pts);
 
 public slots:

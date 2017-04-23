@@ -19,11 +19,13 @@
 #include "front-end/sidebar/side_bar.h"
 #include "front-end/viewers/multivideoviewer.h"
 #include "front-end/viewers/fullscreenvideoviewer.h"
+#include "front-end/videowidget.h"
 
 #define mainWindowWidth     854
 #define mainWindowHeight    480
 #define sideBarWidth        300
 #define multiVideoWidth     (mainWindowWidth-sideBarWidth)
+#define videoWidgetWidth    300
 
 class MainWindow : public QMainWindow
 {
@@ -42,6 +44,7 @@ private:
     MultiVideoViewer *mulVidWidget;
     fullScreenVideoViewer *fsVidWidget;
     Side_bar *sidebar;
+    VideoWidget *vidWid;
     QWidget *cen1;
     QWidget *cen2;
     QGridLayout *grid_main_layout;
@@ -50,11 +53,6 @@ private:
     QGraphicsOpacityEffect *mEffect;
     QGraphicsOpacityEffect *wEffect;
 
-signals:
-    void sidebar_disappear();
-
-private slots:
-    void ToFullScreenAnimationFinish();
 };
 
 #endif // MAINWINDOW_H

@@ -7,7 +7,7 @@ Side_bar::Side_bar(QWidget *parent) :
     v_main_scroll_area = new QVBoxLayout;
     mainWidget = new QWidget(this);
     main_scroll_area = new QScrollArea(this);
-    QFont f( "Arial", 8, QFont::Normal);
+    QFont f("Arial", 8, QFont::Normal);
     this->setFont(f);
     this->setLayout(v_main_scroll_area);
     v_main_scroll_area->addWidget(main_scroll_area);

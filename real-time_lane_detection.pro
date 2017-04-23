@@ -33,8 +33,7 @@ SOURCES += main.cpp\
             front-end/sidebar/curvefitwidget.cpp \
             front-end/sidebar/decisionmakewidget.cpp \
             front-end/sidebar/regiongrowwidget.cpp \
-            front-end/videocontrols.cpp \
-            front-end/videostatistics.cpp
+    front-end/videowidget.cpp
 
 HEADERS  += mainwindow.h \
             front-end/viewers/opencv_opengl_viewer.h \
@@ -50,8 +49,7 @@ HEADERS  += mainwindow.h \
             front-end/sidebar/curvefitwidget.h \
             front-end/sidebar/decisionmakewidget.h \
             front-end/sidebar/regiongrowwidget.h \
-            front-end/videocontrols.h \
-            front-end/videostatistics.h
+    front-end/videowidget.h
 
 
 unix {
@@ -71,3 +69,6 @@ C:/opencv/build/x64/vc12/lib/opencv_world310.lib \
 C:/opencv/build/x64/vc12/lib/opencv_world310d.lib
 -LC:/opencv/build/x64/vc12/bin
 }
+
+RESOURCES += \
+    resources.qrc
