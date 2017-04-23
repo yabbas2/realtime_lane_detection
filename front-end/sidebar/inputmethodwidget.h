@@ -12,9 +12,12 @@
 #include <QPushButton>
 #include <QSpacerItem>
 #include <QString>
+#include <QFileDialog>
+#include <QDir>
 
 #define InputBoxFixedWidth  240
 #define InputBoxFixedHeight  110
+#define FileDirectory "/media/amany/ALL"
 
 class InputMethodWidget : public QWidget
 {
@@ -24,6 +27,7 @@ public:
 
 private slots:
     void comboBox(QString item);
+    void browseVideoClicked();
 
 private:
     QGroupBox *input_gb;
