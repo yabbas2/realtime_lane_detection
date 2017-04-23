@@ -20,14 +20,14 @@ MainWindow::MainWindow(QWidget *parent)
     sidebar->setFixedSize(sideBarWidth, mainWindowHeight);
     grid_main_layout->addWidget(sidebar, 0, 0);
 
-    mulVidWidget = new MultiVideoViewer(cen1);
-    mulVidWidget->setFixedSize(multiVideoWidth, mainWindowHeight);
-    mulVidWidget->setVideoSize(200, 200, 200, 200);
-    grid_main_layout->addWidget(mulVidWidget, 0, 1);
+//    mulVidWidget = new MultiVideoViewer(cen1);
+//    mulVidWidget->setFixedSize(multiVideoWidth, mainWindowHeight);
+//    mulVidWidget->setVideoSize(200, 200, 200, 200);
+//    grid_main_layout->addWidget(mulVidWidget, 0, 1);
 
-    fsVidWidget = new fullScreenVideoViewer(cen2);
-    fsVidWidget->setFixedSize(mainWindowWidth, mainWindowHeight);
-    fsVidWidget->setVideoSize(fsVidWidget->size());
+//    fsVidWidget->setVideoSize(fsVidWidget->size());
+//    fsVidWidget->setFixedSize(mainWindowWidth, mainWindowHeight);
+//    fsVidWidget = new fullScreenVideoViewer(cen2);
 
     cen1->setVisible(true);
     cen2->setVisible(false);
@@ -40,21 +40,21 @@ MainWindow::MainWindow(QWidget *parent)
 //    wEffect->setOpacity(0.0);
 //    cen2->setGraphicsEffect(wEffect);
 
-    connect(mulVidWidget->getVideoWidget(0), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen()));
-    connect(mulVidWidget->getVideoWidget(1), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen()));
-    connect(mulVidWidget->getVideoWidget(2), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen()));
-    connect(mulVidWidget->getVideoWidget(3), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen()));
+//    connect(mulVidWidget->getVideoWidget(0), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen()));
+//    connect(mulVidWidget->getVideoWidget(1), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen()));
+//    connect(mulVidWidget->getVideoWidget(2), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen()));
+//    connect(mulVidWidget->getVideoWidget(3), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen()));
 }
 
-MultiVideoViewer *MainWindow::getMultiVideoViewerWidget()
-{
-    return mulVidWidget;
-}
+//MultiVideoViewer *MainWindow::getMultiVideoViewerWidget()
+//{
+//    return mulVidWidget;
+//}
 
-fullScreenVideoViewer *MainWindow::getFullScreenVideoViewerWidget()
-{
-    return fsVidWidget;
-}
+//fullScreenVideoViewer *MainWindow::getFullScreenVideoViewerWidget()
+//{
+//    return fsVidWidget;
+//}
 
 void MainWindow::switchToFullScreen()
 {

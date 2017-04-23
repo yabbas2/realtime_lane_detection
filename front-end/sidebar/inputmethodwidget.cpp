@@ -49,6 +49,7 @@ InputMethodWidget::InputMethodWidget(QWidget *parent) :
     stop_video->setText("stop");
     pause_video->setText("pause");
     connect(input, SIGNAL(activated(QString)), this, SLOT(comboBox(QString)));
+    connect(browse_video, SIGNAL(clicked(bool)), this, SLOT(browseVideoClicked()));
     this->setFixedSize(input_gb->size());
 }
 
@@ -82,4 +83,10 @@ void InputMethodWidget::comboBox(QString item)
         stop_camera->setVisible(false);
         pause_camera->setVisible(false);
     }
+}
+
+void InputMethodWidget::browseVideoClicked()
+{
+    QString file_name = QFileDialog::getOpenFileName(this, tr("Select Video"), DirectoryName, tr("Videos (*.mp4)"));
+    qDebug() << "file:" + file_name;
 }

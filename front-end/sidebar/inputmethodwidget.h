@@ -13,9 +13,12 @@
 #include <QSpacerItem>
 #include <QString>
 #include <QDir>
+#include <QFileDialog>
+#include <QDebug>
 
 #define InputBoxFixedWidth  240
 #define InputBoxFixedHeight  110
+#define DirectoryName "/home"
 
 class InputMethodWidget : public QWidget
 {
@@ -25,6 +28,7 @@ public:
 
 private slots:
     void comboBox(QString item);
+    void browseVideoClicked();
 
 private:
     QGroupBox *input_gb;

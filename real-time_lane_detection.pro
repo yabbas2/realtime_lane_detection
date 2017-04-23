@@ -25,42 +25,42 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
             mainwindow.cpp \
-            front-end/viewers/opencv_opengl_viewer.cpp \
-            front-end/viewers/multivideoviewer.cpp \
+#            front-end/viewers/opencv_opengl_viewer.cpp \
+#            front-end/viewers/multivideoviewer.cpp \
             front-end/sidebar/side_bar.cpp \
-            front-end/viewers/fullscreenvideoviewer.cpp \
-            back-end/stream_in.cpp \
-            back-end/stream_out.cpp \
-            back-end/stream.cpp \
+#            front-end/viewers/fullscreenvideoviewer.cpp \
             front-end/sidebar/gaussianblurwidget.cpp \
             front-end/sidebar/inputmethodwidget.cpp \
             front-end/sidebar/lsdwidget.cpp \
             front-end/sidebar/curvefitwidget.cpp \
             front-end/sidebar/decisionmakewidget.cpp \
-            front-end/sidebar/regiongrowwidget.cpp \
-            back-end/ipm.cpp
+            front-end/sidebar/regiongrowwidget.cpp
+#            back-end/ipm.cpp
+#            back-end/stream.cpp
+#            back-end/stream_in.cpp
+#            back-end/stream_out.cpp
 
 HEADERS  += mainwindow.h \
-            front-end/viewers/opencv_opengl_viewer.h \
-            front-end/viewers/multivideoviewer.h \
+#            front-end/viewers/opencv_opengl_viewer.h \
+#            front-end/viewers/multivideoviewer.h \
             front-end/sidebar/side_bar.h \
-            front-end/viewers/fullscreenvideoviewer.h \
-            back-end/stream_in.h \
-            back-end/stream_out.h \
-            back-end/stream.h \
+#            front-end/viewers/fullscreenvideoviewer.h \
             front-end/sidebar/gaussianblurwidget.h \
             front-end/sidebar/inputmethodwidget.h \
             front-end/sidebar/lsdwidget.h \
             front-end/sidebar/curvefitwidget.h \
             front-end/sidebar/decisionmakewidget.h \
-            front-end/sidebar/regiongrowwidget.h \
-            back-end/ipm.h
+            front-end/sidebar/regiongrowwidget.h
+#            back-end/ipm.h
+#            back-end/stream.h
+#            back-end/stream_in.h
+#            back-end/stream_out.h
 
 
 unix {
 CONFIG += c++11
 CONFIG += link_pkgconfig
-PKGCONFIG += opencv
+#PKGCONFIG += opencv
 }
 
 win32 {

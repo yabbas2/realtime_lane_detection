@@ -9,8 +9,8 @@
 #include <vector>
 #include "mainwindow.h"
 #include "front-end/viewers/fullscreenvideoviewer.h"
-#include "stream_in.h"
-#include "stream_out.h"
+#include "#stream_in.h"
+#include "#stream_out.h"
 #include "front-end/viewers/multivideoviewer.h"
 
 #define StreamingVideos     4
