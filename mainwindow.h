@@ -23,6 +23,7 @@
 #define mainWindowWidth     854
 #define mainWindowHeight    480
 #define sideBarWidth        300
+#define sideBarHeight       (mainWindowHeight-50)
 #define multiVideoWidth     (mainWindowWidth-sideBarWidth)
 #define videoWidgetWidth    300
 

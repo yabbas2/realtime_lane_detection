@@ -62,7 +62,7 @@ void Stream::pause_timers()
 void Stream::start_timers()
 {
     stream_in.startStreamIn();
-    timer.start(static_cast<int> (1000/fps) + 1);
+    timer.start(static_cast<int> (1000/fps) + delayOffset);
 }
 
 void Stream::FullScreenFrame(int index)

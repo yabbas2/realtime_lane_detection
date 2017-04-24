@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     cen1->setLayout(grid_main_layout);
 
     sidebar = new Side_bar(cen1);
-    sidebar->setFixedSize(sideBarWidth, mainWindowHeight);
+    sidebar->setFixedSize(sideBarWidth, sideBarHeight);
     grid_main_layout->addWidget(sidebar, 0, 0);
 
     mulVidWidget = new MultiVideoViewer(cen1);

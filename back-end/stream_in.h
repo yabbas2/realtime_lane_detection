@@ -3,10 +3,11 @@
 
 #include <opencv2/opencv.hpp>
 #include <QObject>
-#include <QThread>
 #include <QDebug>
 #include <QString>
 #include <QTimer>
+
+#define delayOffset     25
 
 class StreamIn : public QObject
 {

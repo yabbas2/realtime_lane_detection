@@ -31,7 +31,7 @@ void StreamIn::startStreamIn()
 {
     if (timer.isActive())
         return;
-    timer.start(static_cast<int> (1000 / cap.get(cv::CAP_PROP_FPS)) + 1);
+    timer.start(static_cast<int> (1000 / cap.get(cv::CAP_PROP_FPS)) + delayOffset);
     qDebug() << "start streaming";
 }
 
