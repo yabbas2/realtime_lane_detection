@@ -21,18 +21,18 @@ class Side_bar : public QWidget
 public:
     explicit Side_bar(QWidget *parent = 0);
     ~Side_bar();
+    InputMethodWidget *inputMethod;
+    CurveFitWidget *curveFit;
+    DecisionMakeWidget *decisionMake;
+    GaussianBlurWidget *gaussianBlur;
+    LSDWidget *lsd;
+    RegionGrowWidget *regionGrow;
 
 private:
     QWidget * mainWidget;
     QScrollArea *main_scroll_area;
     QVBoxLayout *v_main;
     QVBoxLayout *v_main_scroll_area;
-    CurveFitWidget *curveFit;
-    DecisionMakeWidget *decisionMake;
-    GaussianBlurWidget *gaussianBlur;
-    InputMethodWidget *inputMethod;
-    LSDWidget *lsd;
-    RegionGrowWidget *regionGrow;
 
 };
 

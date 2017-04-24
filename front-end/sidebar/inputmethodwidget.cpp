@@ -49,7 +49,13 @@ InputMethodWidget::InputMethodWidget(QWidget *parent) :
     stop_video->setText("stop");
     pause_video->setText("pause");
     connect(input, SIGNAL(activated(QString)), this, SLOT(comboBox(QString)));
+    connect(pause_video, SIGNAL(clicked(bool)), this, SLOT(pause()));
     this->setFixedSize(input_gb->size());
+}
+
+void InputMethodWidget::pause()
+{
+    emit pauseStreaming();
 }
 
 void InputMethodWidget::comboBox(QString item)

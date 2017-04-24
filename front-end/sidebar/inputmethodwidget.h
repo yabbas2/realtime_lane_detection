@@ -24,6 +24,10 @@ public:
 
 private slots:
     void comboBox(QString item);
+    void pause();
+
+signals:
+    void pauseStreaming();
 
 private:
     QGroupBox *input_gb;

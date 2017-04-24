@@ -13,6 +13,7 @@
 #include "stream_out.h"
 #include "front-end/viewers/multivideoviewer.h"
 #include "front-end/videowidget.h"
+#include "front-end/sidebar/side_bar.h"
 
 #define StreamingVideos     4
 
@@ -43,6 +44,7 @@ private:
     MultiVideoViewer *multiViewer;
     fullScreenVideoViewer *fsViewer;
     VideoWidget *videoWidget;
+    Side_bar *sideBar;
     QTimer timer;
     int width, height, fps;
 };

@@ -32,14 +32,17 @@ MainWindow::MainWindow(QWidget *parent)
     vidWid = new VideoWidget(cen2);
     vidWid->setFixedSize(videoWidgetWidth, mainWindowHeight);
 
-    cen1->setVisible(true);
-    cen2->setVisible(false);
+    widgetStack = new QStackedWidget(this);
+    widgetStack->insertWidget(0, cen1);
+    widgetStack->insertWidget(1, cen2);
+    widgetStack->setFixedSize(this->size());
+    widgetStack->setCurrentIndex(0);
 
     connect(mulVidWidget->getVideoWidget(0), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen()));
     connect(mulVidWidget->getVideoWidget(1), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen()));
     connect(mulVidWidget->getVideoWidget(2), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen()));
     connect(mulVidWidget->getVideoWidget(3), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen()));
-    connect(vidWid, SIGNAL(switchToMain()), this, SLOT(switchToMain()));
+    connect(vidWid, SIGNAL(switchToMain()), this, SLOT(switchToMainScreen()));
 }
 
 MultiVideoViewer *MainWindow::getMultiVideoViewerWidget()
@@ -57,16 +60,19 @@ VideoWidget *MainWindow::getVideoWidget()
     return vidWid;
 }
 
-void MainWindow::switchToFullScreen()
+Side_bar *MainWindow::getSideBarWidget()
 {
-    cen1->setVisible(false);
-    cen2->setVisible(true);
+    return sidebar;
 }
 
-void MainWindow::switchToMain()
+void MainWindow::switchToFullScreen()
 {
-    cen1->setVisible(true);
-    cen2->setVisible(false);
+    widgetStack->setCurrentIndex(1);
+}
+
+void MainWindow::switchToMainScreen()
+{
+    widgetStack->setCurrentIndex(0);
 }
 
 MainWindow::~MainWindow()

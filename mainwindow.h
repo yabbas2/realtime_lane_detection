@@ -13,9 +13,8 @@
 #include <QComboBox>
 #include <QSlider>
 #include <QGridLayout>
-#include <QGraphicsOpacityEffect>
 #include <QList>
-#include <QPropertyAnimation>
+#include <QStackedWidget>
 #include "front-end/sidebar/side_bar.h"
 #include "front-end/viewers/multivideoviewer.h"
 #include "front-end/viewers/fullscreenvideoviewer.h"
@@ -37,10 +36,11 @@ public:
     MultiVideoViewer *getMultiVideoViewerWidget();
     fullScreenVideoViewer *getFullScreenVideoViewerWidget();
     VideoWidget *getVideoWidget();
+    Side_bar *getSideBarWidget();
 
 private slots:
     void switchToFullScreen();
-    void switchToMain();
+    void switchToMainScreen();
 
 private:
     MultiVideoViewer *mulVidWidget;
@@ -50,10 +50,7 @@ private:
     QWidget *cen1;
     QWidget *cen2;
     QGridLayout *grid_main_layout;
-    QPropertyAnimation* animation;
-    QPropertyAnimation* animation2;
-    QGraphicsOpacityEffect *mEffect;
-    QGraphicsOpacityEffect *wEffect;
+    QStackedWidget *widgetStack;
 
 };
 
