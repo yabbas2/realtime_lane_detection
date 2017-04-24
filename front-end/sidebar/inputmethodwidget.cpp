@@ -6,10 +6,6 @@ InputMethodWidget::InputMethodWidget(QWidget *parent) :
     input_gb = new QGroupBox(this);
     input_gb->setFixedSize(InputBoxFixedWidth, InputBoxFixedHeight);
     browse_video = new QPushButton(input_gb);
-    stop_video = new QPushButton(input_gb);
-    start_camera = new QPushButton(input_gb);
-    stop_camera = new QPushButton(input_gb);
-    pause_camera = new QPushButton(input_gb);
     pause_video = new QPushButton(input_gb);
     start_video = new QPushButton(input_gb);
     input = new QComboBox(input_gb);
@@ -28,28 +24,18 @@ InputMethodWidget::InputMethodWidget(QWidget *parent) :
     v_input->addLayout(h_input);
     input_gb->setTitle("Input Method");
     browse_video->setVisible(false);
-    stop_video->setVisible(false);
-    start_camera->setVisible(false);
-    stop_camera->setVisible(false);
     start_video->setVisible(false);
     pause_video->setVisible(false);
-    pause_camera->setVisible(false);
-    start_camera->setText("start");
-    stop_camera->setText("stop");
-    pause_camera->setText("pause");
-    h_input->addWidget(start_camera);
-    h_input->addWidget(pause_camera);
-    h_input->addWidget(stop_camera);
     h_input->addWidget(browse_video);
     h_input->addWidget(start_video);
     h_input->addWidget(pause_video);
-    h_input->addWidget(stop_video);
-    browse_video->setText("browse");
-    start_video->setText("start");
-    stop_video->setText("stop");
-    pause_video->setText("pause");
+    browse_video->setIcon(QIcon(":/icons/browse.png"));
+    start_video->setIcon(QIcon(":/icons/play.png"));
+    pause_video->setIcon(QIcon(":/icons/pause.png"));
     connect(input, SIGNAL(activated(QString)), this, SLOT(comboBox(QString)));
     connect(pause_video, SIGNAL(clicked(bool)), this, SLOT(pause()));
+    connect(start_video, SIGNAL(clicked(bool)), this, SLOT(play()));
+    connect(browse_video, SIGNAL(clicked(bool)), this, SLOT(browseVideo()));
     this->setFixedSize(input_gb->size());
 }
 
@@ -58,34 +44,36 @@ void InputMethodWidget::pause()
     emit pauseStreaming();
 }
 
+void InputMethodWidget::play()
+{
+    emit startStreaming();
+}
+
 void InputMethodWidget::comboBox(QString item)
 {
     if (item == "Camera"){
         browse_video->setVisible(false);
-        stop_video->setVisible(false);
-        pause_video->setVisible(false);
-        start_video->setVisible(false);
-        start_camera->setVisible(true);
-        stop_camera->setVisible(true);
-        pause_camera->setVisible(true);
+        pause_video->setVisible(true);
+        start_video->setVisible(true);
+        emit changeVideoSource("/dev/video0");
     }
     else if (item == "Video File"){
         browse_video->setVisible(true);
-        stop_video->setVisible(true);
         pause_video->setVisible(true);
         start_video->setVisible(true);
-        start_camera->setVisible(false);
-        stop_camera->setVisible(false);
-        pause_camera->setVisible(false);
 
     }
     else if (item == "None"){
         browse_video->setVisible(false);
-        stop_video->setVisible(false);
         pause_video->setVisible(false);
         start_video->setVisible(false);
-        start_camera->setVisible(false);
-        stop_camera->setVisible(false);
-        pause_camera->setVisible(false);
     }
+}
+
+void InputMethodWidget::browseVideo()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, "Choose video file", "/home", "*.mp4");
+    qDebug() << fileName;
+    if (fileName.length() > 0)
+        emit changeVideoSource(fileName);
 }

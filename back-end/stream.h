@@ -7,6 +7,7 @@
 #include <QTimer>
 #include <opencv2/opencv.hpp>
 #include <vector>
+#include <QImage>
 #include "mainwindow.h"
 #include "front-end/viewers/fullscreenvideoviewer.h"
 #include "stream_in.h"
@@ -33,7 +34,7 @@ private slots:
     void showFrames();
     void FullScreenFrame(int index);
     void start_timers();
-    void stop_timers();
+    void pause_timers();
 
 private:
     QString streamInSource;
@@ -47,6 +48,8 @@ private:
     Side_bar *sideBar;
     QTimer timer;
     int width, height, fps;
+
+    void initScreens();
 };
 
 #endif // STREAM_H

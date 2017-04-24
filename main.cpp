@@ -13,7 +13,6 @@ int main(int argc, char *argv[])
 
     Stream st;
     st.connectFrontEndToStreamBackEnd(&w);
-    st.changeStreamInSource("/home/yousef/projects/real-time_lane_detection/Data/samplesVideos/sample1.mp4");
 
     return a.exec();
 }

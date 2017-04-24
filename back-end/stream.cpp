@@ -8,11 +8,14 @@ Stream::Stream() : width(0), height(0), fps(0)
 
 void Stream::changeStreamInSource(QString source)
 {
+    if (timer.isActive())
+        timer.stop();
+    stream_in.stopStreamIn();
     streamInSource = source;
     stream_in.initStreamIn(streamInSource);
     stream_in.getVideoInfo(width, height, fps);
     qDebug() << "using framerate:" << fps;
-    timer.start(static_cast<int> (1000/fps) + 1);
+    initScreens();
 }
 
 void Stream::showFrames()
@@ -42,12 +45,15 @@ void Stream::connectFrontEndToStreamBackEnd(MainWindow *w)
     connect(multiViewer->getVideoWidget(1), SIGNAL(mouseClicked(int)), this, SLOT(FullScreenFrame(int)));
     connect(multiViewer->getVideoWidget(2), SIGNAL(mouseClicked(int)), this, SLOT(FullScreenFrame(int)));
     connect(multiViewer->getVideoWidget(3), SIGNAL(mouseClicked(int)), this, SLOT(FullScreenFrame(int)));
-    connect(videoWidget, SIGNAL(pauseStreaming()), this, SLOT(stop_timers()));
+    connect(videoWidget, SIGNAL(pauseStreaming()), this, SLOT(pause_timers()));
     connect(videoWidget, SIGNAL(startStreaming()), this, SLOT(start_timers()));
-    connect(sideBar->inputMethod, SIGNAL(pauseStreaming()), this, SLOT(stop_timers()));
+    connect(sideBar->inputMethod, SIGNAL(pauseStreaming()), this, SLOT(pause_timers()));
+    connect(sideBar->inputMethod, SIGNAL(startStreaming()), this, SLOT(start_timers()));
+    connect(sideBar->inputMethod, SIGNAL(changeVideoSource(QString)), this, SLOT(changeStreamInSource(QString)));
+    initScreens();
 }
 
-void Stream::stop_timers()
+void Stream::pause_timers()
 {
     stream_in.pauseStreamIn();
     timer.stop();
@@ -68,4 +74,14 @@ void Stream::FullScreenFrame(int index)
 void Stream::setPointsToDraw(std::vector<cv::Vec2i> *pts)
 {
     stream_out.setDrawingData(pts);
+}
+
+void Stream::initScreens()
+{
+    cv::Mat default_screen = cv::Mat::zeros(480, 854, CV_8UC3);
+    multiViewer->getVideoWidget(MultiVideoViewerWidget::normal)->showImage(default_screen);
+    multiViewer->getVideoWidget(MultiVideoViewerWidget::final_rgb)->showImage(default_screen);
+    multiViewer->getVideoWidget(MultiVideoViewerWidget::ipm_rgb)->showImage(default_screen);
+    multiViewer->getVideoWidget(MultiVideoViewerWidget::ipm_bw)->showImage(default_screen);
+    fsViewer->getVideoWidget()->showImage(default_screen);
 }

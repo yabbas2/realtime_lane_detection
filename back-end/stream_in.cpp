@@ -3,7 +3,8 @@
 StreamIn::StreamIn(QObject *parent) :
     QObject(parent)
 {
-
+    connect(this, SIGNAL(endStream()), this, SLOT(stopStreamIn()));
+    connect(&timer, SIGNAL(timeout()), this, SLOT(loopStreamIn()));
 }
 
 void StreamIn::initStreamIn(QString source)
@@ -17,11 +18,6 @@ void StreamIn::initStreamIn(QString source)
         qDebug() << "Cannot open video streaming source";
         return;
     }
-    int msec = static_cast<int> (1000 / cap.get(cv::CAP_PROP_FPS));
-    connect(this, SIGNAL(endStream()), this, SLOT(stopStreamIn()));
-    connect(&timer, SIGNAL(timeout()), this, SLOT(loopStreamIn()));
-    timer.start(msec + 1);
-    qDebug() << "start streaming";
 }
 
 void StreamIn::loopStreamIn()
@@ -41,7 +37,7 @@ void StreamIn::startStreamIn()
 
 void StreamIn::stopStreamIn()
 {
-    if (!timer.isActive())
+    if (!timer.isActive() && !cap.isOpened())
         return;
     timer.stop();
     qDebug() << "stop streaming";
