@@ -33,8 +33,9 @@ SOURCES += main.cpp\
             front-end/sidebar/curvefitwidget.cpp \
             front-end/sidebar/decisionmakewidget.cpp \
             front-end/sidebar/regiongrowwidget.cpp \
-    front-end/videowidget.cpp \
-    back-end/pipeline.cpp
+            front-end/videowidget.cpp \
+            back-end/pipeline.cpp
+            back-end/curvefit.cpp
 
 HEADERS  += mainwindow.h \
             front-end/viewers/opencv_opengl_viewer.h \
@@ -50,15 +51,16 @@ HEADERS  += mainwindow.h \
             front-end/sidebar/curvefitwidget.h \
             front-end/sidebar/decisionmakewidget.h \
             front-end/sidebar/regiongrowwidget.h \
-    front-end/videowidget.h \
-    back-end/pipeline.h
-
+            front-end/videowidget.h \
+            back-end/pipeline.h
+            back-end/curvefit.h
 
 unix {
 CONFIG += c++11
 CONFIG += link_pkgconfig
 PKGCONFIG += opencv
-}       
+LIBS += -lalglib
+}
 
 win32 {
 CONFIG += c++11
