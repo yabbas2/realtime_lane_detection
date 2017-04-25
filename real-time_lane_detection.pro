@@ -33,7 +33,8 @@ SOURCES += main.cpp\
             front-end/sidebar/curvefitwidget.cpp \
             front-end/sidebar/decisionmakewidget.cpp \
             front-end/sidebar/regiongrowwidget.cpp \
-    front-end/videowidget.cpp
+    front-end/videowidget.cpp \
+    back-end/pipeline.cpp
 
 HEADERS  += mainwindow.h \
             front-end/viewers/opencv_opengl_viewer.h \
@@ -49,7 +50,8 @@ HEADERS  += mainwindow.h \
             front-end/sidebar/curvefitwidget.h \
             front-end/sidebar/decisionmakewidget.h \
             front-end/sidebar/regiongrowwidget.h \
-    front-end/videowidget.h
+    front-end/videowidget.h \
+    back-end/pipeline.h
 
 
 unix {

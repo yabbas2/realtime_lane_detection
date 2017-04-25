@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     mulVidWidget = new MultiVideoViewer(cen1);
     mulVidWidget->setFixedSize(multiVideoWidth, mainWindowHeight);
-    mulVidWidget->setVideoSize(200, 200, 200, 200);
+    mulVidWidget->setVideoSize(200, 150);
     grid_main_layout->addWidget(mulVidWidget, 0, 1);
 
     fsVidWidget = new fullScreenVideoViewer(cen2);

@@ -78,10 +78,11 @@ void Stream::setPointsToDraw(std::vector<cv::Vec2i> *pts)
 
 void Stream::initScreens()
 {
-    cv::Mat default_screen = cv::Mat::zeros(480, 854, CV_8UC3);
-    multiViewer->getVideoWidget(MultiVideoViewerWidget::normal)->showImage(default_screen);
-    multiViewer->getVideoWidget(MultiVideoViewerWidget::final_rgb)->showImage(default_screen);
-    multiViewer->getVideoWidget(MultiVideoViewerWidget::ipm_rgb)->showImage(default_screen);
-    multiViewer->getVideoWidget(MultiVideoViewerWidget::ipm_bw)->showImage(default_screen);
-    fsViewer->getVideoWidget()->showImage(default_screen);
+    cv::Mat normal_default_screen = cv::Mat::zeros(480, 854, CV_8UC3);
+    cv::Mat ipm_default_screen = cv::Mat::zeros(854, 480, CV_8UC3);
+    multiViewer->getVideoWidget(MultiVideoViewerWidget::normal)->showImage(normal_default_screen);
+    multiViewer->getVideoWidget(MultiVideoViewerWidget::final_rgb)->showImage(normal_default_screen);
+    multiViewer->getVideoWidget(MultiVideoViewerWidget::ipm_rgb)->showImage(ipm_default_screen);
+    multiViewer->getVideoWidget(MultiVideoViewerWidget::ipm_bw)->showImage(ipm_default_screen);
+    fsViewer->getVideoWidget()->showImage(normal_default_screen);
 }
