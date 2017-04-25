@@ -22,12 +22,12 @@ MultiVideoViewer::MultiVideoViewer(QWidget *parent) :
     v_main_layout->addLayout(h_sec_layouts[1]);
 }
 
-void MultiVideoViewer::setVideoSize(int w1, int h1, int w2, int h2)
+void MultiVideoViewer::setVideoSize(int w1, int w2)
 {
-    videos[0]->setFixedSize(w1, h1);
-    videos[1]->setFixedSize(w1, h1);
-    videos[2]->setFixedSize(w2, h2);
-    videos[3]->setFixedSize(w2, h2);
+    videos[0]->setFixedSize(w1, static_cast<int> (w1*normalAspectRatio));
+    videos[1]->setFixedSize(w1, static_cast<int> (w1*normalAspectRatio));
+    videos[2]->setFixedSize(w2, static_cast<int> (w2*ipmAspectRatio));
+    videos[3]->setFixedSize(w2, static_cast<int> (w2*ipmAspectRatio));
 }
 
 void MultiVideoViewer::setVideoSize(const QSize &s1, const QSize &s2)

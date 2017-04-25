@@ -13,6 +13,9 @@
 #include <QSpacerItem>
 #include <QString>
 #include <QDir>
+#include <QFileDialog>
+#include <QDebug>
+#include <QIcon>
 
 #define InputBoxFixedWidth  240
 #define InputBoxFixedHeight  110
@@ -25,6 +28,14 @@ public:
 
 private slots:
     void comboBox(QString item);
+    void pause();
+    void play();
+    void browseVideo();
+
+signals:
+    void pauseStreaming();
+    void startStreaming();
+    void changeVideoSource(QString source);
 
 private:
     QGroupBox *input_gb;
@@ -33,11 +44,7 @@ private:
     QHBoxLayout *h_input;
     QHBoxLayout *h_input_extra_buttons;
     QVBoxLayout *v_input;
-    QPushButton *start_camera;
-    QPushButton *stop_camera;
-    QPushButton *pause_camera;
     QPushButton *browse_video;
-    QPushButton *stop_video;
     QPushButton *start_video;
     QPushButton *pause_video;
     QSpacerItem *buttons_spacer;

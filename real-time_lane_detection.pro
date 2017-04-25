@@ -1,9 +1,4 @@
 #-------------------------------------------------
-#
-# Project created by QtCreator 2017-04-15T13:24:56
-#
-#-------------------------------------------------
-
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -38,7 +33,10 @@ SOURCES += main.cpp\
             front-end/sidebar/curvefitwidget.cpp \
             front-end/sidebar/decisionmakewidget.cpp \
             front-end/sidebar/regiongrowwidget.cpp \
-            back-end/ipm.cpp
+            back-end/ipm.cpp \
+            front-end/videowidget.cpp \
+            back-end/pipeline.cpp \
+            back-end/curvefit.cpp
 
 HEADERS  += mainwindow.h \
             front-end/viewers/opencv_opengl_viewer.h \
@@ -54,13 +52,16 @@ HEADERS  += mainwindow.h \
             front-end/sidebar/curvefitwidget.h \
             front-end/sidebar/decisionmakewidget.h \
             front-end/sidebar/regiongrowwidget.h \
-            back-end/ipm.h
-
+            back-end/ipm.h \
+            front-end/videowidget.h \
+            back-end/pipeline.h \
+            back-end/curvefit.h
 
 unix {
 CONFIG += c++11
 CONFIG += link_pkgconfig
 PKGCONFIG += opencv
+LIBS += -lalglib
 }
 
 win32 {
@@ -74,3 +75,6 @@ C:/opencv/build/x64/vc12/lib/opencv_world310.lib \
 C:/opencv/build/x64/vc12/lib/opencv_world310d.lib
 -LC:/opencv/build/x64/vc12/bin
 }
+
+RESOURCES += \
+    resources.qrc

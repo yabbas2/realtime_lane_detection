@@ -20,7 +20,7 @@ void IPM::transform(Mat &original_frame, QString video_name){
     else if (video_name == "sample6")
         input_pts = (Mat_<double>(4, 2) << 350, 270, 560, 270, 700, 385, 260, 385);
     else
-        qDebug() << ("unknown video file!");
+        qDebug() << ("[IPM] unknown video file!");
 
     Mat transform_homography = getPerspectiveTransform(input_pts, dst_pts);
     inverse_homography = getPerspectiveTransform(dst_pts, input_pts);
