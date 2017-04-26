@@ -7,6 +7,10 @@
 #include <QFont>
 #include <QScrollArea>
 #include <QScrollBar>
+#include <QStyle>
+#include <QStyleOption>
+#include <QPainter>
+#include <QPaintEvent>
 #include "curvefitwidget.h"
 #include "decisionmakewidget.h"
 #include "gaussianblurwidget.h"
@@ -14,13 +18,13 @@
 #include "lsdwidget.h"
 #include "regiongrowwidget.h"
 
-class Side_bar : public QWidget
+class SideBar : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit Side_bar(QWidget *parent = 0);
-    ~Side_bar();
+    explicit SideBar(QWidget *parent = 0);
+    ~SideBar();
     InputMethodWidget *inputMethod;
     CurveFitWidget *curveFit;
     DecisionMakeWidget *decisionMake;
@@ -33,7 +37,7 @@ private:
     QScrollArea *main_scroll_area;
     QVBoxLayout *v_main;
     QVBoxLayout *v_main_scroll_area;
-
+    void paintEvent(QPaintEvent *);
 };
 
 #endif // SIDE_BAR_H

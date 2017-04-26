@@ -7,28 +7,33 @@ MainWindow::MainWindow(QWidget *parent)
     QMetaObject::connectSlotsByName(this);
     this->setFixedSize(mainWindowWidth, mainWindowHeight);
     this->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", Q_NULLPTR));
-    this->setWindowFlags(Qt::FramelessWindowHint);
+//    this->setWindowFlags(Qt::FramelessWindowHint);
+    this->setObjectName("mainWindow");
 
-    grid_main_layout = new QGridLayout;
+    h_cen1_layout = new QHBoxLayout;
     cen1 = new QWidget(this);
+    cen1->setObjectName("cen1");
     cen2 = new QWidget(this);
+    cen1->setObjectName("cen2");
     cen1->setFixedSize(this->size());
     cen2->setFixedSize(this->size());
 
-    cen1->setLayout(grid_main_layout);
+    cen1->setLayout(h_cen1_layout);
 
-    sidebar = new Side_bar(cen1);
+    sidebar = new SideBar(cen1);
+    sidebar->setObjectName("sidebar");
     sidebar->setFixedSize(sideBarWidth, sideBarHeight);
-    grid_main_layout->addWidget(sidebar, 0, 0);
+    h_cen1_layout->addWidget(sidebar);
 
     mulVidWidget = new MultiVideoViewer(cen1);
-    mulVidWidget->setFixedSize(multiVideoWidth, mainWindowHeight);
-    mulVidWidget->setVideoSize(200, 150);
-    grid_main_layout->addWidget(mulVidWidget, 0, 1);
+    mulVidWidget->setObjectName("mulVidWidget");
+    mulVidWidget->setFixedSize(multiVideoWidth, multiVideoHeight);
+    mulVidWidget->setVideoSize(250, 150);
+    h_cen1_layout->addWidget(mulVidWidget);
 
     fsVidWidget = new fullScreenVideoViewer(cen2);
-    fsVidWidget->setFixedSize(mainWindowWidth, mainWindowHeight);
-    fsVidWidget->setVideoSize(fsVidWidget->size());
+    fsVidWidget->setObjectName("fsVidWidget");
+
 
     vidWid = new VideoWidget(cen2);
     vidWid->setFixedSize(videoWidgetWidth, mainWindowHeight);
@@ -44,6 +49,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(mulVidWidget->getVideoWidget(2), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen()));
     connect(mulVidWidget->getVideoWidget(3), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen()));
     connect(vidWid, SIGNAL(switchToMain()), this, SLOT(switchToMainScreen()));
+
+    this->setStyleSheet("#mainWindow {border-image: url(:/images/background.png) 0 0 0 0 stretch stretch; border-width: 0px; border-radius: 0px;}"
+                        "#sidebar {background: rgba(100, 100, 100, 100); border: 1px solid gray; border-radius: 10px;}"
+                        "#mulVidWidget {background: rgba(100, 100, 100, 50); border: 1px solid gray; border-radius: 10px;}");
 }
 
 MultiVideoViewer *MainWindow::getMultiVideoViewerWidget()
@@ -61,7 +70,7 @@ VideoWidget *MainWindow::getVideoWidget()
     return vidWid;
 }
 
-Side_bar *MainWindow::getSideBarWidget()
+SideBar *MainWindow::getSideBarWidget()
 {
     return sidebar;
 }

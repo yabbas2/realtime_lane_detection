@@ -6,8 +6,6 @@
         <file>browse.png</file>
     </qresource>
     <qresource prefix="/images">
-        <file>background1.jpg</file>
-        <file>background2.png</file>
-        <file>background3.jpg</file>
+        <file>background.png</file>
     </qresource>
 </RCC>

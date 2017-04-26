@@ -6,6 +6,10 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QSpacerItem>
+#include <QStyle>
+#include <QStyleOption>
+#include <QPainter>
+#include <QPaintEvent>
 
 #define VideosNum       4
 #define LayoutsNum      2
@@ -36,6 +40,7 @@ protected:
 private:
     QVBoxLayout *v_main_layout;
     QHBoxLayout *h_sec_layouts[LayoutsNum];
+    void paintEvent(QPaintEvent *);
 
 };
 

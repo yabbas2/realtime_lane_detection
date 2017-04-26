@@ -39,7 +39,6 @@ private:
     int mRenderHeight;
     int mRenderPosX;
     int mRenderPosY;
-
     void recalculatePosition();
 };
 

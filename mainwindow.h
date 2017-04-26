@@ -8,13 +8,8 @@
 #include <QtCore>
 #include <QtGui>
 #include <QDebug>
-#include <QListView>
-#include <QStringListModel>
-#include <QComboBox>
-#include <QSlider>
-#include <QGridLayout>
-#include <QList>
 #include <QStackedWidget>
+#include <QHBoxLayout>
 #include "front-end/sidebar/side_bar.h"
 #include "front-end/viewers/multivideoviewer.h"
 #include "front-end/viewers/fullscreenvideoviewer.h"
@@ -24,7 +19,8 @@
 #define mainWindowHeight    480
 #define sideBarWidth        300
 #define sideBarHeight       (mainWindowHeight-50)
-#define multiVideoWidth     (mainWindowWidth-sideBarWidth)
+#define multiVideoHeight    (mainWindowHeight-50)
+#define multiVideoWidth     (mainWindowWidth-sideBarWidth-30)
 #define videoWidgetWidth    300
 
 class MainWindow : public QMainWindow
@@ -37,7 +33,7 @@ public:
     MultiVideoViewer *getMultiVideoViewerWidget();
     fullScreenVideoViewer *getFullScreenVideoViewerWidget();
     VideoWidget *getVideoWidget();
-    Side_bar *getSideBarWidget();
+    SideBar *getSideBarWidget();
 
 private slots:
     void switchToFullScreen();
@@ -46,13 +42,12 @@ private slots:
 private:
     MultiVideoViewer *mulVidWidget;
     fullScreenVideoViewer *fsVidWidget;
-    Side_bar *sidebar;
+    SideBar *sidebar;
     VideoWidget *vidWid;
     QWidget *cen1;
     QWidget *cen2;
-    QGridLayout *grid_main_layout;
+    QHBoxLayout *h_cen1_layout;
     QStackedWidget *widgetStack;
-
 };
 
 #endif // MAINWINDOW_H

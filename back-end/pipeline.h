@@ -37,7 +37,7 @@ private:
     MultiVideoViewer *multiViewer;
     fullScreenVideoViewer *fsViewer;
     VideoWidget *videoWidget;
-    Side_bar *sideBar;
+    SideBar *sideBar;
     QTimer *timer;
 };
 

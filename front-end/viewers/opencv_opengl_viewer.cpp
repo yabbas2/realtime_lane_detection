@@ -8,6 +8,7 @@ CVGLViewer::CVGLViewer( int index, QWidget *parent, int width, int height) :
     mBgColor = QColor::fromRgb(235, 235, 235);
     this->setFixedSize(width, height);
     this->index = index;
+//    this->setStyleSheet("background: rgba(0, 0, 0, 0); border: 3px solid black; border-radius: 10px;");
 }
 
 void CVGLViewer::initializeGL()
@@ -100,7 +101,7 @@ bool CVGLViewer::showImage(const cv::Mat& image)
 
 void CVGLViewer::mousePressEvent(QMouseEvent *event)
 {
-    qDebug() << "clicked on video:" << this->index;
+    qDebug() << "[OPENGL] clicked on video:" << this->index;
     if (event->button() == Qt::MouseButton::LeftButton)
         emit mouseClicked(this->index);
 }

@@ -1,14 +1,16 @@
 #include "side_bar.h"
 
-Side_bar::Side_bar(QWidget *parent) :
+SideBar::SideBar(QWidget *parent) :
     QWidget(parent)
 {
     v_main = new QVBoxLayout;
     v_main_scroll_area = new QVBoxLayout;
     mainWidget = new QWidget(this);
+    mainWidget->setObjectName("mainWidget");
+    this->setStyleSheet("#mainWidget {background: rgb(200, 200, 200);}");
     main_scroll_area = new QScrollArea(this);
-    QFont f("Arial", 8, QFont::Normal);
-    this->setFont(f);
+//    QFont f("Arial", 8, QFont::Normal);
+//    this->setFont(f);
     this->setLayout(v_main_scroll_area);
     v_main_scroll_area->addWidget(main_scroll_area);
     main_scroll_area->setWidget(mainWidget);
@@ -29,7 +31,15 @@ Side_bar::Side_bar(QWidget *parent) :
     v_main->addWidget(decisionMake);
 }
 
-Side_bar::~Side_bar()
+void SideBar::paintEvent(QPaintEvent *)
+{
+    QStyleOption opt;
+    opt.init(this);
+    QPainter p(this);
+    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
+
+SideBar::~SideBar()
 {
 
 }

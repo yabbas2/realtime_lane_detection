@@ -70,6 +70,19 @@ void Stream::setIPMFrame(cv::Mat *f)
 
 void Stream::FullScreenFrame(int index)
 {
+    switch(index)
+    {
+    case 0:
+    case 1:
+        fsViewer->setGeometry(0, 0, 854, 480);
+        fsViewer->setVideoSize(854, 480);
+        break;
+    case 2:
+    case 3:
+        fsViewer->setGeometry(292, 0, 270, 480);
+        fsViewer->setVideoSize(270, 480);
+        break;
+    }
     fsFrame = &(frames[index]);
     fsViewer->getVideoWidget()->showImage(*fsFrame);
 }

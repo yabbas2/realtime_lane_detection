@@ -42,3 +42,11 @@ CVGLViewer *MultiVideoViewer::getVideoWidget(int index)
 {
     return videos[index];
 }
+
+void MultiVideoViewer::paintEvent(QPaintEvent *)
+{
+    QStyleOption opt;
+    opt.init(this);
+    QPainter p(this);
+    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
