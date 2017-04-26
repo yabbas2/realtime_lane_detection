@@ -55,12 +55,16 @@ void InputMethodWidget::comboBox(QString item)
         browse_video->setVisible(false);
         pause_video->setVisible(true);
         start_video->setVisible(true);
+        pause_video->setEnabled(true);
+        start_video->setEnabled(true);
         emit changeVideoSource("/dev/video0");
     }
     else if (item == "Video File"){
         browse_video->setVisible(true);
         pause_video->setVisible(true);
         start_video->setVisible(true);
+        pause_video->setEnabled(false);
+        start_video->setEnabled(false);
 
     }
     else if (item == "None"){
@@ -75,5 +79,9 @@ void InputMethodWidget::browseVideo()
     QString fileName = QFileDialog::getOpenFileName(this, "Choose video file", "/home", "*.mp4");
     qDebug() << fileName;
     if (fileName.length() > 0)
+    {
         emit changeVideoSource(fileName);
+        pause_video->setEnabled(true);
+        start_video->setEnabled(true);
+    }
 }

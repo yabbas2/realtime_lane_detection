@@ -22,6 +22,9 @@ void IPM::transform(Mat &original_frame, QString video_name){
     else
         qDebug() << ("[IPM] unknown video file!");
 
+    input_pts.convertTo(input_pts, CV_32F);
+    dst_pts.convertTo(dst_pts, CV_32F);
+
     Mat transform_homography = getPerspectiveTransform(input_pts, dst_pts);
     inverse_homography = getPerspectiveTransform(dst_pts, input_pts);
     warpPerspective(original_frame, ipm_frame, transform_homography, Size(height, width));

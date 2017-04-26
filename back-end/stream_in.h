@@ -14,7 +14,7 @@ class StreamIn : public QObject
     Q_OBJECT
 
 public:
-    explicit StreamIn(QObject *parent = 0);
+    explicit StreamIn();
     ~StreamIn();
     void initStreamIn(QString source);
     cv::Mat *getFrame();
@@ -32,7 +32,7 @@ public slots:
 private:
     cv::Mat inputFrame;
     cv::VideoCapture cap;
-    QTimer timer;
+    QTimer *timer;
 
 };
 

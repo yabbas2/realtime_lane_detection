@@ -12,8 +12,8 @@
 #define normalAspectRatio   0.5620608899
 #define ipmAspectRatio      1.779166667
 
-namespace MultiVideoViewerWidget {
-    enum {normal, final_rgb, ipm_rgb, ipm_bw};
+namespace MultiVideo {
+    enum {normal_rgb, final_rgb, ipm_rgb, ipm_bw};
 }
 
 

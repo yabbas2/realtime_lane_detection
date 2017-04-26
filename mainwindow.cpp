@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
     QMetaObject::connectSlotsByName(this);
     this->setFixedSize(mainWindowWidth, mainWindowHeight);
     this->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", Q_NULLPTR));
+    this->setWindowFlags(Qt::FramelessWindowHint);
 
     grid_main_layout = new QGridLayout;
     cen1 = new QWidget(this);

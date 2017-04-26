@@ -1,8 +1,6 @@
 #include <QApplication>
 #include "mainwindow.h"
-#include "back-end/stream.h"
-#include "back-end/curvefit.h"
-#include <opencv2/opencv.hpp>
+#include "back-end/pipeline.h"
 
 int main(int argc, char *argv[])
 {
@@ -10,8 +8,8 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    Stream st;
-    st.connectFrontEndToStreamBackEnd(&w);
+    Pipeline p;
+    p.connectFrontEndToBackEnd(&w);
 
 //    CurveFit c;
 //    vector<Vec4i> llines;

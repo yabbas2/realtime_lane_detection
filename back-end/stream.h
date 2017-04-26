@@ -7,14 +7,10 @@
 #include <QTimer>
 #include <opencv2/opencv.hpp>
 #include <vector>
-#include <QImage>
-#include "mainwindow.h"
 #include "front-end/viewers/fullscreenvideoviewer.h"
 #include "stream_in.h"
 #include "stream_out.h"
 #include "front-end/viewers/multivideoviewer.h"
-#include "front-end/videowidget.h"
-#include "front-end/sidebar/side_bar.h"
 
 #define StreamingVideos     4
 
@@ -23,9 +19,15 @@ class Stream : public QObject
     Q_OBJECT
 
 public:
-    Stream();
-    void connectFrontEndToStreamBackEnd(MainWindow *w);
+    explicit Stream();
+    ~Stream();
+    void setViewers(MultiVideoViewer *m, fullScreenVideoViewer *f);
     void setPointsToDraw(std::vector<cv::Vec2i> *pts);
+    cv::Mat getFrame();
+    void setIPMFrame(cv::Mat *f);
+    void pause_timers();
+    void start_timers();
+    int width, height, fps;
 
 public slots:
     void changeStreamInSource(QString source);
@@ -33,8 +35,6 @@ public slots:
 private slots:
     void showFrames();
     void FullScreenFrame(int index);
-    void start_timers();
-    void pause_timers();
 
 private:
     QString streamInSource;
@@ -42,12 +42,11 @@ private:
     StreamOut stream_out;
     cv::Mat frames[StreamingVideos];
     cv::Mat *fsFrame;
+    cv::Mat normal_default_screen;
+    cv::Mat ipm_default_screen;
     MultiVideoViewer *multiViewer;
     fullScreenVideoViewer *fsViewer;
-    VideoWidget *videoWidget;
-    Side_bar *sideBar;
-    QTimer timer;
-    int width, height, fps;
+    QTimer *timer;
 
     void initScreens();
 };

@@ -17,7 +17,6 @@ public:
 
 protected:
     CVGLViewer *fsVideo;
-
 };
 
 #endif // FULLSCREENVIDEOVIEWER_H

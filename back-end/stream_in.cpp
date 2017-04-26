@@ -1,21 +1,21 @@
 #include "stream_in.h"
 
-StreamIn::StreamIn(QObject *parent) :
-    QObject(parent)
+StreamIn::StreamIn()
 {
+    timer = new QTimer(this);
     connect(this, SIGNAL(endStream()), this, SLOT(stopStreamIn()));
-    connect(&timer, SIGNAL(timeout()), this, SLOT(loopStreamIn()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(loopStreamIn()));
 }
 
 void StreamIn::initStreamIn(QString source)
 {
-    if (timer.isActive())
-        timer.stop();
+    if (timer->isActive())
+        timer->stop();
     if (cap.isOpened())
         cap.release();
     if (!cap.open(source.toStdString()))
     {
-        qDebug() << "Cannot open video streaming source";
+        qDebug() << "[STREAM_IN] Cannot open video streaming source";
         return;
     }
 }
@@ -29,27 +29,27 @@ void StreamIn::loopStreamIn()
 
 void StreamIn::startStreamIn()
 {
-    if (timer.isActive())
+    if (timer->isActive())
         return;
-    timer.start(static_cast<int> (1000 / cap.get(cv::CAP_PROP_FPS)) + delayOffset);
-    qDebug() << "start streaming";
+    timer->start(static_cast<int> (1000 / cap.get(cv::CAP_PROP_FPS)) + delayOffset);
+    qDebug() << "[STREAM_IN] start streaming";
 }
 
 void StreamIn::stopStreamIn()
 {
-    if (!timer.isActive() && !cap.isOpened())
+    if (!timer->isActive() && !cap.isOpened())
         return;
-    timer.stop();
-    qDebug() << "stop streaming";
+    timer->stop();
+    qDebug() << "[STREAM_IN] stop streaming";
     cap.release();
 }
 
 void StreamIn::pauseStreamIn()
 {
-    if (!timer.isActive())
+    if (!timer->isActive())
         return;
-    timer.stop();
-    qDebug() << "pause streaming";
+    timer->stop();
+    qDebug() << "[STREAM_IN] pause streaming";
 }
 
 void StreamIn::getVideoInfo(int &w, int &h, int &fps)
