@@ -36,6 +36,7 @@ signals:
     void pauseStreaming();
     void startStreaming();
     void changeVideoSource(QString source);
+    void reInit();
 
 private:
     QGroupBox *input_gb;
@@ -48,6 +49,7 @@ private:
     QPushButton *start_video;
     QPushButton *pause_video;
     QSpacerItem *buttons_spacer;
+    QString fileName;
 };
 
 #endif // INPUTMETHOD_H

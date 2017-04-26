@@ -29,7 +29,14 @@ void Pipeline::connectFrontEndToBackEnd(MainWindow *w)
     connect(sideBar->inputMethod, SIGNAL(pauseStreaming()), this, SLOT(pause_timers()));
     connect(sideBar->inputMethod, SIGNAL(startStreaming()), this, SLOT(start_timers()));
     connect(sideBar->inputMethod, SIGNAL(changeVideoSource(QString)), streamObj, SLOT(changeStreamInSource(QString)));
+    connect(sideBar->inputMethod, SIGNAL(reInit()), this, SLOT(initStatus()));
     streamObj->setViewers(multiViewer, fsViewer);
+}
+
+void Pipeline::initStatus()
+{
+    timer->stop();
+    streamObj->reInitStream();
 }
 
 void Pipeline::pause_timers()

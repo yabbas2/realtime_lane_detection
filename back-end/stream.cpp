@@ -21,6 +21,14 @@ void Stream::changeStreamInSource(QString source)
     initScreens();
 }
 
+void Stream::reInitStream()
+{
+    if (timer->isActive())
+        timer->stop();
+    stream_in.stopStreamIn();
+    initScreens();
+}
+
 void Stream::showFrames()
 {
     frames[MultiVideo::normal_rgb] = stream_in.getFrame()->clone();

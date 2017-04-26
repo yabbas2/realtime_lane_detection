@@ -27,6 +27,8 @@ public:
     void setIPMFrame(cv::Mat *f);
     void pause_timers();
     void start_timers();
+    void reInitStream();
+    void initScreens();
     int width, height, fps;
 
 public slots:
@@ -47,8 +49,6 @@ private:
     MultiVideoViewer *multiViewer;
     fullScreenVideoViewer *fsViewer;
     QTimer *timer;
-
-    void initScreens();
 };
 
 #endif // STREAM_H

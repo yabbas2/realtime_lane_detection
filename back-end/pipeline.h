@@ -28,6 +28,7 @@ private slots:
     void start_timers();
     void pause_timers();
     void exec();
+    void initStatus();
 
 private:
     Stream *streamObj;
