@@ -12,6 +12,7 @@ class stream(threading.Thread):
         self.width = self.stream.get(cv2.CAP_PROP_FRAME_WIDTH)
         self.frameCount = self.stream.get(cv2.CAP_PROP_FRAME_COUNT)
         self.afps = 0
+        self.normalFrame2 = None
         self.left_points = []
         self.right_points = []
         self.normalFrame = None
@@ -25,6 +26,7 @@ class stream(threading.Thread):
             if not grabbed:
                 break
             self.frameToShow = self.normalFrame.copy()
+            self.normalFrame2 = self.normalFrame.copy()
             self.draw()
             if cv2.waitKey(int(self.fps)) & 0xFF == ord('q'):
                 break
@@ -57,18 +59,29 @@ class stream(threading.Thread):
 
     def draw(self):
         if self.locker:
+            if len(self.right_points) == 0 or len(self.left_points) == 0:
+                return
+            bottom_points = list()
+            top_points = list()
             if len(self.right_points) != 0:
-                cv2.polylines(self.frameToShow, np.int32([self.right_points]), False, (0, 255, 0), 2, cv2.LINE_AA)
+                top_points.append(self.right_points[0])
+                bottom_points.append(self.right_points[0])
             if len(self.left_points) != 0:
-                cv2.polylines(self.frameToShow, np.int32([self.left_points]), False, (0, 255, 0), 2, cv2.LINE_AA)
-            cv2.rectangle(self.frameToShow, (0, 0), (200, 50), (0, 0, 0), 1, cv2.LINE_AA)
-            cv2.putText(self.frameToShow, "status: ", (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.4
-                        , (255, 0, 0), 1, cv2.LINE_AA)
-            cv2.putText(self.frameToShow, "AFPS: ", (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.4
-                        , (255, 0, 0), 1, cv2.LINE_AA)
-            if self.afps >= self.fps:
-                cv2.putText(self.frameToShow, str(self.afps), (60, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.4
-                            , (0, 255, 0), 1, cv2.LINE_AA)
-            else:
-                cv2.putText(self.frameToShow, str(self.afps), (60, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.4
-                            , (0, 0, 255), 1, cv2.LINE_AA)
+                top_points.append(self.left_points[0])
+                bottom_points.append(self.left_points[0])
+            top_points = np.array(top_points, dtype="int32")
+            bottom_points = np.array(bottom_points, dtype="int32")
+            cv2.polylines(self.normalFrame2, np.int32([top_points]), False, (255, 127, 127), 2, cv2.LINE_AA)
+            cv2.polylines(self.normalFrame2, np.int32([bottom_points]), False, (255, 127, 127), 2, cv2.LINE_AA)
+            cv2.polylines(self.normalFrame2, np.int32([self.left_points]), False, (255, 127, 127), 2, cv2.LINE_AA)
+            cv2.polylines(self.normalFrame2, np.int32([self.right_points]), False, (255, 127, 127), 2, cv2.LINE_AA)
+            mask = cv2.inRange(self.normalFrame2, (255, 127, 127), (255, 127, 127))
+            im2, contours, hierarchy = cv2.findContours(mask, 1, 2)
+            if len(contours) == 0:
+                contours = self.prev_contours
+            if len(contours) != 0:
+                cv2.fillConvexPoly(self.normalFrame2, contours[0], (0, 255, 0))
+            cv2.addWeighted(self.normalFrame2, 0.5, self.frameToShow, 1 - 0.5, 0, self.frameToShow)
+            self.prev_contours = contours
+
+

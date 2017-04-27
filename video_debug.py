@@ -157,13 +157,13 @@ while True:
         cv2.fillConvexPoly(normalFrame2, contours[0], (255, 127, 127))
     cv2.addWeighted(normalFrame2, 0.5, normalFrame, 1 - 0.5, 0, normalFrame)
     prev_contours = contours
-    end = time.time()
-    print(end-start)
 
     # cv2.imshow('ipm', ipmFrame)
     # cv2.imshow('used lines', magdy)
     cv2.imshow('detected', normalFrame)
     # cv2.imshow('mask', mask)
     # cv2.imshow('hsv', hsvFrame)
+    end = time.time()
+    print(end-start)
 stream.release()
 cv2.destroyAllWindows()
