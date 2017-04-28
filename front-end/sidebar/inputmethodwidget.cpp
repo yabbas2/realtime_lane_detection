@@ -13,6 +13,7 @@ InputMethodWidget::InputMethodWidget(QWidget *parent) :
     h_input = new QHBoxLayout;
     v_input = new QVBoxLayout;
     buttons_spacer = new QSpacerItem(0, 50);
+    chosen_video_re.setPattern("sample[0-9]+");
     h_input->addSpacerItem(buttons_spacer);
     input_gb->setFixedHeight(100);
     input_list->append("None");
@@ -77,12 +78,20 @@ void InputMethodWidget::comboBox(QString item)
 
 void InputMethodWidget::browseVideo()
 {
-    fileName = QFileDialog::getOpenFileName(this, "Choose video file", "/home", "*.mp4");
-    qDebug() << fileName;
-    if (fileName.length() > 0)
+    file_name = QFileDialog::getOpenFileName(this, "Choose video file", "/home", "*.mp4");
+    qDebug() << file_name;
+    if (file_name.length() > 0)
     {
-        emit changeVideoSource(fileName);
+        emit changeVideoSource(file_name);
         pause_video->setEnabled(true);
         start_video->setEnabled(true);
     }
+    chosen_video_match = chosen_video_re.match(file_name);
+    if (chosen_video_match.hasMatch())
+    {
+        QString sample_no = chosen_video_match.captured(0);
+        qDebug() << sample_no;
+    }
+    else
+        qDebug() << "no sample matched";
 }

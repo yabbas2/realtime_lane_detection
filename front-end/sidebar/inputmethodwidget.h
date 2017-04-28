@@ -16,6 +16,8 @@
 #include <QFileDialog>
 #include <QDebug>
 #include <QIcon>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
 
 #define InputBoxFixedWidth  240
 #define InputBoxFixedHeight  110
@@ -49,7 +51,9 @@ private:
     QPushButton *start_video;
     QPushButton *pause_video;
     QSpacerItem *buttons_spacer;
-    QString fileName;
+    QString file_name;
+    QRegularExpression chosen_video_re;
+    QRegularExpressionMatch chosen_video_match;
 };
 
 #endif // INPUTMETHOD_H
