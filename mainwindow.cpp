@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(vidWid, SIGNAL(switchToMain()), this, SLOT(switchToMainScreen()));
 
     this->setStyleSheet("#mainWindow {border-image: url(:/images/background.png) 0 0 0 0 stretch stretch; border-width: 0px; border-radius: 0px;}"
-                        "#sidebar {background: rgba(100, 100, 100, 100); border: 1px solid gray; border-radius: 10px;}"
+                        "#sidebar {background: rgba(100, 100, 100, 50); border: 1px solid gray; border-radius: 10px;}"
                         "#mulVidWidget {background: rgba(100, 100, 100, 50); border: 1px solid gray; border-radius: 10px;}");
 }
 
