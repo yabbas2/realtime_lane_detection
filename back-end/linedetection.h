@@ -11,7 +11,7 @@ using namespace cv;
 class LineDetection
 {
 public:
-    vector<Vec4f> *lineSegmentDetector(Mat& input_frame);
+    vector<Vec4f> *lineSegmentDetector(Mat input_frame);
 
 private:
     vector<Vec4f> lines;
