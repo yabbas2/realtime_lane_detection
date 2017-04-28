@@ -28,11 +28,11 @@ public:
     void pause_timers();
     void start_timers();
     void reInitStream();
-    void initScreens();
     int width, height, fps;
 
 public slots:
     void changeStreamInSource(QString source);
+    void initScreens();
 
 private slots:
     void showFrames();
@@ -40,8 +40,8 @@ private slots:
 
 private:
     QString streamInSource;
-    StreamIn stream_in;
-    StreamOut stream_out;
+    StreamIn *stream_in;
+    StreamOut *stream_out;
     cv::Mat frames[StreamingVideos];
     cv::Mat *fsFrame;
     cv::Mat normal_default_screen;

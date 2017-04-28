@@ -51,9 +51,7 @@ private:
     QPushButton *start_video;
     QPushButton *pause_video;
     QSpacerItem *buttons_spacer;
-    QString file_name;
     QRegularExpression chosen_video_re;
-    QRegularExpressionMatch chosen_video_match;
 };
 
 #endif // INPUTMETHOD_H

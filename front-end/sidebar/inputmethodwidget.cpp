@@ -78,20 +78,19 @@ void InputMethodWidget::comboBox(QString item)
 
 void InputMethodWidget::browseVideo()
 {
-    file_name = QFileDialog::getOpenFileName(this, "Choose video file", "/home", "*.mp4");
+    QString file_name = QFileDialog::getOpenFileName(this, "Choose video file", "/home", "*.mp4");
     qDebug() << file_name;
-    if (file_name.length() > 0)
-    {
-        emit changeVideoSource(file_name);
-        pause_video->setEnabled(true);
-        start_video->setEnabled(true);
-    }
-    chosen_video_match = chosen_video_re.match(file_name);
+    if (file_name.length() == 0)
+        return;
+    emit changeVideoSource(file_name);
+    pause_video->setEnabled(true);
+    start_video->setEnabled(true);
+    QRegularExpressionMatch chosen_video_match = chosen_video_re.match(file_name);
     if (chosen_video_match.hasMatch())
     {
         QString sample_no = chosen_video_match.captured(0);
-        qDebug() << sample_no;
+        qDebug() << "[SIDEBAR] sample matched" << sample_no;
     }
     else
-        qDebug() << "no sample matched";
+        qDebug() << "[SIDEBAR] no sample matched";
 }

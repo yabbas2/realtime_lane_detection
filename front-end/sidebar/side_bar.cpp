@@ -7,10 +7,10 @@ SideBar::SideBar(QWidget *parent) :
     v_main_scroll_area = new QVBoxLayout;
     mainWidget = new QWidget(this);
     mainWidget->setObjectName("mainWidget");
-    this->setStyleSheet("#mainWidget {background: rgb(200, 200, 200);}");
+//    this->setStyleSheet("#mainWidget {background: rgb(200, 200, 200);}");
     main_scroll_area = new QScrollArea(this);
-//    QFont f("Arial", 8, QFont::Normal);
-//    this->setFont(f);
+    QFont f("Arial", 8, QFont::Normal);
+    this->setFont(f);
     this->setLayout(v_main_scroll_area);
     v_main_scroll_area->addWidget(main_scroll_area);
     main_scroll_area->setWidget(mainWidget);
