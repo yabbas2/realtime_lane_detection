@@ -37,7 +37,8 @@ SOURCES += main.cpp\
             front-end/sidebar/lsdwidget.cpp \
             front-end/sidebar/curvefitwidget.cpp \
             front-end/sidebar/decisionmakewidget.cpp \
-            front-end/sidebar/regiongrowwidget.cpp
+            front-end/sidebar/regiongrowwidget.cpp \
+            back-end/eliminatefalsedetection.cpp
 
 HEADERS  += mainwindow.h \
             front-end/viewers/opencv_opengl_viewer.h \
@@ -52,7 +53,8 @@ HEADERS  += mainwindow.h \
             front-end/sidebar/lsdwidget.h \
             front-end/sidebar/curvefitwidget.h \
             front-end/sidebar/decisionmakewidget.h \
-            front-end/sidebar/regiongrowwidget.h
+            front-end/sidebar/regiongrowwidget.h \
+            back-end/eliminatefalsedetection.h
 
 
 unix {
