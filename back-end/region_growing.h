@@ -5,7 +5,7 @@
 #define thresholdAngle     10
 #define thresholdX         40
 
-#include<opencv2/opencv.hpp>
+#include <opencv2/opencv.hpp>
 #include <vector>
 
 using namespace std;
