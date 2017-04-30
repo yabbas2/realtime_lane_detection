@@ -1,6 +1,5 @@
 #include "region_growing.h"
 
-
 RegionGrowing::RegionGrowing(){}
 
 void RegionGrowing::regionGrowing(vector<Vec4i> lines, int &width)

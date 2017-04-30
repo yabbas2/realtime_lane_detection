@@ -30,7 +30,6 @@ public:
     void anyRegionGrowing(char c);
     void leftRegionGrowing();
     void rightRegionGrowing();
-
     vector<Vec4i> getLeftLines();
     vector<Vec4i> getRightLines();
     Vec4i getLeftSeedLines();
