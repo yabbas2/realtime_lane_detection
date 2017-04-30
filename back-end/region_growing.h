@@ -5,8 +5,8 @@
 #include <vector>
 
 #define USED                1
-#define threshold_angle     10
-#define threshold_x         40
+#define thresholdAngle     10
+#define thresholdX         40
 
 using namespace std;
 using namespace cv;
@@ -24,13 +24,15 @@ public:
     RegionGrowing();
 
     void regionGrowing(vector<Vec4i> lines, int &width);
-    void findSeedLines(char &c);
+    void findSeedLines(char c);
     void findLeftSeedLines();
     void findRightSeedLines();
+    void anyRegionGrowing(char c);
     void leftRegionGrowing();
     void rightRegionGrowing();
 
-    vector<Vec4i> getLines();
+    vector<Vec4i> getLeftLines();
+    vector<Vec4i> getRightLines();
     Vec4i getLeftSeedLines();
     Vec4i getRightSeedLines();
     vector<Vec4i> getLeftRegion();
