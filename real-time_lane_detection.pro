@@ -36,7 +36,9 @@ SOURCES += main.cpp\
             back-end/ipm.cpp \
             front-end/videowidget.cpp \
             back-end/curvefit.cpp \
-            back-end/pipeline.cpp
+            back-end/pipeline.cpp \
+            back-end/region_growing.cpp \
+    back-end/filter.cpp
 
 HEADERS  += mainwindow.h \
             front-end/viewers/opencv_opengl_viewer.h \
@@ -55,7 +57,9 @@ HEADERS  += mainwindow.h \
             back-end/ipm.h \
             front-end/videowidget.h \
             back-end/curvefit.h \
-            back-end/pipeline.h
+            back-end/pipeline.h \
+            back-end/region_growing.h \
+    back-end/filter.h
 
 unix {
 CONFIG += c++11
