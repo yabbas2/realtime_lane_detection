@@ -1,12 +1,12 @@
 #ifndef REGION_GROWING_H
 #define REGION_GROWING_H
 
-#include<opencv2/opencv.hpp>
-#include <vector>
-
 #define USED                1
 #define thresholdAngle     10
 #define thresholdX         40
+
+#include<opencv2/opencv.hpp>
+#include <vector>
 
 using namespace std;
 using namespace cv;

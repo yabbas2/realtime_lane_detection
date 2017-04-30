@@ -38,7 +38,8 @@ SOURCES += main.cpp\
             back-end/curvefit.cpp \
             back-end/pipeline.cpp \
             back-end/region_growing.cpp \
-    back-end/filter.cpp
+    back-end/filter.cpp \
+    back-end/kalman.cpp
 
 HEADERS  += mainwindow.h \
             front-end/viewers/opencv_opengl_viewer.h \
@@ -59,7 +60,8 @@ HEADERS  += mainwindow.h \
             back-end/curvefit.h \
             back-end/pipeline.h \
             back-end/region_growing.h \
-    back-end/filter.h
+    back-end/filter.h \
+    back-end/kalman.h
 
 unix {
 CONFIG += c++11
