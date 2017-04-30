@@ -5,7 +5,10 @@ RegionGrowing::RegionGrowing(){}
 
 void RegionGrowing::regionGrowing(vector<Vec4i> &l)
 {
-
+    findLeftSeedLines();
+    findRightSeedLines();
+    leftRegionGrowing();
+    rightRegionGrowing();
 }
 
 Vec4i RegionGrowing::findLeftSeedLines()
