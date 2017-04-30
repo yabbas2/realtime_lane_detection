@@ -14,17 +14,19 @@ using namespace cv;
 class RegionGrowing
 {
 private:
-    vector<Vec4i> lines;
-    Vec4i leftSeedLines;
-    Vec4i rightSeedLines;
+    vector<Vec4i> leftLines;
+    vector<Vec4i> rightLines;
+    Vec4i leftSeedLine;
+    Vec4i rightSeedLine;
     vector<Vec4i> leftRegion;
     vector<Vec4i> rightRegion;
 public:
     RegionGrowing();
 
-    void regionGrowing(vector<Vec4i> &l);
-    Vec4i findLeftSeedLines();
-    Vec4i findRightSeedLines();
+    void regionGrowing(vector<Vec4i> lines, int &width);
+    void findSeedLines(char &c);
+    void findLeftSeedLines();
+    void findRightSeedLines();
     void leftRegionGrowing();
     void rightRegionGrowing();
 
