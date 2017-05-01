@@ -54,11 +54,6 @@ void Kalman::smoothing(char &c)
                 (*(k+i)).correct(mp);
                 tp = (*(k+i)).predict();
             }
+            prevPoints->push_back(tp);
         }
-    for (int i = 0; i < 20; ++i) {
-        mp = (Mat_ <int>(1,2)<< newPoints->at(i)[0], newPoints->at(i)[1]);
-        (*(k+i)).correct(mp);
-        tp = (*(k+i)).predict();
-        prevPoints->push_back(tp);
-    }
 }

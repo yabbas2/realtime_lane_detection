@@ -8,6 +8,8 @@
 using namespace std;
 using namespace cv;
 
+typedef Vec<int, 7> Vec7i;
+
 class Kalman
 {
 private:
