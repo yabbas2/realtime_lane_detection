@@ -2,10 +2,10 @@
 
 RegionGrowing::RegionGrowing(){}
 
-void RegionGrowing::regionGrowing(vector<Vec4i> lines, int &width)
+void RegionGrowing::regionGrowing(vector<Vec7i> lines, int &width)
 {
     sort(lines.begin(), lines.end(),
-                  [](const Vec4i& a, const Vec4i& b) {
+                  [](const Vec7i& a, const Vec7i& b) {
           return a[1] > b[1];
         });
 
@@ -23,20 +23,20 @@ void RegionGrowing::regionGrowing(vector<Vec4i> lines, int &width)
 void RegionGrowing::findLeftSeedLines()
 {
     findSeedLines('l');
-    if(leftSeedLine[0] == 0 && leftSeedLine[1] == 0 && leftSeedLine[2] == 0 && leftSeedLine[3] == 0)
+    if(leftSeedLine[0] == 0 && leftSeedLine[1] == 0 && leftSeedLine[2] == 0 && leftSeedLine[3] == 0 && rightLines.size() > 0)
         leftSeedLine = leftLines[0];
 }
 
 void RegionGrowing::findRightSeedLines()
 {
     findSeedLines('r');
-    if(rightSeedLine[0] == 0 && rightSeedLine[1] == 0 && rightSeedLine[2] == 0 && rightSeedLine[3] == 0)
+    if(rightSeedLine[0] == 0 && rightSeedLine[1] == 0 && rightSeedLine[2] == 0 && rightSeedLine[3] == 0 && rightLines.size() > 0)
         rightSeedLine = rightLines[0];
 }
 
 void RegionGrowing::findSeedLines(char c)
 {
-    vector<Vec4i>* lines;
+    vector<Vec7i>* lines;
     if(c == 'l')
         lines = &leftLines;
     else
@@ -51,9 +51,15 @@ void RegionGrowing::findSeedLines(char c)
             if(abs(lines->at(i)[0]-lines->at(j)[0]) <= 20 && abs(lines->at(i)[1]-lines->at(j)[1]) <= 5)
             {
                 if(c == 'l')
+                {
                     leftSeedLine = lines->at(i);
+                    lines->at(i)[6] = USED;
+                }
                 else
+                {
                     rightSeedLine = lines->at(i);
+                    lines->at(i)[6] = USED;
+                }
                 flag = 1;
                 break;
             }
@@ -77,9 +83,9 @@ void RegionGrowing::rightRegionGrowing()
 
 void RegionGrowing::anyRegionGrowing(char c)
 {
-    Vec4i* seedLine;
-    vector<Vec4i>* region;
-    vector<Vec4i>* lines;
+    Vec7i* seedLine;
+    vector<Vec7i>* region;
+    vector<Vec7i>* lines;
     if (c == 'l')
     {
         seedLine = &leftSeedLine;
@@ -124,14 +130,14 @@ void RegionGrowing::anyRegionGrowing(char c)
 }
 
 
-vector<Vec4i> RegionGrowing::getLeftLines(){return leftLines;}
+vector<Vec7i> RegionGrowing::getLeftLines(){return leftLines;}
 
-vector<Vec4i> RegionGrowing::getRightLines(){return rightLines;}
+vector<Vec7i> RegionGrowing::getRightLines(){return rightLines;}
 
-Vec4i RegionGrowing::getLeftSeedLines(){return leftSeedLine;}
+Vec7i RegionGrowing::getLeftSeedLines(){return leftSeedLine;}
 
-Vec4i RegionGrowing::getRightSeedLines(){return rightSeedLine;}
+Vec7i RegionGrowing::getRightSeedLines(){return rightSeedLine;}
 
-vector<Vec4i> RegionGrowing::getLeftRegion(){return leftRegion;}
+vector<Vec7i> RegionGrowing::getLeftRegion(){return leftRegion;}
 
-vector<Vec4i> RegionGrowing::getRightRegion(){return rightRegion;}
+vector<Vec7i> RegionGrowing::getRightRegion(){return rightRegion;}
