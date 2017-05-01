@@ -13,10 +13,10 @@ class Kalman
 private:
     KalmanFilter leftKalman[20];
     KalmanFilter rightKalman[20];
-    vector<Vec2i> prevLeftPoints[20];
-    vector<Vec2i> prevRightPoints[20];
-    vector<Vec2i> newLeftPoints[20];
-    vector<Vec2i> newRightPoints[20];
+    vector<Vec2i> prevLeftPoints;
+    vector<Vec2i> prevRightPoints;
+    vector<Vec2i> newLeftPoints;
+    vector<Vec2i> newRightPoints;
 public:
     Kalman();
     void kalmanFilter(vector<Vec2i> &points, int &width);

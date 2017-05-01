@@ -5,14 +5,14 @@ Filter::Filter()
 
 }
 
-vector<Vec4i>* Filter::getFilteredLines()
+vector<Vec7i>* Filter::getFilteredLines()
 {
     return &lines;
 }
 
 void Filter::falseDetectionElimination(Mat &ipm_frame, vector<Vec4i> &l)
 {
-    vector<Vec4i> tmp_lines;
+    vector<Vec7i> tmp_lines;
     for(unsigned int it = 0; it < l.size(); ++it)
     {
         int x1 = l[it][0], y1 = l[it][1], x2 = l[it][2], y2 = l[it][3];
@@ -26,7 +26,7 @@ void Filter::falseDetectionElimination(Mat &ipm_frame, vector<Vec4i> &l)
             theta -= 180;
         float length = sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2));
         if ((threshold_angle_min < theta) && (theta < threshold_angle_max) && (length >= threshold_length))
-            tmp_lines.push_back(Vec4i{x1, y1, x2, y2, (int)theta, (int)length, 0});
+            tmp_lines.push_back(Vec7i{x1, y1, x2, y2, (int)theta, (int)length, 0});
     }
     vector<float> contours;
     vector<int> boundary_min = {0, 100, 0};
@@ -57,7 +57,7 @@ void Filter::falseDetectionElimination(Mat &ipm_frame, vector<Vec4i> &l)
             }
         }
         if(!flag)
-            lines.push_back(Vec4i{tmp_lines[it_lines][0], tmp_lines[it_lines][1], tmp_lines[it_lines][2],
+            lines.push_back(Vec7i{tmp_lines[it_lines][0], tmp_lines[it_lines][1], tmp_lines[it_lines][2],
                                   tmp_lines[it_lines][3], tmp_lines[it_lines][4], tmp_lines[it_lines][5],
                                   tmp_lines[it_lines][6]});
     }
