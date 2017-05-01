@@ -45,9 +45,9 @@ void Kalman::smoothing(char &c)
         isMeasure = false;
         for (int i = 0; i < 20; ++i) {
             mp = (Mat_ <int>(2,1)<< newPoints->at(i)[0], newPoints->at(i)[1]);
-            mp.convertTo(mp, CV_32F);
+            mp.convertTo(mp, CV_64F);
             for (int j = 0; j < 50; ++j) {
-                leftKalman[i].correct(mp);
+                k[i].correct(mp);
                 tp = k[i].predict();
             }
         }

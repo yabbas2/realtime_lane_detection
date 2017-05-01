@@ -28,13 +28,13 @@ void Filter::falseDetectionElimination(Mat &ipm_frame, vector<Vec4i> &l)
         if ((threshold_angle_min < theta) && (theta < threshold_angle_max) && (length >= threshold_length))
             tmp_lines.push_back(Vec7i{x1, y1, x2, y2, (int)theta, (int)length, 0});
     }
-    vector<float> contours;
+    vector<vector<Point>> contours;
     vector<int> boundary_min = {0, 100, 0};
     vector<int> boundary_max = {154, 255, 154};
     Mat hsv_frame;
     cvtColor(ipm_frame, hsv_frame, COLOR_BGR2HSV);
     inRange(hsv_frame, boundary_min, boundary_max, hsv_frame);
-    findContours(hsv_frame, contours, 1, 2);
+    findContours(hsv_frame, contours, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE);
     lines.clear();
     for(unsigned int it_lines = 0; it_lines < tmp_lines.size(); ++it_lines)
     {
