@@ -11,15 +11,19 @@ using namespace cv;
 class Kalman
 {
 private:
-    vector<KalmanFilter> leftKalman[20];
-    vector<KalmanFilter> rightKalman[20];
+    KalmanFilter leftKalman[20];
+    KalmanFilter rightKalman[20];
     vector<Vec2i> prevLeftPoints[20];
     vector<Vec2i> prevRightPoints[20];
     vector<Vec2i> newLeftPoints[20];
     vector<Vec2i> newRightPoints[20];
 public:
     Kalman();
+    void kalmanFilter(vector<Vec2i> points);
     void smoothing(char c);
+    void leftSmoothing();
+    void rightSmoothing();
+
 };
 
 #endif // KALMAN_H

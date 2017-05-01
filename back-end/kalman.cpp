@@ -12,26 +12,50 @@ Kalman::Kalman()
     }
 }
 
-void Kalman::smoothing(char c)
+void Kalman::kalmanFilter(vector<Vec2i> &points, int &width)
 {
-    vector<KalmanFilter>* k;
-    vector<Vec2i>* points;
+    char c;
+    if (points[0][0] < width/2)
+    {
+        c = 'l';
+        newLeftPoints = points;
+    }
+    else
+    {
+        c = "r";
+        newRightPoints = points;
+    }
+    smoothing(c);
+}
+
+void Kalman::smoothing(char &c)
+{
+    KalmanFilter* k;
+    vector<Vec2i>* newPoints;
+    vector<Vec2i>* prevPoints;
     if (c == 'l')
     {
         k = &leftKalman;
-        points = &newLeftPoints;
+        newPoints = &newLeftPoints;
     }
     else
     {
         k = &rightKalman;
-        points = &newRightPoints;
+        newPoints = &newRightPoints;
     }
-    if((*k)[0].statePre == 0)
+    Mat mp, tp;
+    if((*k).statePre[0][0] == 0)
         for (int i = 0; i < 20; ++i) {
-            Mat mp = (Mat <int>(2,1)<< (*points)[i]);
+            mp = (Mat <int>(2,1)<< (*newPoints)[i]);
             for (int j = 0; j < 50; ++j) {
-
+                (*(k+i)).correct(mp);
+                tp = (*(k+i)).predict();
             }
         }
-    leftKalman.
+    for (int i = 0; i < 20; ++i) {
+        mp = (Mat <int>(2,1)<< (*newPoints)[i]);
+        (*(k+i)).correct(mp);
+        tp = (*(k+i)).predict();
+        prevPoints->push_back(tp);
+    }
 }
