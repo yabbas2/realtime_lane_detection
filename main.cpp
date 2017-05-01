@@ -1,6 +1,7 @@
 #include <QApplication>
 #include "mainwindow.h"
 #include "back-end/pipeline.h"
+#include "back-end/kalman.h"
 
 int main(int argc, char *argv[])
 {
@@ -10,6 +11,36 @@ int main(int argc, char *argv[])
 
     Pipeline p;
     p.connectFrontEndToBackEnd(&w);
+
+    vector<Vec2i> points;
+    points = {
+        {401, 290},
+        {398, 293},
+        {394, 297},
+        {390, 302},
+        {385, 307},
+        {381, 312},
+        {376, 318},
+        {370, 325},
+        {364, 333},
+        {357, 342},
+        {349, 352},
+        {340, 364},
+        {330, 378},
+        {317, 395},
+        {303, 415},
+        {285, 441},
+        {262, 474},
+        {232, 519},
+        {190, 580},
+        {129, 672}
+    };
+
+
+
+
+    Kalman k;
+    k.kalmanFilter(points, 'l');
 
 //    CurveFit c;
 //    vector<Vec4i> llines;

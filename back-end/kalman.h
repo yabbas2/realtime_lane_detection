@@ -19,9 +19,10 @@ private:
     vector<Vec2i> prevRightPoints;
     vector<Vec2i> newLeftPoints;
     vector<Vec2i> newRightPoints;
+    bool isMeasure;
 public:
     Kalman();
-    void kalmanFilter(vector<Vec2i> &points, int &width);
+    void kalmanFilter(vector<Vec2i> &points, char c);
     void smoothing(char &c);
     void leftSmoothing();
     void rightSmoothing();

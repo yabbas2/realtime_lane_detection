@@ -3,29 +3,22 @@
 Kalman::Kalman()
 {
     KalmanFilter KF(4,2);
-    KF.measurementMatrix = (Mat_ <int>(4,2)<< 1, 0, 0, 0, 0, 1, 0, 0);
+    KF.measurementMatrix = (Mat_ <int>(2,4)<< 1, 0, 0, 0, 0, 1, 0, 0);
     KF.transitionMatrix = (Mat_ <int>(4,4)<< 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1);
     KF.processNoiseCov = (Mat_ <int>(4,4)<< 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1) * 0.0003;
     for (int i = 0; i < 20; ++i) {
         leftKalman[i] = KF;
         rightKalman[i] = KF;
     }
-
+    isMeasure = true;
 }
 
-void Kalman::kalmanFilter(vector<Vec2i> &points, int &width)
+void Kalman::kalmanFilter(vector<Vec2i> &points, char c)
 {
-    char c;
-    if (points[0][0] < width/2)
-    {
-        c = 'l';
+    if (c == 'l')
         newLeftPoints = points;
-    }
     else
-    {
-        c = 'r';
         newRightPoints = points;
-    }
     smoothing(c);
 }
 
@@ -47,13 +40,23 @@ void Kalman::smoothing(char &c)
         k = rightKalman;
     }
     Mat mp, tp;
-    if(k->statePre.empty())
+    if(isMeasure)
+    {
+        isMeasure = false;
         for (int i = 0; i < 20; ++i) {
-            mp = (Mat_ <int>(1,2)<< newPoints->at(i)[0], newPoints->at(i)[1]);
+            mp = (Mat_ <int>(2,1)<< newPoints->at(i)[0], newPoints->at(i)[1]);
+            mp.convertTo(mp, CV_32F);
             for (int j = 0; j < 50; ++j) {
-                (*(k+i)).correct(mp);
-                tp = (*(k+i)).predict();
+                leftKalman[i].correct(mp);
+                tp = k[i].predict();
             }
-            prevPoints->push_back(tp);
         }
+    }
+    for (int i = 0; i < 20; ++i) {
+        mp = (Mat_ <int>(2,1)<< newPoints->at(i)[0], newPoints->at(i)[1]);
+        k[i].correct(mp);
+        tp = k[i].predict();
+        prevPoints->push_back(tp);
+    }
+
 }
