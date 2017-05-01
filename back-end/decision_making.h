@@ -6,6 +6,7 @@
 #include <opencv2/opencv.hpp>
 
 using namespace cv;
+using namespace std;
 
 class DecisionMaking
 {
@@ -13,8 +14,11 @@ private:
     float yThreshold;
     int dashed;
     int solid;
+    bool isDashed;
 public:
-    bool isDashed(vector<Vec4f> lines, vector<float> seed_line);
+    DecisionMaking();
+    void decide(vector<Vec4i> &lines, vector<float> &seed_line);
+    bool getDecision();
 };
 
 #endif // DECISION_MAKING_H

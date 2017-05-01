@@ -1,17 +1,25 @@
 #include "decision_making.h"
 
-bool DecisionMaking::isDashed(vector<Vec4f> lines, vector<float> seed_line)
+
+DecisionMaking::DecisionMaking()
+{
+    yThreshold = 150.0;
+}
+
+void DecisionMaking::decide(vector<Vec4i> &lines, vector<float> &seed_line)
 {
     if(lines.empty() || seed_line.empty())
-        return false;
-    yThreshold = 150.0;
+    {
+        isDashed = false;
+        return;
+    }
     dashed = 0;
     solid = 0;
     sort(lines.begin(), lines.end(),
-              [](const std::vector<float>& a, const std::vector<float>& b) {
+              [](const Vec4i& a, const Vec4i& b) {
       return a[1] > b[1];
     });
-    vector<Vec4f>::iterator i;
+    vector<Vec4i>::iterator i;
     float y1 = seed_line[1];
     float y2 = seed_line[3];
     float y1c;
@@ -28,9 +36,14 @@ bool DecisionMaking::isDashed(vector<Vec4f> lines, vector<float> seed_line)
             dashed += 1;
         y1 = y1c;
         y2 = y2c;
-        if(solid > dashed || dashed == 0)
-            return false;
-        else
-            return true;
     }
+    if(solid > dashed || dashed == 0)
+        isDashed = false;
+    else
+        isDashed = true;
+}
+
+bool DecisionMaking::getDecision()
+{
+    return isDashed;
 }

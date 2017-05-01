@@ -6,16 +6,17 @@
 #include <opencv2/opencv.hpp>
 
 using namespace cv;
-
+using namespace std;
 
 class LineDetection
 {
 public:
-    vector<Vec4f> *lineSegmentDetector(Mat input_frame);
+    LineDetection();
+    void lineSegmentDetector(Mat &input_frame);
+    vector<Vec4f> *getDetectedLines();
 
 private:
     vector<Vec4f> lines;
-
 };
 
 #endif // LINEDETECTION_H
