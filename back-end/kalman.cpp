@@ -34,16 +34,4 @@ void Kalman::smoothing(char c)
             }
         }
     leftKalman.
-
-
-
-
-
-
-
-
-
-
-
-
 }

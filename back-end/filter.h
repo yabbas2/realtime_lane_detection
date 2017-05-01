@@ -1,7 +1,7 @@
 #ifndef FILTER_H
 #define FILTER_H
 
-#include<opencv2/opencv.hpp>
+#include <opencv2/opencv.hpp>
 #include <vector>
 
 #define threshold_angle_min     70
@@ -15,7 +15,7 @@ class Filter
 {
 public:
     Filter();
-    vector<Vec4i> * getFilteredLines();
+    vector<Vec4i>* getFilteredLines();
     void falseDetectionElimination(Mat &ipm_frame, vector<Vec4i> &l);
 
 private:
