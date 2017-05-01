@@ -35,13 +35,13 @@ void Kalman::smoothing(char &c)
     vector<Vec2i>* prevPoints;
     if (c == 'l')
     {
-        k = &leftKalman;
         newPoints = &newLeftPoints;
+        k = &leftKalman;
     }
     else
     {
-        k = &rightKalman;
         newPoints = &newRightPoints;
+        k = &rightKalman;
     }
     Mat mp, tp;
     if((*k).statePre[0][0] == 0)

@@ -19,11 +19,10 @@ private:
     vector<Vec2i> newRightPoints[20];
 public:
     Kalman();
-    void kalmanFilter(vector<Vec2i> points);
-    void smoothing(char c);
+    void kalmanFilter(vector<Vec2i> &points, int &width);
+    void smoothing(char &c);
     void leftSmoothing();
     void rightSmoothing();
-
 };
 
 #endif // KALMAN_H
