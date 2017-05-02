@@ -17,6 +17,7 @@ enum {left_region, right_region};
 class Kalman
 {
 private:
+    int count = 0;
     KalmanFilter leftKalman[20];
     KalmanFilter rightKalman[20];
     vector<Vec2i> prevLeftPoints;
@@ -31,6 +32,9 @@ private:
 public:
     Kalman();
     void kalmanFilter(vector<Vec2i> &points, char c);
+    vector<Vec2i>* getPrevLeftPoints();
+    vector<Vec2i>* getPrevRightPoints();
+    int* getCount();
 };
 
 #endif // KALMAN_H

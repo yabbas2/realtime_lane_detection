@@ -18,11 +18,21 @@ Kalman::Kalman()
 void Kalman::kalmanFilter(vector<Vec2i> &points, char c)
 {
     if(points.empty())
-        return;
-    if (c == kalman::left_region)
-        newLeftPoints = points;
+    {
+        if (c == kalman::left_region)
+            newLeftPoints = prevLeftPoints;
+        else if(c == kalman::right_region)
+            newRightPoints = prevRightPoints;
+        count++;
+    }
     else
-        newRightPoints = points;
+    {
+        if (c == kalman::left_region)
+            newLeftPoints = points;
+        else if(c == kalman::right_region)
+            newRightPoints = points;
+        count = 0;
+    }
     smoothing(c);
 }
 
@@ -65,3 +75,9 @@ void Kalman::smoothing(char &c)
         prevPoints->push_back(Vec2i{(int)tp.at<double>(0, 0), (int)tp.at<double>(1, 0)});
     }
 }
+
+vector<Vec2i> *Kalman::getPrevLeftPoints(){return &prevLeftPoints;}
+
+vector<Vec2i> *Kalman::getPrevRightPoints(){return &prevRightPoints;}
+
+int *Kalman::getCount(){return &count;}
