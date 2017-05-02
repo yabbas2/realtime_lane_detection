@@ -130,14 +130,14 @@ void RegionGrowing::anyRegionGrowing(char c)
 }
 
 
-vector<Vec7i> RegionGrowing::getLeftLines(){return leftLines;}
+vector<Vec7i> *RegionGrowing::getLeftLines(){return &leftLines;}
 
-vector<Vec7i> RegionGrowing::getRightLines(){return rightLines;}
+vector<Vec7i> *RegionGrowing::getRightLines(){return &rightLines;}
 
-Vec7i RegionGrowing::getLeftSeedLines(){return leftSeedLine;}
+Vec7i *RegionGrowing::getLeftSeedLines(){return &leftSeedLine;}
 
-Vec7i RegionGrowing::getRightSeedLines(){return rightSeedLine;}
+Vec7i *RegionGrowing::getRightSeedLines(){return &rightSeedLine;}
 
-vector<Vec7i> RegionGrowing::getLeftRegion(){return leftRegion;}
+vector<Vec7i> *RegionGrowing::getLeftRegion(){return &leftRegion;}
 
-vector<Vec7i> RegionGrowing::getRightRegion(){return rightRegion;}
+vector<Vec7i> *RegionGrowing::getRightRegion(){return &rightRegion;}

@@ -10,6 +10,10 @@ using namespace cv;
 
 typedef Vec<int, 7> Vec7i;
 
+namespace kalman {
+enum {left_region, right_region};
+}
+
 class Kalman
 {
 private:
@@ -20,12 +24,13 @@ private:
     vector<Vec2i> newLeftPoints;
     vector<Vec2i> newRightPoints;
     bool isMeasure;
-public:
-    Kalman();
-    void kalmanFilter(vector<Vec2i> &points, char c);
     void smoothing(char &c);
     void leftSmoothing();
     void rightSmoothing();
+
+public:
+    Kalman();
+    void kalmanFilter(vector<Vec2i> &points, char c);
 };
 
 #endif // KALMAN_H

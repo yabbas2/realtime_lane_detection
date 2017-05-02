@@ -23,22 +23,21 @@ private:
     Vec7i rightSeedLine;
     vector<Vec7i> leftRegion;
     vector<Vec7i> rightRegion;
-public:
-    RegionGrowing();
-
-    void regionGrowing(vector<Vec7i> lines, int &width);
     void findSeedLines(char c);
     void findLeftSeedLines();
     void findRightSeedLines();
     void anyRegionGrowing(char c);
     void leftRegionGrowing();
     void rightRegionGrowing();
-    vector<Vec7i> getLeftLines();
-    vector<Vec7i> getRightLines();
-    Vec7i getLeftSeedLines();
-    Vec7i getRightSeedLines();
-    vector<Vec7i> getLeftRegion();
-    vector<Vec7i> getRightRegion();
+public:
+    RegionGrowing();
+    void regionGrowing(vector<Vec7i> lines, int &width);
+    vector<Vec7i> *getLeftLines();
+    vector<Vec7i> *getRightLines();
+    Vec7i *getLeftSeedLines();
+    Vec7i *getRightSeedLines();
+    vector<Vec7i> *getLeftRegion();
+    vector<Vec7i> *getRightRegion();
 
 };
 
