@@ -69,7 +69,7 @@ void CurveFit::doCurveFitting(int side)
     polynomialfit(ptsY, ptsX, m, info, p, rep);
     makeLinspace();
     ptsAfterFit->clear();
-    for (int i = 0; i < newPtsY.size(); ++i)
+    for (unsigned int i = 0; i < newPtsY.size(); ++i)
         ptsAfterFit->push_back(Vec2i{static_cast<int> (barycentriccalc(p, newPtsY[i])), newPtsY[i]});
 }
 

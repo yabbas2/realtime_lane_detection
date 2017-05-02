@@ -24,44 +24,48 @@ SOURCES += main.cpp\
             front-end/viewers/multivideoviewer.cpp \
             front-end/sidebar/side_bar.cpp \
             front-end/viewers/fullscreenvideoviewer.cpp \
-            back-end/stream_in.cpp \
-            back-end/stream_out.cpp \
-            back-end/stream.cpp \
             front-end/sidebar/gaussianblurwidget.cpp \
             front-end/sidebar/inputmethodwidget.cpp \
             front-end/sidebar/lsdwidget.cpp \
             front-end/sidebar/curvefitwidget.cpp \
             front-end/sidebar/decisionmakewidget.cpp \
             front-end/sidebar/regiongrowwidget.cpp \
-            back-end/ipm.cpp \
             front-end/videowidget.cpp \
+            back-end/ipm.cpp \
+            back-end/stream_in.cpp \
+            back-end/stream_out.cpp \
+            back-end/stream.cpp \
             back-end/curvefit.cpp \
             back-end/pipeline.cpp \
             back-end/region_growing.cpp \
             back-end/filter.cpp \
-            back-end/kalman.cpp
+            back-end/kalman.cpp \
+            back-end/decision_making.cpp \
+            back-end/linedetection.cpp
 
 HEADERS  += mainwindow.h \
             front-end/viewers/opencv_opengl_viewer.h \
             front-end/viewers/multivideoviewer.h \
             front-end/sidebar/side_bar.h \
             front-end/viewers/fullscreenvideoviewer.h \
-            back-end/stream_in.h \
-            back-end/stream_out.h \
-            back-end/stream.h \
             front-end/sidebar/gaussianblurwidget.h \
             front-end/sidebar/inputmethodwidget.h \
             front-end/sidebar/lsdwidget.h \
             front-end/sidebar/curvefitwidget.h \
             front-end/sidebar/decisionmakewidget.h \
             front-end/sidebar/regiongrowwidget.h \
-            back-end/ipm.h \
             front-end/videowidget.h \
+            back-end/ipm.h \
+            back-end/stream_in.h \
+            back-end/stream_out.h \
+            back-end/stream.h \
             back-end/curvefit.h \
             back-end/pipeline.h \
             back-end/region_growing.h \
             back-end/filter.h \
-            back-end/kalman.h
+            back-end/kalman.h \
+            back-end/decision_making.h \
+            back-end/linedetection.h
 
 unix {
 CONFIG += c++11

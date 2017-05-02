@@ -34,7 +34,7 @@ private:
     real_1d_array leftYBeforeFit;
     real_1d_array rightXBeforeFit;
     real_1d_array rightYBeforeFit;
-    vector<double> newPtsY;
+    vector<int> newPtsY;
     vector<Vec2i> leftPtsAfterFit;
     vector<Vec2i> rightPtsAfterFit;
     int ptsNum, startY, endY;
