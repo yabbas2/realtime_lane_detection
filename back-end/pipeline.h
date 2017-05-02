@@ -6,6 +6,7 @@
 #include <QTimer>
 #include <vector>
 #include <QDebug>
+#include <iostream>
 #include "stream.h"
 #include "ipm.h"
 #include "filter.h"

@@ -16,7 +16,7 @@ void Filter::falseDetectionElimination(Mat &ipm_frame, vector<Vec4f> &l)
     for(unsigned int it = 0; it < l.size(); ++it)
     {
         int x1 = l[it][0], y1 = l[it][1], x2 = l[it][2], y2 = l[it][3];
-        if(y1 > y2)
+        if(y1 < y2)
         {
             swap(x1, x2);
             swap(y1, y2);
@@ -36,14 +36,14 @@ void Filter::falseDetectionElimination(Mat &ipm_frame, vector<Vec4f> &l)
     inRange(hsv_frame, boundary_min, boundary_max, hsv_frame);
     findContours(hsv_frame, contours, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE);
     lines.clear();
+    if(contours.empty())
+    {
+        lines = tmp_lines;
+        return;
+    }
     for(unsigned int it_lines = 0; it_lines < tmp_lines.size(); ++it_lines)
     {
         int flag = 0;
-        if(contours.empty())
-        {
-            lines = tmp_lines;
-            return;
-        }
         for(unsigned int it_contours = 0; it_contours < contours.size(); ++it_contours)
         {
             Point2f a((float)tmp_lines[it_lines][0], (float)tmp_lines[it_lines][1]);

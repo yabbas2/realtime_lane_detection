@@ -24,7 +24,7 @@ private:
     vector<Vec2i> prevRightPoints;
     vector<Vec2i> newLeftPoints;
     vector<Vec2i> newRightPoints;
-    bool isMeasure;
+    int isMeasure;
     void smoothing(char &c);
     void leftSmoothing();
     void rightSmoothing();

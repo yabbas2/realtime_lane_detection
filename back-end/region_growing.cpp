@@ -4,6 +4,10 @@ RegionGrowing::RegionGrowing(){}
 
 void RegionGrowing::regionGrowing(vector<Vec7i> &lines, int &width)
 {
+    leftLines.clear();
+    rightLines.clear();
+    leftRegion.clear();
+    rightRegion.clear();
     if(lines.empty())
         return;
     sort(lines.begin(), lines.end(),
@@ -24,6 +28,7 @@ void RegionGrowing::regionGrowing(vector<Vec7i> &lines, int &width)
 
 void RegionGrowing::findLeftSeedLines()
 {
+    leftSeedLine = Vec7i{0, 0, 0, 0, 0, 0, 0};
     findSeedLines('l');
     if(leftSeedLine[0] == 0 && leftSeedLine[1] == 0 && leftSeedLine[2] == 0 && leftSeedLine[3] == 0 && rightLines.size() > 0)
         leftSeedLine = leftLines[0];
@@ -31,6 +36,7 @@ void RegionGrowing::findLeftSeedLines()
 
 void RegionGrowing::findRightSeedLines()
 {
+    rightSeedLine = Vec7i{0, 0, 0, 0, 0, 0, 0};
     findSeedLines('r');
     if(rightSeedLine[0] == 0 && rightSeedLine[1] == 0 && rightSeedLine[2] == 0 && rightSeedLine[3] == 0 && rightLines.size() > 0)
         rightSeedLine = rightLines[0];
@@ -71,15 +77,11 @@ void RegionGrowing::findSeedLines(char c)
 
 void RegionGrowing::leftRegionGrowing()
 {
-    if(leftSeedLine[0] == 0 && leftSeedLine[1] == 0 && leftSeedLine[2] == 0 && leftSeedLine[3] == 0)
-        return;
     anyRegionGrowing('l');
 }
 
 void RegionGrowing::rightRegionGrowing()
 {
-    if(rightSeedLine[0] == 0 && rightSeedLine[1] == 0 && rightSeedLine[2] == 0 && rightSeedLine[3] == 0)
-        return;
     anyRegionGrowing('r');
 }
 

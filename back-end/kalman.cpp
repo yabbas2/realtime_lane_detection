@@ -12,7 +12,7 @@ Kalman::Kalman()
         rightKalman[i].transitionMatrix = (Mat_ <double>(4,4)<< 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1);
         rightKalman[i].processNoiseCov = (Mat_ <double>(4,4)<< 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1) * 0.0003;
     }
-    isMeasure = true;
+    isMeasure = 0;
 }
 
 void Kalman::kalmanFilter(vector<Vec2i> &points, char c)
@@ -53,11 +53,12 @@ void Kalman::smoothing(char &c)
         newPoints = &newRightPoints;
         k = rightKalman;
     }
+    prevPoints->clear();
     Mat tp;
     Mat mp = Mat::zeros(2, 1, CV_64F);
-    if(isMeasure)
+    if(isMeasure < 2)
     {
-        isMeasure = false;
+        isMeasure++;
         for (int i = 0; i < 20; ++i) {
             mp.at<double>(0, 0) = newPoints->at(i)[0];
             mp.at<double>(1, 0) = newPoints->at(i)[1];

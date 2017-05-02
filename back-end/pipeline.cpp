@@ -29,6 +29,7 @@ void Pipeline::exec()
     lineDetector->lineSegmentDetector(*ipmFrame);
     detectedLines = lineDetector->getDetectedLines();
 
+
     filter->falseDetectionElimination(*ipmFrame, *detectedLines);
     filteredLines = filter->getFilteredLines();
 
@@ -40,7 +41,7 @@ void Pipeline::exec()
 
     if (curveFit->fromLinesToPoints(*leftRegion, *rightRegion))
     {
-        curveFit->setParameters(0, ipmFrame->rows, 20);
+        curveFit->setParameters(100, ipmFrame->rows - 100, 20);
         curveFit->doCurveFitting(CurveFitting::left_points);
         curveFit->doCurveFitting(CurveFitting::right_points);
         leftPoints = curveFit->getLeftPtsAfterFit();
@@ -51,11 +52,6 @@ void Pipeline::exec()
         leftPoints = &emptyPoints;
         rightPoints = &emptyPoints;
     }
-
-//    k->kalmanFilter(*leftPoints, kalman::left_region);
-//    k->kalmanFilter(*rightPoints, kalman::right_region);
-//    leftPoints = k->getPrevLeftPoints();
-//    rightPoints = k->getPrevRightPoints();
 
     decisionMake->decide(*leftRegion, *leftSeedLine, Decision::left_region);
     decisionMake->decide(*rightRegion, *rightSeedLine, Decision::right_region);
@@ -68,10 +64,15 @@ void Pipeline::exec()
     else
         qDebug() << "right is solid";
 
-    ipmObj->inverseTransform(*leftPoints);
-    leftPoints = ipmObj->getFinalPoints();
-    ipmObj->inverseTransform(*rightPoints);
-    rightPoints = ipmObj->getFinalPoints();
+    *leftPoints = ipmObj->inverseTransformL(*leftPoints);
+//    leftPoints = ipmObj->getFinalPoints();
+    *rightPoints = ipmObj->inverseTransformR(*rightPoints);
+//    rightPoints = ipmObj->getFinalPoints();
+
+    k->kalmanFilter(*leftPoints, kalman::left_region);
+    k->kalmanFilter(*rightPoints, kalman::right_region);
+    leftPoints = k->getPrevLeftPoints();
+    rightPoints = k->getPrevRightPoints();
 
     streamObj->setPointsToDraw(*leftPoints, *rightPoints);
 }
