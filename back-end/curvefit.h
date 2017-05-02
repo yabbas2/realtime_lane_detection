@@ -26,8 +26,8 @@ public:
     void setParameters(int start, int end, int n);
     vector<Vec2i> *getLeftPtsBeforeFit();
     vector<Vec2i> *getRightPtsBeforeFit();
-    vector<Vec2i> *getLeftPtsAfterFit();
-    vector<Vec2i> *getRightPtsAfterFit();
+    vector<Vec2f> *getLeftPtsAfterFit();
+    vector<Vec2f> *getRightPtsAfterFit();
 
 private:
     vector<Vec2i> leftPtsBeforeFit;
@@ -36,9 +36,9 @@ private:
     real_1d_array leftYBeforeFit;
     real_1d_array rightXBeforeFit;
     real_1d_array rightYBeforeFit;
-    vector<int> newPtsY;
-    vector<Vec2i> leftPtsAfterFit;
-    vector<Vec2i> rightPtsAfterFit;
+    vector<float> newPtsY;
+    vector<Vec2f> leftPtsAfterFit;
+    vector<Vec2f> rightPtsAfterFit;
     int ptsNum, startY, endY;
 
     void makeLinspace();

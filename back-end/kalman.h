@@ -20,10 +20,10 @@ private:
     int count = 0;
     KalmanFilter leftKalman[20];
     KalmanFilter rightKalman[20];
-    vector<Vec2i> prevLeftPoints;
-    vector<Vec2i> prevRightPoints;
-    vector<Vec2i> newLeftPoints;
-    vector<Vec2i> newRightPoints;
+    vector<Vec2f> prevLeftPoints;
+    vector<Vec2f> prevRightPoints;
+    vector<Vec2f> newLeftPoints;
+    vector<Vec2f> newRightPoints;
     int isMeasure;
     void smoothing(char &c);
     void leftSmoothing();
@@ -31,9 +31,9 @@ private:
 
 public:
     Kalman();
-    void kalmanFilter(vector<Vec2i> &points, char c);
-    vector<Vec2i>* getPrevLeftPoints();
-    vector<Vec2i>* getPrevRightPoints();
+    void kalmanFilter(vector<Vec2f> &points, char c);
+    vector<Vec2f>* getPrevLeftPoints();
+    vector<Vec2f>* getPrevRightPoints();
     int* getCount();
 };
 

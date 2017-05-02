@@ -18,8 +18,8 @@ private:
 
 public:
     void transform(Mat &original_frame, QString vido_name);
-    vector<Vec2i> inverseTransformL(vector<Vec2i> &old_pts);
-    vector<Vec2i> inverseTransformR(vector<Vec2i> &old_pts);
+    vector<Vec2f> inverseTransformL(vector<Vec2f> &old_pts);
+    vector<Vec2f> inverseTransformR(vector<Vec2f> &old_pts);
     Mat *getIPMFrame();
 //    vector<Vec2i> *getFinalPoints();
 

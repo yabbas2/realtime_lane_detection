@@ -55,9 +55,9 @@ private:
     vector<Vec7i> *filteredLines;
     vector<Vec7i> *leftRegion;
     vector<Vec7i> *rightRegion;
-    vector<Vec2i> *leftPoints;
-    vector<Vec2i> *rightPoints;
-    vector<Vec2i> emptyPoints;
+    vector<Vec2f> *leftPoints;
+    vector<Vec2f> *rightPoints;
+    vector<Vec2f> emptyPoints;
     Vec7i *leftSeedLine;
     Vec7i *rightSeedLine;
 

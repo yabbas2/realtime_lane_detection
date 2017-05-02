@@ -41,7 +41,7 @@ void Pipeline::exec()
 
     if (curveFit->fromLinesToPoints(*leftRegion, *rightRegion))
     {
-        curveFit->setParameters(100, ipmFrame->rows - 100, 20);
+        curveFit->setParameters(0, ipmFrame->rows + 100, 20);
         curveFit->doCurveFitting(CurveFitting::left_points);
         curveFit->doCurveFitting(CurveFitting::right_points);
         leftPoints = curveFit->getLeftPtsAfterFit();

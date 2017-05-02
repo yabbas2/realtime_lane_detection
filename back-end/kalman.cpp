@@ -15,7 +15,7 @@ Kalman::Kalman()
     isMeasure = 0;
 }
 
-void Kalman::kalmanFilter(vector<Vec2i> &points, char c)
+void Kalman::kalmanFilter(vector<Vec2f> &points, char c)
 {
     if(points.empty())
     {
@@ -39,8 +39,8 @@ void Kalman::kalmanFilter(vector<Vec2i> &points, char c)
 void Kalman::smoothing(char &c)
 {
     KalmanFilter* k;
-    vector<Vec2i>* prevPoints;
-    vector<Vec2i>* newPoints;
+    vector<Vec2f>* prevPoints;
+    vector<Vec2f>* newPoints;
     if (c == kalman::left_region)
     {
         prevPoints = &prevLeftPoints;
@@ -73,12 +73,12 @@ void Kalman::smoothing(char &c)
         mp.at<double>(1, 0) = newPoints->at(i)[1];
         k[i].correct(mp);
         tp = k[i].predict();
-        prevPoints->push_back(Vec2i{(int)tp.at<double>(0, 0), (int)tp.at<double>(1, 0)});
+        prevPoints->push_back(Vec2f{tp.at<double>(0, 0), tp.at<double>(1, 0)});
     }
 }
 
-vector<Vec2i> *Kalman::getPrevLeftPoints(){return &prevLeftPoints;}
+vector<Vec2f> *Kalman::getPrevLeftPoints(){return &prevLeftPoints;}
 
-vector<Vec2i> *Kalman::getPrevRightPoints(){return &prevRightPoints;}
+vector<Vec2f> *Kalman::getPrevRightPoints(){return &prevRightPoints;}
 
 int *Kalman::getCount(){return &count;}

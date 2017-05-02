@@ -101,11 +101,15 @@ void Stream::FullScreenFrame(int index)
     fsViewer->getVideoWidget()->showImage(*fsFrame);
 }
 
-void Stream::setPointsToDraw(std::vector<cv::Vec2i> leftPoints, std::vector<cv::Vec2i> rightPoints)
+void Stream::setPointsToDraw(std::vector<cv::Vec2f> leftPoints, std::vector<cv::Vec2f> rightPoints)
 {
     updateDataLock = true;
-    this->leftPoints = leftPoints;
-    this->rightPoints = rightPoints;
+    this->leftPoints.clear();
+    this->rightPoints.clear();
+    for (unsigned int i = 0; i < leftPoints.size(); i++)
+        this->leftPoints.push_back(Vec2i{(int)leftPoints[i][0], (int)leftPoints[i][1]});
+    for (unsigned int i = 0; i < rightPoints.size(); i++)
+        this->rightPoints.push_back(Vec2i{(int)rightPoints[i][0], (int)rightPoints[i][1]});
     stream_out->setDrawingData(&(this->leftPoints), &(this->rightPoints));
     updateDataLock = false;
 }

@@ -30,29 +30,29 @@ void IPM::transform(Mat &original_frame, QString video_name){
     warpPerspective(original_frame, ipm_frame, transform_homography, Size(height, width));
 }
 
-vector<Vec2i> IPM::inverseTransformL(vector<Vec2i> &old_pts){
-    vector<Vec2i> new_pts;
+vector<Vec2f> IPM::inverseTransformL(vector<Vec2f> &old_pts){
+    vector<Vec2f> new_pts;
     float z;
     float ptx, pty;
-    for(vector<Vec2i>::iterator it = old_pts.begin(); it != old_pts.end(); it++){
+    for(vector<Vec2f>::iterator it = old_pts.begin(); it != old_pts.end(); it++){
         z = 1 / (inverse_homography.at<double>(2,0) * (*it)[0] + inverse_homography.at<double>(2,1) * (*it)[1] + inverse_homography.at<double>(2,2));
         ptx =  ((inverse_homography.at<double>(0,0) * (*it)[0] + inverse_homography.at<double>(0,1) * (*it)[1] + inverse_homography.at<double>(0,2)) * z);
         pty =  ((inverse_homography.at<double>(1,0) * (*it)[0] + inverse_homography.at<double>(1,1) * (*it)[1] + inverse_homography.at<double>(1,2)) * z);
-        new_pts.push_back(Vec2i{static_cast<int> (ptx), static_cast<int> (pty)});
+        new_pts.push_back(Vec2f{ptx, pty});
     }
     assert(new_pts.size() == old_pts.size());
     return new_pts;
 }
 
-vector<Vec2i> IPM::inverseTransformR(vector<Vec2i> &old_pts){
-    vector<Vec2i> new_pts;
+vector<Vec2f> IPM::inverseTransformR(vector<Vec2f> &old_pts){
+    vector<Vec2f> new_pts;
     float z;
     float ptx, pty;
-    for(vector<Vec2i>::iterator it = old_pts.begin(); it != old_pts.end(); it++){
+    for(vector<Vec2f>::iterator it = old_pts.begin(); it != old_pts.end(); it++){
         z = 1 / (inverse_homography.at<double>(2,0) * (*it)[0] + inverse_homography.at<double>(2,1) * (*it)[1] + inverse_homography.at<double>(2,2));
         ptx =  ((inverse_homography.at<double>(0,0) * (*it)[0] + inverse_homography.at<double>(0,1) * (*it)[1] + inverse_homography.at<double>(0,2)) * z);
         pty =  ((inverse_homography.at<double>(1,0) * (*it)[0] + inverse_homography.at<double>(1,1) * (*it)[1] + inverse_homography.at<double>(1,2)) * z);
-        new_pts.push_back(Vec2i{static_cast<int> (ptx), static_cast<int> (pty)});
+        new_pts.push_back(Vec2f{ptx, pty});
     }
     assert(new_pts.size() == old_pts.size());
     return new_pts;
