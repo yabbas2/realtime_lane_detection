@@ -4,6 +4,8 @@ RegionGrowing::RegionGrowing(){}
 
 void RegionGrowing::regionGrowing(vector<Vec7i> lines, int &width)
 {
+    if(lines.empty())
+        return;
     sort(lines.begin(), lines.end(),
                   [](const Vec7i& a, const Vec7i& b) {
           return a[1] > b[1];

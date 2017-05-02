@@ -17,6 +17,8 @@ Kalman::Kalman()
 
 void Kalman::kalmanFilter(vector<Vec2i> &points, char c)
 {
+    if(points.empty())
+        return;
     if (c == kalman::left_region)
         newLeftPoints = points;
     else
