@@ -29,6 +29,7 @@ private:
     void anyRegionGrowing(char c);
     void leftRegionGrowing();
     void rightRegionGrowing();
+
 public:
     RegionGrowing();
     void regionGrowing(vector<Vec7i> lines, int &width);
@@ -38,7 +39,6 @@ public:
     Vec7i *getRightSeedLines();
     vector<Vec7i> *getLeftRegion();
     vector<Vec7i> *getRightRegion();
-
 };
 
 #endif // REGION_GROWING_H
