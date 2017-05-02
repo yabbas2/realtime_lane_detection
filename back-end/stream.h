@@ -22,7 +22,7 @@ public:
     explicit Stream();
     ~Stream();
     void setViewers(MultiVideoViewer *m, fullScreenVideoViewer *f);
-    void setPointsToDraw(std::vector<cv::Vec2i> *pts);
+    void setPointsToDraw(std::vector<cv::Vec2i> leftPoints, std::vector<cv::Vec2i> rightPoints);
     cv::Mat getFrame();
     void setIPMFrame(cv::Mat *f);
     void pause_timers();
@@ -49,6 +49,9 @@ private:
     MultiVideoViewer *multiViewer;
     fullScreenVideoViewer *fsViewer;
     QTimer *timer;
+    std::vector<cv::Vec2i> leftPoints;
+    std::vector<cv::Vec2i> rightPoints;
+    bool updateDataLock;
 };
 
 #endif // STREAM_H

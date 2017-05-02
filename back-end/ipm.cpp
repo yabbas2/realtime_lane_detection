@@ -30,11 +30,11 @@ void IPM::transform(Mat &original_frame, QString video_name){
     warpPerspective(original_frame, ipm_frame, transform_homography, Size(height, width));
 }
 
-void IPM::inverseTransform(std::vector<Vec2i> &old_pts, std::vector<Vec2i> &new_pts){
+void IPM::inverseTransform(vector<Vec2i> &old_pts){
     new_pts.clear();
     float z;
     float ptx, pty;
-    for(std::vector<Vec2i>::iterator it = old_pts.begin(); it != old_pts.end(); it++){
+    for(vector<Vec2i>::iterator it = old_pts.begin(); it != old_pts.end(); it++){
         z = 1 / (inverse_homography.at<double>(2,0) * (*it)[0] + inverse_homography.at<double>(2,1) * (*it)[1] + inverse_homography.at<double>(2,2));
         ptx =  ((inverse_homography.at<double>(0,0) * (*it)[0] + inverse_homography.at<double>(0,1) * (*it)[1] + inverse_homography.at<double>(0,2)) * z);
         pty =  ((inverse_homography.at<double>(1,0) * (*it)[0] + inverse_homography.at<double>(1,1) * (*it)[1] + inverse_homography.at<double>(1,2)) * z);
@@ -46,4 +46,9 @@ void IPM::inverseTransform(std::vector<Vec2i> &old_pts, std::vector<Vec2i> &new_
 Mat *IPM::getIPMFrame()
 {
     return &ipm_frame;
+}
+
+vector<Vec2i> *IPM::getFinalPoints()
+{
+    return &new_pts;
 }

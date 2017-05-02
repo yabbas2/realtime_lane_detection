@@ -11,6 +11,8 @@ using namespace alglib;
 using namespace std;
 using namespace cv;
 
+typedef Vec<int,7> Vec7i;
+
 namespace CurveFitting {
     enum {left_points, right_points};
 }
@@ -19,7 +21,7 @@ class CurveFit
 {
 public:
     explicit CurveFit();
-    void fromLinesToPoints(vector<Vec4i> &leftLines, vector<Vec4i> &rightLines);
+    bool fromLinesToPoints(vector<Vec7i> &leftLines, vector<Vec7i> &rightLines);
     void doCurveFitting(int side);
     void setParameters(int start, int end, int n);
     vector<Vec2i> *getLeftPtsBeforeFit();

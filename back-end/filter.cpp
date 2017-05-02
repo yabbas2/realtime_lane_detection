@@ -10,7 +10,7 @@ vector<Vec7i>* Filter::getFilteredLines()
     return &lines;
 }
 
-void Filter::falseDetectionElimination(Mat &ipm_frame, vector<Vec4i> &l)
+void Filter::falseDetectionElimination(Mat &ipm_frame, vector<Vec4f> &l)
 {
     vector<Vec7i> tmp_lines;
     for(unsigned int it = 0; it < l.size(); ++it)

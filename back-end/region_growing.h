@@ -32,11 +32,11 @@ private:
 
 public:
     RegionGrowing();
-    void regionGrowing(vector<Vec7i> lines, int &width);
+    void regionGrowing(vector<Vec7i> &lines, int &width);
     vector<Vec7i> *getLeftLines();
     vector<Vec7i> *getRightLines();
-    Vec7i *getLeftSeedLines();
-    Vec7i *getRightSeedLines();
+    Vec7i *getLeftSeedLine();
+    Vec7i *getRightSeedLine();
     vector<Vec7i> *getLeftRegion();
     vector<Vec7i> *getRightRegion();
 };

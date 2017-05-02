@@ -5,9 +5,11 @@ CurveFit::CurveFit()
 
 }
 
-void CurveFit::fromLinesToPoints(vector<Vec4i> &leftLines, vector<Vec4i> &rightLines)
+bool CurveFit::fromLinesToPoints(vector<Vec7i> &leftLines, vector<Vec7i> &rightLines)
 {
-    vector<Vec4i>::iterator it;
+    if (leftLines.empty() || rightLines.empty())
+        return false;
+    vector<Vec7i>::iterator it;
     int i;
     leftPtsBeforeFit.clear();
     rightPtsBeforeFit.clear();
@@ -33,6 +35,7 @@ void CurveFit::fromLinesToPoints(vector<Vec4i> &leftLines, vector<Vec4i> &rightL
         rightXBeforeFit[++i] = (*it)[2];
         rightYBeforeFit[i] = (*it)[3];
     }
+    return true;
 }
 
 void CurveFit::setParameters(int start, int end, int n)
@@ -75,6 +78,7 @@ void CurveFit::doCurveFitting(int side)
 
 void CurveFit::makeLinspace()
 {
+    newPtsY.clear();
     int a = startY, b = endY;
     double step = (b-a) / (ptsNum-1);
     while(a <= b)

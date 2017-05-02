@@ -18,7 +18,7 @@ class Filter
 public:
     Filter();
     vector<Vec7i>* getFilteredLines();
-    void falseDetectionElimination(Mat &ipm_frame, vector<Vec4i> &l);
+    void falseDetectionElimination(Mat &ipm_frame, vector<Vec4f> &l);
 
 private:
     vector<Vec7i> lines;

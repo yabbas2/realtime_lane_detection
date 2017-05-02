@@ -2,7 +2,7 @@
 
 RegionGrowing::RegionGrowing(){}
 
-void RegionGrowing::regionGrowing(vector<Vec7i> lines, int &width)
+void RegionGrowing::regionGrowing(vector<Vec7i> &lines, int &width)
 {
     if(lines.empty())
         return;
@@ -136,9 +136,9 @@ vector<Vec7i> *RegionGrowing::getLeftLines(){return &leftLines;}
 
 vector<Vec7i> *RegionGrowing::getRightLines(){return &rightLines;}
 
-Vec7i *RegionGrowing::getLeftSeedLines(){return &leftSeedLine;}
+Vec7i *RegionGrowing::getLeftSeedLine(){return &leftSeedLine;}
 
-Vec7i *RegionGrowing::getRightSeedLines(){return &rightSeedLine;}
+Vec7i *RegionGrowing::getRightSeedLine(){return &rightSeedLine;}
 
 vector<Vec7i> *RegionGrowing::getLeftRegion(){return &leftRegion;}
 

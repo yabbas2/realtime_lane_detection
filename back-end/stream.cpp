@@ -9,6 +9,7 @@ Stream::Stream() : width(0), height(0), fps(0)
     fsFrame = Q_NULLPTR;
     normal_default_screen = cv::Mat::zeros(480, 854, CV_8UC3);
     ipm_default_screen = cv::Mat::zeros(854, 480, CV_8UC3);
+    updateDataLock = true;
 }
 
 void Stream::changeStreamInSource(QString source)
@@ -35,8 +36,10 @@ void Stream::showFrames()
 {
     frames[MultiVideo::normal_rgb] = stream_in->getFrame()->clone();
     frames[MultiVideo::final_rgb] = stream_in->getFrame()->clone();
-    cv::cvtColor(frames[MultiVideo::final_rgb], frames[MultiVideo::final_rgb], cv::COLOR_BGR2HSV);
-
+    if (! updateDataLock)
+    {
+        stream_out->drawFinalRGB(frames[MultiVideo::final_rgb]);
+    }
     if (!frames[MultiVideo::normal_rgb].empty())
         multiViewer->getVideoWidget(MultiVideo::normal_rgb)->showImage(frames[0]);
     if (!frames[MultiVideo::final_rgb].empty())
@@ -75,8 +78,8 @@ void Stream::setViewers(MultiVideoViewer *m, fullScreenVideoViewer *f)
 
 void Stream::setIPMFrame(cv::Mat *f)
 {
-    frames[MultiVideo::ipm_rgb] = *f;
-    frames[MultiVideo::ipm_bw] = *f;
+    frames[MultiVideo::ipm_rgb] = f->clone();
+    frames[MultiVideo::ipm_bw] = f->clone();
 }
 
 void Stream::FullScreenFrame(int index)
@@ -98,9 +101,13 @@ void Stream::FullScreenFrame(int index)
     fsViewer->getVideoWidget()->showImage(*fsFrame);
 }
 
-void Stream::setPointsToDraw(std::vector<cv::Vec2i> *pts)
+void Stream::setPointsToDraw(std::vector<cv::Vec2i> leftPoints, std::vector<cv::Vec2i> rightPoints)
 {
-    stream_out->setDrawingData(pts);
+    updateDataLock = true;
+    this->leftPoints = leftPoints;
+    this->rightPoints = rightPoints;
+    stream_out->setDrawingData(&(this->leftPoints), &(this->rightPoints));
+    updateDataLock = false;
 }
 
 cv::Mat Stream::getFrame()

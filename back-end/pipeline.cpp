@@ -4,7 +4,14 @@ Pipeline::Pipeline()
 {
     streamObj = new Stream;
     ipmObj = new IPM;
+    lineDetector = new LineDetection;
+    filter = new Filter;
+    regGrow = new RegionGrowing;
+    curveFit = new CurveFit;
+    k = new Kalman;
+    decisionMake = new DecisionMaking;
     timer = new QTimer(this);
+    emptyPoints.clear();
     connect(timer, SIGNAL(timeout()), this, SLOT(exec()));
 }
 
@@ -13,9 +20,60 @@ void Pipeline::exec()
     normalFrame = streamObj->getFrame();
     if (normalFrame.empty())
         return;
+
     ipmObj->transform(normalFrame, "sample1");
     ipmFrame = ipmObj->getIPMFrame();
+
     streamObj->setIPMFrame(ipmFrame);
+
+    lineDetector->lineSegmentDetector(*ipmFrame);
+    detectedLines = lineDetector->getDetectedLines();
+
+    filter->falseDetectionElimination(*ipmFrame, *detectedLines);
+    filteredLines = filter->getFilteredLines();
+
+    regGrow->regionGrowing(*filteredLines, ipmFrame->cols);
+    leftRegion = regGrow->getLeftRegion();
+    rightRegion = regGrow->getRightRegion();
+    leftSeedLine = regGrow->getLeftSeedLine();
+    rightSeedLine = regGrow->getRightSeedLine();
+
+    if (curveFit->fromLinesToPoints(*leftRegion, *rightRegion))
+    {
+        curveFit->setParameters(0, ipmFrame->rows, 20);
+        curveFit->doCurveFitting(CurveFitting::left_points);
+        curveFit->doCurveFitting(CurveFitting::right_points);
+        leftPoints = curveFit->getLeftPtsAfterFit();
+        rightPoints = curveFit->getRightPtsAfterFit();
+    }
+    else
+    {
+        leftPoints = &emptyPoints;
+        rightPoints = &emptyPoints;
+    }
+
+//    k->kalmanFilter(*leftPoints, kalman::left_region);
+//    k->kalmanFilter(*rightPoints, kalman::right_region);
+//    leftPoints = k->getPrevLeftPoints();
+//    rightPoints = k->getPrevRightPoints();
+
+    decisionMake->decide(*leftRegion, *leftSeedLine, Decision::left_region);
+    decisionMake->decide(*rightRegion, *rightSeedLine, Decision::right_region);
+    if (decisionMake->getLeftStatus())
+        qDebug() << "left is dashed";
+    else
+        qDebug() << "left is solid";
+    if (decisionMake->getRightStatus())
+        qDebug() << "right is dashed";
+    else
+        qDebug() << "right is solid";
+
+    ipmObj->inverseTransform(*leftPoints);
+    leftPoints = ipmObj->getFinalPoints();
+    ipmObj->inverseTransform(*rightPoints);
+    rightPoints = ipmObj->getFinalPoints();
+
+    streamObj->setPointsToDraw(*leftPoints, *rightPoints);
 }
 
 void Pipeline::connectFrontEndToBackEnd(MainWindow *w)
