@@ -3,22 +3,27 @@
 
 DecisionMaking::DecisionMaking()
 {
-
+    leftStatus = 0;
+    rightStatus = 0;
 }
 
 void DecisionMaking::decide(vector<Vec7i> &lines, Vec7i &seed_line, int side)
 {
+    int* status;
     if (side == Decision::left_region)
-        isDashedPtr = &isDashedLeft;
+        status = &leftStatus;
     else if (side == Decision::right_region)
-        isDashedPtr = &isDashedRight;
+        status = &rightStatus;
     if(lines.empty())
     {
-        *isDashedPtr = false;
+        if(*status > 0)
+            *status = *status - 1;
+        else if (*status < 0)
+            *status = *status + 1;
         return;
     }
-    dashed = 0;
-    solid = 0;
+    int dashed = 0;
+    int solid = 0;
     sort(lines.begin(), lines.end(),
               [](const Vec7i& a, const Vec7i& b) {
       return a[1] > b[1];
@@ -34,7 +39,7 @@ void DecisionMaking::decide(vector<Vec7i> &lines, Vec7i &seed_line, int side)
         y2c = (*i)[3];
         if(abs(y1 - y1c) < yThreshold)
             continue;
-        else if(abs(y2 - y2c) < yThreshold)
+        else if(abs(y2 - y1c) < yThreshold)
             solid += 1;
         else
             dashed += 1;
@@ -42,17 +47,31 @@ void DecisionMaking::decide(vector<Vec7i> &lines, Vec7i &seed_line, int side)
         y2 = y2c;
     }
     if(solid > dashed || dashed == 0)
-        *isDashedPtr = false;
+    {
+        if(*status > -30)
+            *status = *status - 1;
+    }
     else
-        *isDashedPtr = true;
+        if(*status < 30)
+            *status = *status + 1;
 }
 
-bool DecisionMaking::getLeftStatus()
+int DecisionMaking::getLeftStatus()
 {
-    return isDashedLeft;
+    if(leftStatus > 0)
+        return 1;
+    else if(leftStatus < 0)
+        return -1;
+    else
+        return 0;
 }
 
-bool DecisionMaking::getRightStatus()
+int DecisionMaking::getRightStatus()
 {
-    return isDashedRight;
+    if(rightStatus > 0)
+        return 1;
+    else if(rightStatus < 0)
+        return -1;
+    else
+        return 0;
 }

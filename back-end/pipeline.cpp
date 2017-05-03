@@ -89,13 +89,13 @@ void Pipeline::exec()
 
     decisionMake->decide(*leftRegion, *leftSeedLine, Decision::left_region);
     decisionMake->decide(*rightRegion, *rightSeedLine, Decision::right_region);
-    if (decisionMake->getLeftStatus())
+    if (decisionMake->getLeftStatus() > 0)
         qDebug() << "left is dashed";
-    else
+    else if(decisionMake->getLeftStatus() < 0)
         qDebug() << "left is solid";
-    if (decisionMake->getRightStatus())
+    if (decisionMake->getRightStatus() > 0)
         qDebug() << "right is dashed";
-    else
+    else if(decisionMake->getRightStatus() < 0)
         qDebug() << "right is solid";
 
     ipmObj->inverseTransform(*leftPoints, ipm::left_points);
