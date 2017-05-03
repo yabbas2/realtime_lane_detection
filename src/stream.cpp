@@ -1,14 +1,14 @@
 #include "processing.hpp"
 
-const char Processing::endStream = 'q';
-Mat Processing::normalFrame;
-Mat Processing::frameToShow;
-VideoCapture Processing::cap;
-double Processing::fps = 0;
-double Processing::framesNumber = 0;
-char Processing::videoSourceNum;
+const char processing::endStream = 'q';
+Mat processing::normalFrame;
+Mat processing::frameToShow;
+VideoCapture processing::cap;
+double processing::fps = 0;
+//double processing::framesNumber = 0;
+char processing::videoSourceNum;
 
-bool Processing::setVideoSource(string source)
+bool processing::setVideoSource(string source)
 {
     if(source.length() == 1)
         cap = VideoCapture(stoi(source));
@@ -20,15 +20,15 @@ bool Processing::setVideoSource(string source)
     if(!cap.isOpened())
         return false;
     fps = cap.get(CV_CAP_PROP_FPS);
-    framesNumber = cap.get(CV_CAP_PROP_FRAME_COUNT);
+    //framesNumber = cap.get(CV_CAP_PROP_FRAME_COUNT);
     return true;
 }
 
-void Processing::videoIOStream()
+void processing::videoIOStream()
 {
     cout << "[INFO] Start of streaming!" << endl;
 #if writeVideo
-    VideoWriter video("out.avi",CV_FOURCC('M','J','P','G'),fps, Size(640,360),true);
+    VideoWriter video("out.avi",CV_FOURCC('M','J','P','G'),fps, Size(360, 640),true);
 #endif
     //Mat finalFrame;
     while(true)
@@ -48,17 +48,20 @@ void Processing::videoIOStream()
         imshow("Real-time Lane Detection", frameToShow);
 #endif
 #if show_ipm
+#if writeVideo
+        if(ipmFrame.rows == 640 && ipmFrame.cols == 360) video.write(ipmFrame);
+#endif
         if(!ipmFrame.empty()) imshow("IPM", ipmFrame);
 #endif
     }
     cout << "[INFO] End of streaming!" << endl;
     cap.release();
     destroyWindow("Video");
-    printAccuracy();
+    //printAccuracy();
     exit(0);
 }
 
-void Processing::draw()
+void processing::draw()
 {
     list<Vec4f>::iterator lane;
     if(!detectedLanes.empty() && waitFlag)
