@@ -19,16 +19,13 @@ enum {left_region, right_region};
 class DecisionMaking
 {
 private:
-    int dashed;
-    int solid;
-    bool isDashedLeft;
-    bool isDashedRight;
-    bool *isDashedPtr;
+    int leftStatus;
+    int rightStatus;
 public:
     DecisionMaking();
     void decide(vector<Vec7i> &lines, Vec7i &seed_line, int side);
-    bool getLeftStatus();
-    bool getRightStatus();
+    int getLeftStatus();
+    int getRightStatus();
 };
 
 #endif // DECISION_MAKING_H
