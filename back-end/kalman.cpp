@@ -73,7 +73,7 @@ void Kalman::smoothing(char &c)
         mp.at<double>(1, 0) = newPoints->at(i)[1];
         k[i].correct(mp);
         tp = k[i].predict();
-        prevPoints->push_back(Vec2f{tp.at<double>(0, 0), tp.at<double>(1, 0)});
+        prevPoints->push_back(Vec2f{(float)tp.at<double>(0, 0), (float)tp.at<double>(1, 0)});
     }
 }
 

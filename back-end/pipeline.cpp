@@ -32,7 +32,7 @@ void Pipeline::exec()
 
     filter->falseDetectionElimination(*ipmFrame, *detectedLines);
     filteredLines = filter->getFilteredLines();
-    for (int i = 0; i < filteredLines->size(); ++i)
+    for (unsigned int i = 0; i < filteredLines->size(); ++i)
         line(magdy, Point((int)filteredLines->at(i)[0], (int)filteredLines->at(i)[1]), Point((int)filteredLines->at(i)[2], (int)filteredLines->at(i)[3]),
                 Scalar(255, 255, 255), 1, LINE_AA);
 
@@ -42,11 +42,11 @@ void Pipeline::exec()
     leftSeedLine = regGrow->getLeftSeedLine();
     rightSeedLine = regGrow->getRightSeedLine();
     if (!leftRegion->empty())
-        for (int i = 0; i < leftRegion->size(); ++i)
+        for (unsigned int i = 0; i < leftRegion->size(); ++i)
             line(magdy, Point((int)leftRegion->at(i)[0], (int)leftRegion->at(i)[1]), Point((int)leftRegion->at(i)[2], (int)leftRegion->at(i)[3]),
                     Scalar(0, 255, 0), 1, LINE_AA);
     if (!rightRegion->empty())
-        for (int i = 0; i < rightRegion->size(); ++i)
+        for (unsigned int i = 0; i < rightRegion->size(); ++i)
             line(magdy, Point((int)rightRegion->at(i)[0], (int)rightRegion->at(i)[1]), Point((int)rightRegion->at(i)[2], (int)rightRegion->at(i)[3]),
                     Scalar(0, 0, 255), 1, LINE_AA);
     line(magdy, Point((int)leftSeedLine->operator [](0), (int)leftSeedLine->operator [](1)), Point((int)leftSeedLine->operator [](2), (int)leftSeedLine->operator [](3)),
@@ -90,8 +90,10 @@ void Pipeline::exec()
     else
         qDebug() << "right is solid";
 
-    ipmObj->inverseTransform(*leftPoints);
-    ipmObj->inverseTransform(*rightPoints);
+    ipmObj->inverseTransform(*leftPoints, ipm::left_points);
+    leftPoints = ipmObj->getLeftPoints();
+    ipmObj->inverseTransform(*rightPoints, ipm::right_points);
+    rightPoints = ipmObj->getRightPoints();
 
     k->kalmanFilter(*leftPoints, kalman::left_region);
     k->kalmanFilter(*rightPoints, kalman::right_region);

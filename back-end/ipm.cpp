@@ -30,21 +30,39 @@ void IPM::transform(Mat &original_frame, QString video_name){
     warpPerspective(original_frame, ipm_frame, transform_homography, Size(height, width));
 }
 
-void IPM::inverseTransform(vector<Vec2f> &pts){
+void IPM::inverseTransform(vector<Vec2f> &pts, char c){
+    vector<Vec2f>* oldPoints ;
+    if (c == ipm::left_points)
+        oldPoints = &leftPoints;
+    else if (c == ipm::right_points)
+        oldPoints = &rightPoints;
+    if(pts.empty())
+    {
+        oldPoints->clear();
+        return;
+    }
     float z;
     float ptx, pty;
-    unsigned int size = pts.size();
-    for(int it = size-1; it >= 0; it--){
+    oldPoints->clear();
+    for(unsigned int it = 0; it < pts.size(); it++){
         z = 1 / (inverse_homography.at<double>(2,0) * pts[it][0] + inverse_homography.at<double>(2,1) * pts[it][1] + inverse_homography.at<double>(2,2));
         ptx =  ((inverse_homography.at<double>(0,0) * pts[it][0] + inverse_homography.at<double>(0,1) * pts[it][1] + inverse_homography.at<double>(0,2)) * z);
         pty =  ((inverse_homography.at<double>(1,0) * pts[it][0] + inverse_homography.at<double>(1,1) * pts[it][1] + inverse_homography.at<double>(1,2)) * z);
-        pts.pop_back();
-        pts.insert(pts.begin(), Vec2f{ptx, pty});
+        oldPoints->push_back(Vec2f{ptx, pty});
     }
-    assert(pts.size() == size);
 }
 
 Mat *IPM::getIPMFrame()
 {
     return &ipm_frame;
+}
+
+vector<Vec2f> *IPM::getLeftPoints()
+{
+    return &leftPoints;
+}
+
+vector<Vec2f> *IPM::getRightPoints()
+{
+    return &rightPoints;
 }

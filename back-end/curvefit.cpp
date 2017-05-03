@@ -65,7 +65,7 @@ void CurveFit::doCurveFitting(int side)
         ptsY = rightYBeforeFit;
         break;
     }
-    if (ptsX.length() <= 4)
+    if (ptsX.length() <= 6)
         m = 2;
     else
         m = 3;
@@ -73,7 +73,7 @@ void CurveFit::doCurveFitting(int side)
     makeLinspace();
     ptsAfterFit->clear();
     for (unsigned int i = 0; i < newPtsY.size(); ++i)
-        ptsAfterFit->push_back(Vec2f{barycentriccalc(p, newPtsY[i]), newPtsY[i]});
+        ptsAfterFit->push_back(Vec2f{(float)barycentriccalc(p, newPtsY[i]), (float)newPtsY[i]});
 }
 
 void CurveFit::makeLinspace()

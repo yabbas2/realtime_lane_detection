@@ -26,7 +26,7 @@ void Filter::falseDetectionElimination(Mat &ipm_frame, vector<Vec4f> &l)
             theta -= 180;
         float length = sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2));
         if ((threshold_angle_min < theta) && (theta < threshold_angle_max) && (length >= threshold_length))
-            tmp_lines.push_back(Vec7i{x1, y1, x2, y2, (int)theta, (int)length, 0});
+            tmp_lines.push_back(Vec7i{(int)x1, (int)y1, (int)x2, (int)y2, (int)theta, (int)length, 0});
     }
     vector<vector<Point>> contours;
     vector<int> boundary_min = {0, 100, 0};
