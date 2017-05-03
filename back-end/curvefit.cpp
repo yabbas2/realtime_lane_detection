@@ -79,9 +79,9 @@ void CurveFit::doCurveFitting(int side)
 void CurveFit::makeLinspace()
 {
     newPtsY.clear();
-    int a = startY, b = endY;
+    double a = startY, b = endY;
     double step = (b-a) / (ptsNum-1);
-    while(a <= b)
+    while((int)a <= (int)b)
     {
         newPtsY.push_back(a);
         a += step;

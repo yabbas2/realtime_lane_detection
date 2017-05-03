@@ -79,6 +79,12 @@ void Stream::setViewers(MultiVideoViewer *m, fullScreenVideoViewer *f)
 void Stream::setIPMFrame(cv::Mat *f)
 {
     frames[MultiVideo::ipm_rgb] = f->clone();
+//    frames[MultiVideo::ipm_bw] = f->clone();
+}
+
+void Stream::setIPMBW(cv::Mat *f)
+{
+//    frames[MultiVideo::ipm_rgb] = f->clone();
     frames[MultiVideo::ipm_bw] = f->clone();
 }
 

@@ -23,25 +23,40 @@ void Pipeline::exec()
 
     ipmObj->transform(normalFrame, "sample1");
     ipmFrame = ipmObj->getIPMFrame();
+    magdy = Mat::zeros(ipmFrame->rows, ipmFrame->cols, CV_8UC3);
 
     streamObj->setIPMFrame(ipmFrame);
 
     lineDetector->lineSegmentDetector(*ipmFrame);
     detectedLines = lineDetector->getDetectedLines();
 
-
     filter->falseDetectionElimination(*ipmFrame, *detectedLines);
     filteredLines = filter->getFilteredLines();
+    for (int i = 0; i < filteredLines->size(); ++i)
+        line(magdy, Point((int)filteredLines->at(i)[0], (int)filteredLines->at(i)[1]), Point((int)filteredLines->at(i)[2], (int)filteredLines->at(i)[3]),
+                Scalar(255, 255, 255), 1, LINE_AA);
 
     regGrow->regionGrowing(*filteredLines, ipmFrame->cols);
     leftRegion = regGrow->getLeftRegion();
     rightRegion = regGrow->getRightRegion();
     leftSeedLine = regGrow->getLeftSeedLine();
     rightSeedLine = regGrow->getRightSeedLine();
+    if (!leftRegion->empty())
+        for (int i = 0; i < leftRegion->size(); ++i)
+            line(magdy, Point((int)leftRegion->at(i)[0], (int)leftRegion->at(i)[1]), Point((int)leftRegion->at(i)[2], (int)leftRegion->at(i)[3]),
+                    Scalar(0, 255, 0), 1, LINE_AA);
+    if (!rightRegion->empty())
+        for (int i = 0; i < rightRegion->size(); ++i)
+            line(magdy, Point((int)rightRegion->at(i)[0], (int)rightRegion->at(i)[1]), Point((int)rightRegion->at(i)[2], (int)rightRegion->at(i)[3]),
+                    Scalar(0, 0, 255), 1, LINE_AA);
+    line(magdy, Point((int)leftSeedLine->operator [](0), (int)leftSeedLine->operator [](1)), Point((int)leftSeedLine->operator [](2), (int)leftSeedLine->operator [](3)),
+         Scalar(255, 0, 255), 1, LINE_AA);
+    line(magdy, Point((int)rightSeedLine->operator [](0), (int)rightSeedLine->operator [](1)), Point((int)rightSeedLine->operator [](2), (int)rightSeedLine->operator [](3)),
+         Scalar(255, 0, 255), 1, LINE_AA);
 
     if (curveFit->fromLinesToPoints(*leftRegion, *rightRegion))
     {
-        curveFit->setParameters(0, ipmFrame->rows + 100, 20);
+        curveFit->setParameters(100, ipmFrame->rows -100, 20);
         curveFit->doCurveFitting(CurveFitting::left_points);
         curveFit->doCurveFitting(CurveFitting::right_points);
         leftPoints = curveFit->getLeftPtsAfterFit();
@@ -52,6 +67,17 @@ void Pipeline::exec()
         leftPoints = &emptyPoints;
         rightPoints = &emptyPoints;
     }
+
+    vector<Vec2i> left;
+    vector<Vec2i> right;
+    for (unsigned int i = 0; i < leftPoints->size(); i++)
+        left.push_back(Vec2i{(int)leftPoints->at(i)[0], (int)leftPoints->at(i)[1]});
+    for (unsigned int i = 0; i < rightPoints->size(); i++)
+        right.push_back(Vec2i{(int)rightPoints->at(i)[0], (int)rightPoints->at(i)[1]});
+    polylines(magdy, left, false, Scalar(0, 255, 255), 1, LINE_AA);
+    polylines(magdy, right, false, Scalar(0, 255, 255), 1, LINE_AA);
+
+    streamObj->setIPMBW(&magdy);
 
     decisionMake->decide(*leftRegion, *leftSeedLine, Decision::left_region);
     decisionMake->decide(*rightRegion, *rightSeedLine, Decision::right_region);
@@ -64,10 +90,8 @@ void Pipeline::exec()
     else
         qDebug() << "right is solid";
 
-    *leftPoints = ipmObj->inverseTransformL(*leftPoints);
-//    leftPoints = ipmObj->getFinalPoints();
-    *rightPoints = ipmObj->inverseTransformR(*rightPoints);
-//    rightPoints = ipmObj->getFinalPoints();
+    ipmObj->inverseTransform(*leftPoints);
+    ipmObj->inverseTransform(*rightPoints);
 
     k->kalmanFilter(*leftPoints, kalman::left_region);
     k->kalmanFilter(*rightPoints, kalman::right_region);

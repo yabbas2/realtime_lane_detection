@@ -14,14 +14,11 @@ class IPM
 private:
     Mat ipm_frame;
     Mat inverse_homography;
-//    vector<Vec2i> new_pts;
 
 public:
     void transform(Mat &original_frame, QString vido_name);
-    vector<Vec2f> inverseTransformL(vector<Vec2f> &old_pts);
-    vector<Vec2f> inverseTransformR(vector<Vec2f> &old_pts);
+    void inverseTransform(vector<Vec2f> &pts);
     Mat *getIPMFrame();
-//    vector<Vec2i> *getFinalPoints();
 
 };
 

@@ -15,7 +15,7 @@ void Filter::falseDetectionElimination(Mat &ipm_frame, vector<Vec4f> &l)
     vector<Vec7i> tmp_lines;
     for(unsigned int it = 0; it < l.size(); ++it)
     {
-        int x1 = l[it][0], y1 = l[it][1], x2 = l[it][2], y2 = l[it][3];
+        float x1 = l[it][0], y1 = l[it][1], x2 = l[it][2], y2 = l[it][3];
         if(y1 < y2)
         {
             swap(x1, x2);
@@ -34,7 +34,7 @@ void Filter::falseDetectionElimination(Mat &ipm_frame, vector<Vec4f> &l)
     Mat hsv_frame;
     cvtColor(ipm_frame, hsv_frame, COLOR_BGR2HSV);
     inRange(hsv_frame, boundary_min, boundary_max, hsv_frame);
-    findContours(hsv_frame, contours, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE);
+    findContours(hsv_frame, contours, 1, 2);
     lines.clear();
     if(contours.empty())
     {

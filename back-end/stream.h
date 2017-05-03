@@ -25,6 +25,7 @@ public:
     void setPointsToDraw(std::vector<cv::Vec2f> leftPoints, std::vector<cv::Vec2f> rightPoints);
     cv::Mat getFrame();
     void setIPMFrame(cv::Mat *f);
+    void setIPMBW(cv::Mat *f);
     void pause_timers();
     void start_timers();
     void reInitStream();

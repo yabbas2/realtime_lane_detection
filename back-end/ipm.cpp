@@ -5,7 +5,7 @@ void IPM::transform(Mat &original_frame, QString video_name){
     int height = original_frame.rows;
     int width = original_frame.cols;
 
-    dst_pts = (Mat_<double>(4,2) << 0, 0, height, 0, height, width, 0, width);
+    dst_pts = (Mat_<double>(4,2) << 0, 0, height, 0, height, width-200, 0, width-200);
 
     if (video_name == "sample1")
         input_pts = (Mat_<double>(4, 2) << 357, 280, 528, 282, 778, 478, 146, 478);
@@ -30,40 +30,21 @@ void IPM::transform(Mat &original_frame, QString video_name){
     warpPerspective(original_frame, ipm_frame, transform_homography, Size(height, width));
 }
 
-vector<Vec2f> IPM::inverseTransformL(vector<Vec2f> &old_pts){
-    vector<Vec2f> new_pts;
+void IPM::inverseTransform(vector<Vec2f> &pts){
     float z;
     float ptx, pty;
-    for(vector<Vec2f>::iterator it = old_pts.begin(); it != old_pts.end(); it++){
-        z = 1 / (inverse_homography.at<double>(2,0) * (*it)[0] + inverse_homography.at<double>(2,1) * (*it)[1] + inverse_homography.at<double>(2,2));
-        ptx =  ((inverse_homography.at<double>(0,0) * (*it)[0] + inverse_homography.at<double>(0,1) * (*it)[1] + inverse_homography.at<double>(0,2)) * z);
-        pty =  ((inverse_homography.at<double>(1,0) * (*it)[0] + inverse_homography.at<double>(1,1) * (*it)[1] + inverse_homography.at<double>(1,2)) * z);
-        new_pts.push_back(Vec2f{ptx, pty});
+    unsigned int size = pts.size();
+    for(int it = size-1; it >= 0; it--){
+        z = 1 / (inverse_homography.at<double>(2,0) * pts[it][0] + inverse_homography.at<double>(2,1) * pts[it][1] + inverse_homography.at<double>(2,2));
+        ptx =  ((inverse_homography.at<double>(0,0) * pts[it][0] + inverse_homography.at<double>(0,1) * pts[it][1] + inverse_homography.at<double>(0,2)) * z);
+        pty =  ((inverse_homography.at<double>(1,0) * pts[it][0] + inverse_homography.at<double>(1,1) * pts[it][1] + inverse_homography.at<double>(1,2)) * z);
+        pts.pop_back();
+        pts.insert(pts.begin(), Vec2f{ptx, pty});
     }
-    assert(new_pts.size() == old_pts.size());
-    return new_pts;
-}
-
-vector<Vec2f> IPM::inverseTransformR(vector<Vec2f> &old_pts){
-    vector<Vec2f> new_pts;
-    float z;
-    float ptx, pty;
-    for(vector<Vec2f>::iterator it = old_pts.begin(); it != old_pts.end(); it++){
-        z = 1 / (inverse_homography.at<double>(2,0) * (*it)[0] + inverse_homography.at<double>(2,1) * (*it)[1] + inverse_homography.at<double>(2,2));
-        ptx =  ((inverse_homography.at<double>(0,0) * (*it)[0] + inverse_homography.at<double>(0,1) * (*it)[1] + inverse_homography.at<double>(0,2)) * z);
-        pty =  ((inverse_homography.at<double>(1,0) * (*it)[0] + inverse_homography.at<double>(1,1) * (*it)[1] + inverse_homography.at<double>(1,2)) * z);
-        new_pts.push_back(Vec2f{ptx, pty});
-    }
-    assert(new_pts.size() == old_pts.size());
-    return new_pts;
+    assert(pts.size() == size);
 }
 
 Mat *IPM::getIPMFrame()
 {
     return &ipm_frame;
 }
-
-//vector<Vec2i> *IPM::getFinalPoints()
-//{
-//    return &new_pts;
-//}
