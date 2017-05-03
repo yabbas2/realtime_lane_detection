@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.5)
 project(RTLD_C++)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -10,10 +10,7 @@ set(HEADER_FILES include/processing.hpp)
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-set(GCC_THREAD_LINKER_FLAGS "-lpthread -fopenmp")
-set(GCC_COMPILER_FLAGS "-m64 -g -Wall -fopenmp")
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COMPILER_FLAGS}")
+set(GCC_THREAD_LINKER_FLAGS "-lpthread")
 
 add_executable(RTLD_C++ ${SOURCE_FILES} ${HEADER_FILES})
 

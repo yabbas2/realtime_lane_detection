@@ -1,3 +1,8 @@
 .idea/
 cmake-build-debug/
 *.avi
+CMakeCache.txt
+CMakeFiles/
+RTLD_C++*
+Makefile*
+*.cmake
