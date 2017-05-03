@@ -1,8 +1,7 @@
 #include <QApplication>
 #include "mainwindow.h"
 #include "back-end/pipeline.h"
-#include "back-end/kalman.h"
-#include "back-end/filter.h"
+#include "back-end/stream.h"
 
 int main(int argc, char *argv[])
 {
@@ -10,7 +9,10 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
+    Stream st;
+
     Pipeline p;
+    p.connectToStreamEngine(&st);
     p.connectFrontEndToBackEnd(&w);
 
 

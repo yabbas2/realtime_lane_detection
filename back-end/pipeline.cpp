@@ -2,7 +2,7 @@
 
 Pipeline::Pipeline()
 {
-    streamObj = new Stream;
+//    streamObj = new Stream;
     ipmObj = new IPM;
     lineDetector = new LineDetection;
     filter = new Filter;
@@ -124,6 +124,11 @@ void Pipeline::connectFrontEndToBackEnd(MainWindow *w)
     connect(sideBar->inputMethod, SIGNAL(changeVideoSource(QString)), streamObj, SLOT(changeStreamInSource(QString)));
     connect(sideBar->inputMethod, SIGNAL(reInit()), this, SLOT(initStatus()));
     streamObj->setViewers(multiViewer, fsViewer);
+}
+
+void Pipeline::connectToStreamEngine(Stream *s)
+{
+    streamObj = s;
 }
 
 void Pipeline::initStatus()

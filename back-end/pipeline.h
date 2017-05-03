@@ -32,6 +32,7 @@ public:
     explicit Pipeline();
     ~Pipeline();
     void connectFrontEndToBackEnd(MainWindow *w);
+    void connectToStreamEngine(Stream *s);
 
 private slots:
     void start_timers();

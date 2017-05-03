@@ -7,7 +7,7 @@
 #include <QString>
 #include <QTimer>
 
-#define delayOffset     25
+#define delayOffset     10
 
 class StreamIn : public QObject
 {
