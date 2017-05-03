@@ -30,7 +30,7 @@ void RegionGrowing::findLeftSeedLines()
 {
     leftSeedLine = Vec7i{0, 0, 0, 0, 0, 0, 0};
     findSeedLines('l');
-    if(leftSeedLine[0] == 0 && leftSeedLine[1] == 0 && leftSeedLine[2] == 0 && leftSeedLine[3] == 0 && rightLines.size() > 0)
+    if(leftSeedLine[0] == 0 && leftSeedLine[1] == 0 && leftSeedLine[2] == 0 && leftSeedLine[3] == 0 && leftLines.size() > 0)
         leftSeedLine = leftLines[0];
 }
 

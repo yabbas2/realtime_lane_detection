@@ -54,19 +54,27 @@ void Pipeline::exec()
     line(magdy, Point((int)rightSeedLine->operator [](0), (int)rightSeedLine->operator [](1)), Point((int)rightSeedLine->operator [](2), (int)rightSeedLine->operator [](3)),
          Scalar(255, 0, 255), 1, LINE_AA);
 
-    if (curveFit->fromLinesToPoints(*leftRegion, *rightRegion))
+    if (curveFit->fromLinesToPoints(*leftRegion, CurveFitting::left_points))
     {
-        curveFit->setParameters(100, ipmFrame->rows -100, 20);
+        curveFit->setParameters(0, ipmFrame->rows, 20);
         curveFit->doCurveFitting(CurveFitting::left_points);
-        curveFit->doCurveFitting(CurveFitting::right_points);
         leftPoints = curveFit->getLeftPtsAfterFit();
-        rightPoints = curveFit->getRightPtsAfterFit();
+        if (leftPoints->at(0)[0] < -1000 || leftPoints->at(0)[0] > 1000||  leftPoints->at(19)[0] < -1000 || leftPoints->at(19)[0] > 1000 )
+            leftPoints = &emptyPoints;
     }
     else
-    {
         leftPoints = &emptyPoints;
-        rightPoints = &emptyPoints;
-    }
+
+     if (curveFit->fromLinesToPoints(*rightRegion, CurveFitting::right_points))
+     {
+         curveFit->setParameters(0, ipmFrame->rows, 20);
+         curveFit->doCurveFitting(CurveFitting::right_points);
+         rightPoints = curveFit->getRightPtsAfterFit();
+         if (rightPoints->at(0)[0] < -1000 || rightPoints->at(0)[0] > 1000||  rightPoints->at(19)[0] < -1000 || rightPoints->at(19)[0] > 1000 )
+             rightPoints = &emptyPoints;
+     }
+     else
+         rightPoints = &emptyPoints;
 
     vector<Vec2i> left;
     vector<Vec2i> right;

@@ -5,35 +5,39 @@ CurveFit::CurveFit()
 
 }
 
-bool CurveFit::fromLinesToPoints(vector<Vec7i> &leftLines, vector<Vec7i> &rightLines)
+bool CurveFit::fromLinesToPoints(vector<Vec7i> &lines, int side)
 {
-    if (leftLines.empty() || rightLines.empty())
+    vector<Vec7i> *l;
+    vector<Vec2i> *before;
+    real_1d_array *beforeX;
+    real_1d_array *beforeY;
+    if (side == CurveFitting::left_points)
+    {
+        before = &leftPtsBeforeFit;
+        beforeX = &leftXBeforeFit;
+        beforeY = &leftYBeforeFit;
+    }
+    else if (side == CurveFitting::right_points)
+    {
+        before = &rightPtsBeforeFit;
+        beforeX = &rightXBeforeFit;
+        beforeY = &rightYBeforeFit;
+    }
+    if (lines.size() <= 1)
         return false;
     vector<Vec7i>::iterator it;
     int i;
-    leftPtsBeforeFit.clear();
-    rightPtsBeforeFit.clear();
-    leftXBeforeFit.setlength(2 * leftLines.size());
-    leftYBeforeFit.setlength(2 * leftLines.size());
-    rightXBeforeFit.setlength(2 * rightLines.size());
-    rightYBeforeFit.setlength(2 * rightLines.size());
-    for(it = leftLines.begin(), i = 0; it != leftLines.end(); ++it, ++i)
+    before->clear();
+    beforeX->setlength(2 * lines.size());
+    beforeY->setlength(2 * lines.size());
+    for(it = lines.begin(), i = 0; it != lines.end(); ++it, ++i)
     {
-        leftPtsBeforeFit.push_back(Vec2i{(*it)[0], (*it)[1]});
-        leftPtsBeforeFit.push_back(Vec2i{(*it)[2], (*it)[3]});
-        leftXBeforeFit[i] = (*it)[0];
-        leftYBeforeFit[i] = (*it)[1];
-        leftXBeforeFit[++i] = (*it)[2];
-        leftYBeforeFit[i] = (*it)[3];
-    }
-    for(it = rightLines.begin(), i = 0; it != rightLines.end(); ++it, ++i)
-    {
-        rightPtsBeforeFit.push_back(Vec2i{(*it)[0], (*it)[1]});
-        rightPtsBeforeFit.push_back(Vec2i{(*it)[2], (*it)[3]});
-        rightXBeforeFit[i] = (*it)[0];
-        rightYBeforeFit[i] = (*it)[1];
-        rightXBeforeFit[++i] = (*it)[2];
-        rightYBeforeFit[i] = (*it)[3];
+        before->push_back(Vec2i{(*it)[0], (*it)[1]});
+        before->push_back(Vec2i{(*it)[2], (*it)[3]});
+        beforeX->operator [](i) = (*it)[0];
+        beforeY->operator [](i) = (*it)[1];
+        beforeX->operator [](++i) = (*it)[2];
+        beforeY->operator [](i) = (*it)[3];
     }
     return true;
 }

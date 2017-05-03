@@ -21,7 +21,7 @@ class CurveFit
 {
 public:
     explicit CurveFit();
-    bool fromLinesToPoints(vector<Vec7i> &leftLines, vector<Vec7i> &rightLines);
+    bool fromLinesToPoints(vector<Vec7i> &leftLines, int side);
     void doCurveFitting(int side);
     void setParameters(int start, int end, int n);
     vector<Vec2i> *getLeftPtsBeforeFit();

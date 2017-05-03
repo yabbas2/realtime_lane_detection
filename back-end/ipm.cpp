@@ -5,7 +5,7 @@ void IPM::transform(Mat &original_frame, QString video_name){
     int height = original_frame.rows;
     int width = original_frame.cols;
 
-    dst_pts = (Mat_<double>(4,2) << 0, 0, height, 0, height, width-200, 0, width-200);
+    dst_pts = (Mat_<double>(4,2) << 0, 0, height, 0, height, width, 0, width);
 
     if (video_name == "sample1")
         input_pts = (Mat_<double>(4, 2) << 357, 280, 528, 282, 778, 478, 146, 478);
