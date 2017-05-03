@@ -2,13 +2,13 @@
 
 using namespace cv;
 
-vector<Vec4f>Processing::lines;
-list<Vec4f>Processing::detectedLanes;
-int Processing::lineMargin = 0;
-int Processing::marginCount = 0;
-string Processing::lanesNumber = "zero";
+vector<Vec4f>processing::lines;
+list<Vec4f>processing::detectedLanes;
+int processing::lineMargin = 0;
+int processing::marginCount = 0;
+string processing::lanesNumber = "zero";
 
-void Processing::LSD()
+void processing::LSD()
 {
     int width = ipmFrame.size().width;
     int leftMargin = 0, rightMargin = 0;
@@ -40,10 +40,10 @@ void Processing::LSD()
         }
     }
     filterAndTakeAverage(0, width, 40, lineMargin);
-    calAccuracy();
+    //calAccuracy();
 }
 
-void Processing::filterAndTakeAverage(int start, int end, unsigned int windowSize, int margin)
+void processing::filterAndTakeAverage(int start, int end, unsigned int windowSize, int margin)
 {
     int height = ipmFrame.size().height;
     float sum_x1, sum_x2, avg_x1, avg_x2;
@@ -75,7 +75,7 @@ void Processing::filterAndTakeAverage(int start, int end, unsigned int windowSiz
 
 }
 
-int Processing::checkLanesFromLeft()
+int processing::checkLanesFromLeft()
 {
     int margin = 0;
     sort(begin(lines), end(lines), [](const Vec4f &a, const Vec4f &b) { return a[0] < b[0]; });
@@ -103,7 +103,7 @@ int Processing::checkLanesFromLeft()
     return margin;
 }
 
-int Processing::checkLanesFromRight()
+int processing::checkLanesFromRight()
 {
     int margin = 0;
     sort(begin(lines), end(lines), [](const Vec4f &a, const Vec4f &b) { return a[0] > b[0]; });

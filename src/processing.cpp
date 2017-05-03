@@ -3,12 +3,12 @@
 using namespace cv;
 using namespace std;
 
-bool Processing::waitFlag = false;
-Mat Processing::pts;
-Mat Processing::dst;
-double Processing::afps = 0;
+bool processing::waitFlag = false;
+Mat processing::pts;
+Mat processing::dst;
+double processing::afps = 0;
 
-void Processing::initIPM()
+void processing::initIPM()
 {
     while(normalFrame.empty());
     int height = normalFrame.rows;
@@ -31,7 +31,7 @@ void Processing::initIPM()
     dst.convertTo(dst, CV_32F);
 }
 
-void Processing::laneDetection()
+void processing::laneDetection()
 {
     initIPM();
     while(true) {
@@ -41,6 +41,7 @@ void Processing::laneDetection()
             return;
 
         double s1 = getTickCount();
+        //determineROI();
         fourPointTransform();
         double d1 = (double(getTickCount()) - s1) * 1000 / getTickFrequency();
 

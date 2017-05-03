@@ -7,11 +7,11 @@ using namespace cv;
 
 int main(int argc, char** argv) {
     bool streamFlag;
-    streamFlag = Processing::setVideoSource(argv[1]);
+    streamFlag = processing::setVideoSource(argv[1]);
     assert(streamFlag);
-    thread video(Processing::videoIOStream);
+    thread video(processing::videoIOStream);
     video.detach();
     assert(!video.joinable());
-    Processing::laneDetection();
+    processing::laneDetection();
 }
 

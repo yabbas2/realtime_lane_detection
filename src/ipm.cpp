@@ -2,11 +2,11 @@
 
 using namespace cv;
 
-Mat Processing::ipmFrame;
-Mat Processing::HomographyToOriginal;
-vector<int> Processing::arrow;
+Mat processing::ipmFrame;
+Mat processing::HomographyToOriginal;
+vector<int> processing::arrow;
 
-void Processing::fourPointTransform()
+void processing::fourPointTransform()
 {
     int height = normalFrame.rows;
     int width = normalFrame.cols;
@@ -14,7 +14,7 @@ void Processing::fourPointTransform()
     HomographyToOriginal = getPerspectiveTransform(dst, pts);
     warpPerspective(normalFrame, ipmFrame, HomographyToInv, Size(height, width));
 }
-void Processing::inverse()
+void processing::inverse()
 {
     unsigned int size = (unsigned int)detectedLanes.size();
     int height = normalFrame.rows;
