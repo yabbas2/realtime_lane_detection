@@ -1,6 +1,4 @@
 #include "opencv_opengl_viewer.h"
-#include <QOpenGLFunctions>
-#include <opencv2/opencv.hpp>
 
 CVGLViewer::CVGLViewer( int index, QWidget *parent, int width, int height) :
     QOpenGLWidget(parent)

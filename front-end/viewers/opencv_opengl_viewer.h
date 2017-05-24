@@ -2,12 +2,12 @@
 #define OPENCVOPENGLVIEWER_H
 
 #include <QOpenGLWidget>
-#include <QOpenGLFunctions_2_0>
-#include <opencv2/core/core.hpp>
+#include <QOpenGLFunctions>
+#include <opencv2/opencv.hpp>
 #include <QMouseEvent>
 #include <QDebug>
 
-class CVGLViewer : public QOpenGLWidget, protected QOpenGLFunctions_2_0
+class CVGLViewer : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
 public:
