@@ -22,12 +22,10 @@ class CurveFit
 public:
     explicit CurveFit();
     bool fromLinesToPoints(vector<Vec7i> &leftLines, int side);
-    void doCurveFitting(int side);
+    bool doCurveFitting(int side);
     void setParameters(int start, int end, int n);
-    vector<Vec2i> *getLeftPtsBeforeFit();
-    vector<Vec2i> *getRightPtsBeforeFit();
-    vector<Vec2f> *getLeftPtsAfterFit();
-    vector<Vec2f> *getRightPtsAfterFit();
+    vector<Vec2i> *getPtsBeforeFit(int side);
+    vector<Vec2f> *getPtsAfterFit(int side);
 
 private:
     vector<Vec2i> leftPtsBeforeFit;

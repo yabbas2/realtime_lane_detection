@@ -57,12 +57,13 @@ Mat *IPM::getIPMFrame()
     return &ipm_frame;
 }
 
-vector<Vec2f> *IPM::getLeftPoints()
+vector<Vec2f> *IPM::getPoints(int side)
 {
-    return &leftPoints;
-}
-
-vector<Vec2f> *IPM::getRightPoints()
-{
-    return &rightPoints;
+    switch(side)
+    {
+        case ipm::left_points:
+        return &leftPoints;
+        case ipm::right_points:
+        return &rightPoints;
+    }
 }

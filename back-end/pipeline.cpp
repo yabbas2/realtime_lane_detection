@@ -54,25 +54,14 @@ void Pipeline::exec()
     line(magdy, Point((int)rightSeedLine->operator [](0), (int)rightSeedLine->operator [](1)), Point((int)rightSeedLine->operator [](2), (int)rightSeedLine->operator [](3)),
          Scalar(255, 0, 255), 1, LINE_AA);
 
-    if (curveFit->fromLinesToPoints(*leftRegion, CurveFitting::left_points))
-    {
-        curveFit->setParameters(0, ipmFrame->rows, 20);
-        curveFit->doCurveFitting(CurveFitting::left_points);
-        leftPoints = curveFit->getLeftPtsAfterFit();
-        if (leftPoints->at(0)[0] < -1000 || leftPoints->at(0)[0] > 1000||  leftPoints->at(19)[0] < -1000 || leftPoints->at(19)[0] > 1000 )
-            leftPoints = &emptyPoints;
-    }
+    curveFit->setParameters(0, ipmFrame->rows, 20);
+    if (curveFit->fromLinesToPoints(*leftRegion, CurveFitting::left_points) && curveFit->doCurveFitting(CurveFitting::left_points))
+        leftPoints = curveFit->getPtsAfterFit(CurveFitting::left_points);
     else
         leftPoints = &emptyPoints;
 
-     if (curveFit->fromLinesToPoints(*rightRegion, CurveFitting::right_points))
-     {
-         curveFit->setParameters(0, ipmFrame->rows, 20);
-         curveFit->doCurveFitting(CurveFitting::right_points);
-         rightPoints = curveFit->getRightPtsAfterFit();
-         if (rightPoints->at(0)[0] < -1000 || rightPoints->at(0)[0] > 1000||  rightPoints->at(19)[0] < -1000 || rightPoints->at(19)[0] > 1000 )
-             rightPoints = &emptyPoints;
-     }
+     if (curveFit->fromLinesToPoints(*rightRegion, CurveFitting::right_points) && curveFit->doCurveFitting(CurveFitting::right_points))
+        rightPoints = curveFit->getPtsAfterFit(CurveFitting::right_points);
      else
          rightPoints = &emptyPoints;
 
@@ -99,14 +88,14 @@ void Pipeline::exec()
         qDebug() << "right is solid";
 
     ipmObj->inverseTransform(*leftPoints, ipm::left_points);
-    leftPoints = ipmObj->getLeftPoints();
+    leftPoints = ipmObj->getPoints(ipm::left_points);
     ipmObj->inverseTransform(*rightPoints, ipm::right_points);
-    rightPoints = ipmObj->getRightPoints();
+    rightPoints = ipmObj->getPoints(ipm::right_points);
 
     k->kalmanFilter(*leftPoints, kalman::left_region);
     k->kalmanFilter(*rightPoints, kalman::right_region);
-    leftPoints = k->getPrevLeftPoints();
-    rightPoints = k->getPrevRightPoints();
+    leftPoints = k->getPrevPoints(kalman::left_region);
+    rightPoints = k->getPrevPoints(kalman::right_region);
 
     streamObj->setPointsToDraw(*leftPoints, *rightPoints);
 }

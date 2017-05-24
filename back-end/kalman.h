@@ -32,8 +32,7 @@ private:
 public:
     Kalman();
     void kalmanFilter(vector<Vec2f> &points, char c);
-    vector<Vec2f>* getPrevLeftPoints();
-    vector<Vec2f>* getPrevRightPoints();
+    vector<Vec2f>* getPrevPoints(int side);
     int* getCount();
 };
 

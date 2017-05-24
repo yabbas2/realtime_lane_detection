@@ -24,8 +24,7 @@ public:
     void transform(Mat &original_frame, QString vido_name);
     void inverseTransform(vector<Vec2f> &pts, char c);
     Mat *getIPMFrame();
-    vector<Vec2f>* getLeftPoints();
-    vector<Vec2f>* getRightPoints();
+    vector<Vec2f>* getPoints(int side);
 };
 
 #endif // IPM_H

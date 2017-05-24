@@ -77,8 +77,15 @@ void Kalman::smoothing(char &c)
     }
 }
 
-vector<Vec2f> *Kalman::getPrevLeftPoints(){return &prevLeftPoints;}
-
-vector<Vec2f> *Kalman::getPrevRightPoints(){return &prevRightPoints;}
+vector<Vec2f> *Kalman::getPrevPoints(int side)
+{
+    switch(side)
+    {
+        case kalman::left_region:
+        return &prevLeftPoints;
+        case kalman::right_region:
+        return &prevRightPoints;
+    }
+}
 
 int *Kalman::getCount(){return &count;}

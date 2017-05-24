@@ -47,7 +47,7 @@ void CurveFit::setParameters(int start, int end, int n)
     startY = start; endY = end; ptsNum = n;
 }
 
-void CurveFit::doCurveFitting(int side)
+bool CurveFit::doCurveFitting(int side)
 {
     vector<Vec2f> *ptsAfterFit;
     real_1d_array ptsX;
@@ -78,6 +78,9 @@ void CurveFit::doCurveFitting(int side)
     ptsAfterFit->clear();
     for (unsigned int i = 0; i < newPtsY.size(); ++i)
         ptsAfterFit->push_back(Vec2f{(float)barycentriccalc(p, newPtsY[i]), (float)newPtsY[i]});
+    if (ptsAfterFit->at(0)[0] < -1000 || ptsAfterFit->at(0)[0] > 1000||  ptsAfterFit->at(ptsNum-1)[0] < -1000 || ptsAfterFit->at(ptsNum-1)[0] > 1000)
+        return false;
+    return true;
 }
 
 void CurveFit::makeLinspace()
@@ -92,22 +95,24 @@ void CurveFit::makeLinspace()
     }
 }
 
-vector<Vec2i> *CurveFit::getLeftPtsBeforeFit()
+vector<Vec2i> *CurveFit::getPtsBeforeFit(int side)
 {
-    return &leftPtsBeforeFit;
+    switch(side)
+    {
+        case CurveFitting::left_points:
+        return &leftPtsBeforeFit;
+        case CurveFitting::right_points:
+        return &rightPtsBeforeFit;
+    }
 }
 
-vector<Vec2i> *CurveFit::getRightPtsBeforeFit()
+vector<Vec2f> *CurveFit::getPtsAfterFit(int side)
 {
-    return &rightPtsBeforeFit;
-}
-
-vector<Vec2f> *CurveFit::getLeftPtsAfterFit()
-{
-    return &leftPtsAfterFit;
-}
-
-vector<Vec2f> *CurveFit::getRightPtsAfterFit()
-{
-    return &rightPtsAfterFit;
+    switch(side)
+    {
+        case CurveFitting::left_points:
+        return &leftPtsAfterFit;
+        case CurveFitting::right_points:
+        return &rightPtsAfterFit;
+    }
 }
