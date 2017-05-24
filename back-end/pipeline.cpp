@@ -21,6 +21,7 @@ void Pipeline::exec()
     if (normalFrame.empty())
         return;
 
+    imwrite("hi.png", normalFrame);
     ipmObj->transform(normalFrame, "sample1");
     ipmFrame = ipmObj->getIPMFrame();
     magdy = Mat::zeros(ipmFrame->rows, ipmFrame->cols, CV_8UC3);
@@ -129,13 +130,13 @@ void Pipeline::initStatus()
 void Pipeline::pause_timers()
 {
     timer->stop();
-    streamObj->pause_timers();
+    streamObj->pauseStream();
 }
 
 void Pipeline::start_timers()
 {
-    streamObj->start_timers();
-    timer->start(static_cast<int> (1000/streamObj->fps) + delayOffset);
+    streamObj->startStream();
+    timer->start(static_cast<int> (1000/streamObj->fps));
 }
 
 Pipeline::~Pipeline()

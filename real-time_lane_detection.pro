@@ -32,8 +32,6 @@ SOURCES += main.cpp\
             front-end/sidebar/regiongrowwidget.cpp \
             front-end/videowidget.cpp \
             back-end/ipm.cpp \
-            back-end/stream_in.cpp \
-            back-end/stream_out.cpp \
             back-end/stream.cpp \
             back-end/curvefit.cpp \
             back-end/pipeline.cpp \
@@ -56,8 +54,6 @@ HEADERS  += mainwindow.h \
             front-end/sidebar/regiongrowwidget.h \
             front-end/videowidget.h \
             back-end/ipm.h \
-            back-end/stream_in.h \
-            back-end/stream_out.h \
             back-end/stream.h \
             back-end/curvefit.h \
             back-end/pipeline.h \

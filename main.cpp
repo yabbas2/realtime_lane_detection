@@ -10,6 +10,7 @@ int main(int argc, char *argv[])
     w.show();
 
     Stream st;
+    st.start();
 
     Pipeline p;
     p.connectToStreamEngine(&st);
