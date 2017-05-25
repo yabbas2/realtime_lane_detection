@@ -132,9 +132,17 @@ void Stream::FullScreenFrame(int index)
     fsViewer->getVideoWidget()->showImage(*fsFrame);
 }
 
-void Stream::setPointsToDraw(vector<Vec2f> leftPoints, vector<Vec2f> rightPoints)
+void Stream::setInfo(vector<Vec2f> leftPoints, vector<Vec2f> rightPoints, Vec2i leftProp, Vec2i rightProp)
 {
     updateDataLock = true;
+    if (leftProp[0] & leftProp[1])
+        leftColor = Scalar(0, 255, 0);
+    else
+        leftColor = Scalar(0, 0, 255);
+    if (rightProp[0] & rightProp[1])
+        rightColor = Scalar(0, 255, 0);
+    else
+        rightColor = Scalar(0, 0, 255);
     this->leftPts.clear();
     this->rightPts.clear();
     for (unsigned int i = 0; i < leftPoints.size(); i++)
@@ -159,13 +167,15 @@ void Stream::drawFinalRGB()
     polylines(processed, bottomPts, false, Scalar(0, 0, 255), 2, LINE_8);
     polylines(processed, leftPts, false, Scalar(0, 0, 255), 2, LINE_8);
     polylines(processed, rightPts, false, Scalar(0, 0, 255), 2, LINE_8);
+    polylines(frames[MultiVideo::final_rgb], leftPts, false, leftColor, 3, LINE_8);
+    polylines(frames[MultiVideo::final_rgb], rightPts, false, rightColor, 3, LINE_8);
     inRange(processed, colorRange, colorRange, mask);
     findContours(mask, contours, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE);
     if (contours.empty())
         contours = prevContours;
     if (contours.size())
     {
-        fillConvexPoly(processed, contours[0], Scalar(0, 255, 0), LINE_AA);
+        fillConvexPoly(processed, contours[0], Scalar(200, 0, 0), LINE_AA);
         addWeighted(processed, 0.5, frames[MultiVideo::final_rgb], 1 - 0.5, 0, frames[MultiVideo::final_rgb]);
         prevContours = contours;
     }

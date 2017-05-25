@@ -59,6 +59,8 @@ private:
     vector<Vec7i> *rightRegion;
     vector<Vec2f> *leftPoints;
     vector<Vec2f> *rightPoints;
+    Vec2i leftProp;
+    Vec2i rightProp;
     vector<Vec2f> emptyPoints;
     Vec7i *leftSeedLine;
     Vec7i *rightSeedLine;

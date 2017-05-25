@@ -11,6 +11,10 @@ Pipeline::Pipeline()
     k = new Kalman;
     decisionMake = new DecisionMaking;
     timer = new QTimer(this);
+    leftProp[0] = 0;
+    leftProp[1] = 1;
+    rightProp[0] = 0;
+    rightProp[1] = 1;
     emptyPoints.clear();
     connect(timer, SIGNAL(timeout()), this, SLOT(exec()));
 }
@@ -80,13 +84,13 @@ void Pipeline::exec()
     decisionMake->decide(*leftRegion, *leftSeedLine, Decision::left_region);
     decisionMake->decide(*rightRegion, *rightSeedLine, Decision::right_region);
     if (decisionMake->getLeftStatus() > 0)
-        qDebug() << "left is dashed";
+        leftProp[0] = 1;
     else if(decisionMake->getLeftStatus() < 0)
-        qDebug() << "left is solid";
+        leftProp[0] = 0;
     if (decisionMake->getRightStatus() > 0)
-        qDebug() << "right is dashed";
+        rightProp[0] = 1;
     else if(decisionMake->getRightStatus() < 0)
-        qDebug() << "right is solid";
+        rightProp[0] = 0;
 
     ipmObj->inverseTransform(*leftPoints, ipm::left_points);
     leftPoints = ipmObj->getPoints(ipm::left_points);
@@ -98,7 +102,7 @@ void Pipeline::exec()
     leftPoints = k->getPrevPoints(kalman::left_region);
     rightPoints = k->getPrevPoints(kalman::right_region);
 
-    streamObj->setPointsToDraw(*leftPoints, *rightPoints);
+    streamObj->setInfo(*leftPoints, *rightPoints, leftProp, rightProp);
 }
 
 void Pipeline::connectFrontEndToBackEnd(MainWindow *w)

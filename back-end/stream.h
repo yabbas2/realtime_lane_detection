@@ -23,7 +23,7 @@ public:
     explicit Stream();
     ~Stream();
     void setViewers(MultiVideoViewer *m, fullScreenVideoViewer *f);
-    void setPointsToDraw(vector<Vec2f> leftPts, vector<Vec2f> rightPts);
+    void setInfo(vector<Vec2f> leftPts, vector<Vec2f> rightPts, Vec2i leftProp, Vec2i rightProp);
     Mat getFrame();
     void setIPMFrame(Mat *f);
     void setIPMBW(Mat *f);
@@ -51,6 +51,8 @@ private:
     cv::VideoCapture cap;
     Mat frames[StreamingVideos];
     Mat *fsFrame;
+    Scalar leftColor;
+    Scalar rightColor;
     Mat normal_default_screen;
     Mat ipm_default_screen;
     MultiVideoViewer *multiViewer;
