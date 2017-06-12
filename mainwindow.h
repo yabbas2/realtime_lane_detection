@@ -15,7 +15,7 @@
 #include "front-end/viewers/fullscreenvideoviewer.h"
 #include "front-end/videowidget.h"
 
-#define mainWindowWidth     854
+#define mainWindowWidth     800
 #define mainWindowHeight    480
 #define sideBarWidth        300
 #define sideBarHeight       (mainWindowHeight-50)

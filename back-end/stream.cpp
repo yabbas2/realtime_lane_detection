@@ -7,8 +7,8 @@ Stream::Stream() : width(0), height(0), fps(0)
     stream_out = new StreamOut;
     connect(timer, SIGNAL(timeout()), this, SLOT(showFrames()));
     fsFrame = Q_NULLPTR;
-    normal_default_screen = cv::Mat::zeros(480, 854, CV_8UC3);
-    ipm_default_screen = cv::Mat::zeros(854, 480, CV_8UC3);
+    normal_default_screen = cv::Mat::zeros(480, 800, CV_8UC3);
+    ipm_default_screen = cv::Mat::zeros(800, 480, CV_8UC3);
     updateDataLock = true;
 }
 
@@ -40,6 +40,7 @@ void Stream::showFrames()
     {
         stream_out->drawFinalRGB(frames[MultiVideo::final_rgb]);
     }
+//    cvtColor(frames[MultiVideo::final_rgb], frames[MultiVideo::final_rgb], COLOR_BGR2HSV);
     if (!frames[MultiVideo::normal_rgb].empty())
         multiViewer->getVideoWidget(MultiVideo::normal_rgb)->showImage(frames[0]);
     if (!frames[MultiVideo::final_rgb].empty())
@@ -94,8 +95,8 @@ void Stream::FullScreenFrame(int index)
     {
     case 0:
     case 1:
-        fsViewer->setGeometry(0, 0, 854, 480);
-        fsViewer->setVideoSize(854, 480);
+        fsViewer->setGeometry(0, 0, 800, 480);
+        fsViewer->setVideoSize(800, 480);
         break;
     case 2:
     case 3:

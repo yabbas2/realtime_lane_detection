@@ -25,12 +25,13 @@ void Pipeline::exec()
     ipmFrame = ipmObj->getIPMFrame();
     magdy = Mat::zeros(ipmFrame->rows, ipmFrame->cols, CV_8UC3);
 
-    streamObj->setIPMFrame(ipmFrame);
+//    streamObj->setIPMFrame(ipmFrame);
 
     lineDetector->lineSegmentDetector(*ipmFrame);
     detectedLines = lineDetector->getDetectedLines();
 
-    filter->falseDetectionElimination(*ipmFrame, *detectedLines);
+    _3ebs = filter->falseDetectionElimination(*ipmFrame, *detectedLines);
+    streamObj->setIPMFrame(ipmFrame);
     filteredLines = filter->getFilteredLines();
     for (unsigned int i = 0; i < filteredLines->size(); ++i)
         line(magdy, Point((int)filteredLines->at(i)[0], (int)filteredLines->at(i)[1]), Point((int)filteredLines->at(i)[2], (int)filteredLines->at(i)[3]),

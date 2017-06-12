@@ -8,7 +8,8 @@ void IPM::transform(Mat &original_frame, QString video_name){
     dst_pts = (Mat_<double>(4,2) << 0, 0, height, 0, height, width, 0, width);
 
     if (video_name == "sample1")
-        input_pts = (Mat_<double>(4, 2) << 357, 280, 528, 282, 778, 478, 146, 478);
+//        input_pts = (Mat_<double>(4, 2) << 357, 280, 528, 282, 778, 478, 146, 478);
+        input_pts = (Mat_<double>(4, 2) << 325, 280, 485, 282, 748, 478, 120, 478);
     else if (video_name == "sample2")
         input_pts = (Mat_<double>(4, 2) << 250, 222, 370, 222, 440, 290, 214, 290);
     else if (video_name == "sample3")

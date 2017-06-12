@@ -3,6 +3,7 @@
 
 #include <opencv2/opencv.hpp>
 #include <vector>
+#include <QDebug>
 
 #define threshold_angle_min     70
 #define threshold_angle_max     110
@@ -18,10 +19,11 @@ class Filter
 public:
     Filter();
     vector<Vec7i>* getFilteredLines();
-    void falseDetectionElimination(Mat &ipm_frame, vector<Vec4f> &l);
+    Mat falseDetectionElimination(Mat &ipm_frame, vector<Vec4f> &l);
 
 private:
     vector<Vec7i> lines;
+    Mat hsv_frame;
 };
 
 #endif // FILTER_H

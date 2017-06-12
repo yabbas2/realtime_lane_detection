@@ -25,6 +25,8 @@ void StreamIn::loopStreamIn()
     cap >> inputFrame;
     if (!cap.grab())
         emit endStream();
+    cv::resize(inputFrame, inputFrame, cv::Size(800, 480), 0, 0, cv::INTER_LINEAR);
+//    qDebug() << inputFrame.cols << "x" << inputFrame.rows;
 }
 
 void StreamIn::startStreamIn()

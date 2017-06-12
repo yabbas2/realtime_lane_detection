@@ -11,10 +11,10 @@
 #include <QPainter>
 #include <QPaintEvent>
 
-#define VideosNum       4
-#define LayoutsNum      2
-#define normalAspectRatio   0.5620608899
-#define ipmAspectRatio      1.779166667
+#define VideosNum           4
+#define LayoutsNum          2
+#define normalAspectRatio   0.6
+#define ipmAspectRatio      1.666666667
 
 namespace MultiVideo {
     enum {normal_rgb, final_rgb, ipm_rgb, ipm_bw};

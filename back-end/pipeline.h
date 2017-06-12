@@ -53,6 +53,7 @@ private:
     Mat normalFrame;
     Mat *ipmFrame;
     Mat magdy;
+    Mat _3ebs;
     vector<Vec4f> *detectedLines;
     vector<Vec7i> *filteredLines;
     vector<Vec7i> *leftRegion;

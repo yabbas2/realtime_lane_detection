@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     mulVidWidget = new MultiVideoViewer(cen1);
     mulVidWidget->setObjectName("mulVidWidget");
     mulVidWidget->setFixedSize(multiVideoWidth, multiVideoHeight);
-    mulVidWidget->setVideoSize(250, 150);
+    mulVidWidget->setVideoSize(220, 140);
     h_cen1_layout->addWidget(mulVidWidget);
 
     fsVidWidget = new fullScreenVideoViewer(cen2);

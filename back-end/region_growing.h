@@ -2,7 +2,7 @@
 #define REGION_GROWING_H
 
 #define USED                1
-#define thresholdAngle     10
+#define thresholdAngle     20
 #define thresholdX         40
 
 

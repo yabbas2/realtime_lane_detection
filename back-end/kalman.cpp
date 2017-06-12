@@ -54,6 +54,8 @@ void Kalman::smoothing(char &c)
         k = rightKalman;
     }
     prevPoints->clear();
+    if (newPoints->empty())
+        return;
     Mat tp;
     Mat mp = Mat::zeros(2, 1, CV_64F);
     if(isMeasure < 2)

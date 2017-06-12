@@ -10,7 +10,7 @@ vector<Vec7i>* Filter::getFilteredLines()
     return &lines;
 }
 
-void Filter::falseDetectionElimination(Mat &ipm_frame, vector<Vec4f> &l)
+Mat Filter::falseDetectionElimination(Mat &ipm_frame, vector<Vec4f> &l)
 {
     vector<Vec7i> tmp_lines;
     for(unsigned int it = 0; it < l.size(); ++it)
@@ -30,8 +30,7 @@ void Filter::falseDetectionElimination(Mat &ipm_frame, vector<Vec4f> &l)
     }
     vector<vector<Point>> contours;
     vector<int> boundary_min = {0, 100, 0};
-    vector<int> boundary_max = {154, 255, 154};
-    Mat hsv_frame;
+    vector<int> boundary_max = {170, 225, 255};
     cvtColor(ipm_frame, hsv_frame, COLOR_BGR2HSV);
     inRange(hsv_frame, boundary_min, boundary_max, hsv_frame);
     findContours(hsv_frame, contours, 1, 2);
@@ -39,13 +38,17 @@ void Filter::falseDetectionElimination(Mat &ipm_frame, vector<Vec4f> &l)
     if(contours.empty())
     {
         lines = tmp_lines;
-        return;
+        return hsv_frame.clone();
     }
     for(unsigned int it_lines = 0; it_lines < tmp_lines.size(); ++it_lines)
     {
         int flag = 0;
         for(unsigned int it_contours = 0; it_contours < contours.size(); ++it_contours)
         {
+            if (contourArea(contours[it_contours]) > 10000 || contourArea(contours[it_contours]) < 250)
+                continue;
+            qDebug() << contourArea(contours[it_contours]);
+            drawContours(ipm_frame, contours, it_contours, Scalar(0, 0, 255), 2);
             Point2f a((float)tmp_lines[it_lines][0], (float)tmp_lines[it_lines][1]);
             Point2f b((float)tmp_lines[it_lines][2], (float)tmp_lines[it_lines][3]);
             double dist1 = pointPolygonTest(contours[it_contours], a, true);
@@ -61,4 +64,5 @@ void Filter::falseDetectionElimination(Mat &ipm_frame, vector<Vec4f> &l)
                                   tmp_lines[it_lines][3], tmp_lines[it_lines][4], tmp_lines[it_lines][5],
                                   tmp_lines[it_lines][6]});
     }
+    return hsv_frame.clone();
 }

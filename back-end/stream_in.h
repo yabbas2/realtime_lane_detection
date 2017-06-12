@@ -9,6 +9,8 @@
 
 #define delayOffset     10
 
+using namespace cv;
+
 class StreamIn : public QObject
 {
     Q_OBJECT
