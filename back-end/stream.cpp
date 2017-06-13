@@ -108,17 +108,31 @@ void Stream::FullScreenFrame(int index)
     fsViewer->getVideoWidget()->showImage(*fsFrame);
 }
 
-void Stream::setPointsToDraw(std::vector<cv::Vec2f> leftPoints, std::vector<cv::Vec2f> rightPoints)
+void Stream::setInfo(std::vector<cv::Vec2f> leftPoints, std::vector<cv::Vec2f> rightPoints, Vec2i ls, Vec2i rs)
 {
     updateDataLock = true;
-    this->leftPoints.clear();
-    this->rightPoints.clear();
+    if (leftPoints.size() > 0)
+        this->leftPoints.clear();
+    if (rightPoints.size() > 0)
+        this->rightPoints.clear();
     for (unsigned int i = 0; i < leftPoints.size(); i++)
         this->leftPoints.push_back(Vec2i{(int)leftPoints[i][0], (int)leftPoints[i][1]});
     for (unsigned int i = 0; i < rightPoints.size(); i++)
         this->rightPoints.push_back(Vec2i{(int)rightPoints[i][0], (int)rightPoints[i][1]});
-    stream_out->setDrawingData(&(this->leftPoints), &(this->rightPoints));
-    updateDataLock = false;
+    Scalar l, r;
+    if (ls[0] & ls[1])
+        l = Scalar(0, 255, 0);
+    else
+        l = Scalar(0, 0, 255);
+    if (rs[0] & rs[1])
+        r = Scalar(0, 255, 0);
+    else
+        r = Scalar(0, 0, 255);
+    if (this->leftPoints.size() > 0 && this->rightPoints.size() > 0)
+    {
+        stream_out->setDrawingData(&(this->leftPoints), &(this->rightPoints), l, r);
+        updateDataLock = false;
+    }
 }
 
 cv::Mat Stream::getFrame()

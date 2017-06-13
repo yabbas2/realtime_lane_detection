@@ -30,7 +30,7 @@ Mat Filter::falseDetectionElimination(Mat &ipm_frame, vector<Vec4f> &l)
     }
     vector<vector<Point>> contours;
     vector<int> boundary_min = {0, 100, 0};
-    vector<int> boundary_max = {170, 225, 255};
+    vector<int> boundary_max = {154, 225, 154};
     cvtColor(ipm_frame, hsv_frame, COLOR_BGR2HSV);
     inRange(hsv_frame, boundary_min, boundary_max, hsv_frame);
     findContours(hsv_frame, contours, 1, 2);
@@ -45,10 +45,10 @@ Mat Filter::falseDetectionElimination(Mat &ipm_frame, vector<Vec4f> &l)
         int flag = 0;
         for(unsigned int it_contours = 0; it_contours < contours.size(); ++it_contours)
         {
-            if (contourArea(contours[it_contours]) > 10000 || contourArea(contours[it_contours]) < 250)
+            if (contourArea(contours[it_contours]) > 10000 || contourArea(contours[it_contours]) < 1000)
                 continue;
-            qDebug() << contourArea(contours[it_contours]);
-            drawContours(ipm_frame, contours, it_contours, Scalar(0, 0, 255), 2);
+//            qDebug() << contourArea(contours[it_contours]);
+//            drawContours(ipm_frame, contours, it_contours, Scalar(0, 0, 255), 2);
             Point2f a((float)tmp_lines[it_lines][0], (float)tmp_lines[it_lines][1]);
             Point2f b((float)tmp_lines[it_lines][2], (float)tmp_lines[it_lines][3]);
             double dist1 = pointPolygonTest(contours[it_contours], a, true);

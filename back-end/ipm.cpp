@@ -7,19 +7,20 @@ void IPM::transform(Mat &original_frame, QString video_name){
 
     dst_pts = (Mat_<double>(4,2) << 0, 0, height, 0, height, width, 0, width);
 
-    if (video_name == "sample1")
+    if (video_name == "youtube_video1")
 //        input_pts = (Mat_<double>(4, 2) << 357, 280, 528, 282, 778, 478, 146, 478);
-        input_pts = (Mat_<double>(4, 2) << 325, 280, 485, 282, 748, 478, 120, 478);
-    else if (video_name == "sample2")
-        input_pts = (Mat_<double>(4, 2) << 250, 222, 370, 222, 440, 290, 214, 290);
+        input_pts = (Mat_<double>(4, 2) << 325, 280, 485, 280, 748, 478, 120, 478);
+    else if (video_name.startsWith("kitti_video"))
+        input_pts = (Mat_<double>(4, 2) << 330, 300, 460, 300, 600, 478, 200, 478);
     else if (video_name == "sample3")
         input_pts = (Mat_<double>(4, 2) << 250, 222, 370, 222, 440, 290, 214, 290);
     else if (video_name == "sample4")
         input_pts = (Mat_<double>(4, 2) << 250, 222, 370, 222, 440, 290, 214, 290);
     else if (video_name == "sample5")
         input_pts = (Mat_<double>(4, 2) << 260, 196, 354, 196, 442, 280, 204, 280);
-    else if (video_name == "sample6")
-        input_pts = (Mat_<double>(4, 2) << 350, 270, 560, 270, 700, 385, 260, 385);
+    else if (video_name == "youtube_video2")
+//        input_pts = (Mat_<double>(4, 2) << 350, 270, 560, 270, 700, 385, 260, 385);
+        input_pts = (Mat_<double>(4, 2) << 340, 280, 520, 280, 770, 478, 120, 478);
     else
         qDebug() << ("[IPM] unknown video file!");
 
@@ -33,9 +34,9 @@ void IPM::transform(Mat &original_frame, QString video_name){
 
 void IPM::inverseTransform(vector<Vec2f> &pts, char c){
     vector<Vec2f>* oldPoints ;
-    if (c == ipm::left_points)
+    if (c == ipm::left)
         oldPoints = &leftPoints;
-    else if (c == ipm::right_points)
+    else if (c == ipm::right)
         oldPoints = &rightPoints;
     if(pts.empty())
     {
@@ -58,12 +59,13 @@ Mat *IPM::getIPMFrame()
     return &ipm_frame;
 }
 
-vector<Vec2f> *IPM::getLeftPoints()
+vector<Vec2f> *IPM::getPoints(int side)
 {
-    return &leftPoints;
-}
-
-vector<Vec2f> *IPM::getRightPoints()
-{
-    return &rightPoints;
+    switch(side)
+    {
+        case ipm::left:
+        return &leftPoints;
+        case ipm::right:
+        return &rightPoints;
+    }
 }

@@ -11,7 +11,7 @@ using namespace cv;
 typedef Vec<int, 7> Vec7i;
 
 namespace kalman {
-enum {left_region, right_region};
+enum {left, right};
 }
 
 class Kalman
@@ -32,8 +32,7 @@ private:
 public:
     Kalman();
     void kalmanFilter(vector<Vec2f> &points, char c);
-    vector<Vec2f>* getPrevLeftPoints();
-    vector<Vec2f>* getPrevRightPoints();
+    vector<Vec2f>* getPrevPoints(int side);
     int* getCount();
 };
 

@@ -5,26 +5,23 @@ CurveFit::CurveFit()
 
 }
 
-bool CurveFit::fromLinesToPoints(vector<Vec7i> &lines, int side)
+void CurveFit::fromLinesToPoints(vector<Vec7i> &lines, int side)
 {
-    vector<Vec7i> *l;
     vector<Vec2i> *before;
     real_1d_array *beforeX;
     real_1d_array *beforeY;
-    if (side == CurveFitting::left_points)
+    if (side == CurveFitting::left)
     {
         before = &leftPtsBeforeFit;
         beforeX = &leftXBeforeFit;
         beforeY = &leftYBeforeFit;
     }
-    else if (side == CurveFitting::right_points)
+    else if (side == CurveFitting::right)
     {
         before = &rightPtsBeforeFit;
         beforeX = &rightXBeforeFit;
         beforeY = &rightYBeforeFit;
     }
-    if (lines.size() <= 1)
-        return false;
     vector<Vec7i>::iterator it;
     int i;
     before->clear();
@@ -39,7 +36,6 @@ bool CurveFit::fromLinesToPoints(vector<Vec7i> &lines, int side)
         beforeX->operator [](++i) = (*it)[2];
         beforeY->operator [](i) = (*it)[3];
     }
-    return true;
 }
 
 void CurveFit::setParameters(int start, int end, int n)
@@ -58,12 +54,16 @@ void CurveFit::doCurveFitting(int side)
     polynomialfitreport rep;
     switch(side)
     {
-        case CurveFitting::left_points:
+        case CurveFitting::left:
+        if (!leftState)
+            return;
         ptsAfterFit = &leftPtsAfterFit;
         ptsX = leftXBeforeFit;
         ptsY = leftYBeforeFit;
         break;
-        case CurveFitting::right_points:
+        case CurveFitting::right:
+        if (!rightState)
+            return;
         ptsAfterFit = &rightPtsAfterFit;
         ptsX = rightXBeforeFit;
         ptsY = rightYBeforeFit;
@@ -92,22 +92,69 @@ void CurveFit::makeLinspace()
     }
 }
 
-vector<Vec2i> *CurveFit::getLeftPtsBeforeFit()
+vector<Vec2i> *CurveFit::getPtsBeforeFit(int side)
 {
-    return &leftPtsBeforeFit;
+    switch(side)
+    {
+        case CurveFitting::left:
+        return &leftPtsBeforeFit;
+        case CurveFitting::right:
+        return &rightPtsBeforeFit;
+    }
 }
 
-vector<Vec2i> *CurveFit::getRightPtsBeforeFit()
+vector<Vec2f> *CurveFit::getPtsAfterFit(int side)
 {
-    return &rightPtsBeforeFit;
+    switch(side)
+    {
+        case CurveFitting::left:
+        return &leftPtsAfterFit;
+        case CurveFitting::right:
+        return &rightPtsAfterFit;
+    }
 }
 
-vector<Vec2f> *CurveFit::getLeftPtsAfterFit()
+void CurveFit::validateLineBefore(vector<Vec7i> &lines, int side)
 {
-    return &leftPtsAfterFit;
+    if (lines.size() > 1 && side == CurveFitting::left)
+    {
+        leftState = true;
+        fromLinesToPoints(lines, side);
+    }
+    else if (lines.size() > 1 && side == CurveFitting::right)
+    {
+        rightState = true;
+        fromLinesToPoints(lines, side);
+    }
+    else if (lines.size() <= 1 && side == CurveFitting::left)
+        leftState = false;
+    else if (lines.size() <= 1 && side == CurveFitting::right)
+        rightState = false;
 }
 
-vector<Vec2f> *CurveFit::getRightPtsAfterFit()
+void CurveFit::validateLineAfter()
 {
-    return &rightPtsAfterFit;
+    if (!leftState)
+        leftPtsAfterFit.clear();
+    if (!rightState)
+        rightPtsAfterFit.clear();
+
+    if (leftState && (leftPtsAfterFit.at(0)[0] < -xRange || leftPtsAfterFit.at(0)[0] > 480 ||
+            leftPtsAfterFit.at(ptsNum-1)[0] < -xRange || leftPtsAfterFit.at(ptsNum-1)[0] > 480))
+        leftPtsAfterFit.clear();
+
+    if (rightState && (rightPtsAfterFit.at(0)[0] < 0 || rightPtsAfterFit.at(0)[0] > xRange ||
+            rightPtsAfterFit.at(ptsNum-1)[0] < 0 || rightPtsAfterFit.at(ptsNum-1)[0] > xRange))
+        rightPtsAfterFit.clear();
+
+    if (leftState && rightState && leftPtsAfterFit.size() > 0 && rightPtsAfterFit.size() > 0)
+    {
+        int deltaX1 = abs(leftPtsAfterFit.at(0)[0] - rightPtsAfterFit.at(0)[0]);
+        int deltaX2 = abs(leftPtsAfterFit.at(ptsNum-1)[0] - rightPtsAfterFit.at(ptsNum-1)[0]);
+        if (deltaX1 <= xThreshold || deltaX2 <= xThreshold)
+        {
+            leftPtsAfterFit.clear();
+            rightPtsAfterFit.clear();
+        }
+    }
 }

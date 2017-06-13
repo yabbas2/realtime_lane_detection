@@ -14,7 +14,7 @@ public:
     void drawFinalRGB(Mat &frame);
     void drawIpmRGB(Mat &frame);
     void drawIpmBW(Mat &frame);
-    void setDrawingData(vector<Vec2i> *leftPts, vector<Vec2i> *rightPts);
+    void setDrawingData(vector<Vec2i> *leftPts, vector<Vec2i> *rightPts, Scalar lc, Scalar rc);
 
 private:
     vector<Vec2i> *leftPts;
@@ -24,6 +24,8 @@ private:
     vector<vector<Point>> prevContours;
     vector<int> colorRange;
     bool updateDataLock;
+    Scalar leftColor;
+    Scalar rightColor;
 };
 
 #endif // STREAM_OUT_H

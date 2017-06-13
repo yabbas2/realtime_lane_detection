@@ -23,10 +23,13 @@ void StreamIn::initStreamIn(QString source)
 void StreamIn::loopStreamIn()
 {
     cap >> inputFrame;
-    if (!cap.grab())
+    if (!cap.grab() || inputFrame.cols == 0 || inputFrame.rows == 0)
+    {
         emit endStream();
-    cv::resize(inputFrame, inputFrame, cv::Size(800, 480), 0, 0, cv::INTER_LINEAR);
-//    qDebug() << inputFrame.cols << "x" << inputFrame.rows;
+        return;
+    }
+    if (inputFrame.cols != 800 || inputFrame.rows != 480)
+        cv::resize(inputFrame, inputFrame, cv::Size(800, 480), 0, 0, cv::INTER_LINEAR);
 }
 
 void StreamIn::startStreamIn()

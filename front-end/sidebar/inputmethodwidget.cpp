@@ -13,7 +13,7 @@ InputMethodWidget::InputMethodWidget(QWidget *parent) :
     h_input = new QHBoxLayout;
     v_input = new QVBoxLayout;
     buttons_spacer = new QSpacerItem(0, 50);
-    chosen_video_re.setPattern("sample[0-9]+");
+    chosen_video_re.setPattern("[youtubekittiudacity]+_video[0-9]+");
     h_input->addSpacerItem(buttons_spacer);
     input_gb->setFixedHeight(100);
     input_list->append("None");
@@ -86,11 +86,13 @@ void InputMethodWidget::browseVideo()
     pause_video->setEnabled(true);
     start_video->setEnabled(true);
     QRegularExpressionMatch chosen_video_match = chosen_video_re.match(file_name);
+    QString video;
     if (chosen_video_match.hasMatch())
     {
-        QString sample_no = chosen_video_match.captured(0);
-        qDebug() << "[SIDEBAR] sample matched" << sample_no;
+        video = chosen_video_match.captured(0);
+        qDebug() << "[SIDEBAR] video matched" << video;
     }
     else
-        qDebug() << "[SIDEBAR] no sample matched";
+        qDebug() << "[SIDEBAR] no video matched";
+    emit setVideoName(video);
 }

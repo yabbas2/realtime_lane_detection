@@ -22,7 +22,7 @@ public:
     explicit Stream();
     ~Stream();
     void setViewers(MultiVideoViewer *m, fullScreenVideoViewer *f);
-    void setPointsToDraw(std::vector<cv::Vec2f> leftPoints, std::vector<cv::Vec2f> rightPoints);
+    void setInfo(std::vector<cv::Vec2f> leftPoints, std::vector<cv::Vec2f> rightPoints, Vec2i ls, Vec2i rs);
     cv::Mat getFrame();
     void setIPMFrame(cv::Mat *f);
     void setIPMBW(cv::Mat *f);

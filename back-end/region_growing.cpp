@@ -115,22 +115,24 @@ void RegionGrowing::anyRegionGrowing(char c)
             continue;
         if (abs(regionAngle - theta) <= thresholdAngle) {
             if (abs(regionX - (*lines)[i][0]) <= thresholdX) {
-                (*lines)[i][6] = USED;
                 (*region).push_back((*lines)[i]);
+                (*lines)[i][6] = USED;
                 regionX = (*lines)[i][2];
                 sumAngle += theta;
                 regionAngle = sumAngle / (*region).size();
             }
             else if(abs(regionX - (*lines)[i][2]) <= 20) //note: we can check for delta y too
             {
-                (*lines)[i][6] = USED;
                 (*region).push_back((*lines)[i]);
+                (*lines)[i][6] = USED;
                 sumAngle += theta;
                 regionX = (*lines)[i][2];
                 regionAngle = sumAngle / (*region).size();
             }
         }
     }
+    for (unsigned int i =0; i < region->size(); ++i)
+        region->at(i)[6] = NOT_USED;
 }
 
 

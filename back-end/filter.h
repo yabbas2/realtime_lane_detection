@@ -7,7 +7,7 @@
 
 #define threshold_angle_min     70
 #define threshold_angle_max     110
-#define threshold_length        30.0
+#define threshold_length        50
 
 using namespace std;
 using namespace cv;

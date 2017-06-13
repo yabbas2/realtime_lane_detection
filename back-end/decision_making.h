@@ -5,7 +5,10 @@
 #include <vector>
 #include <opencv2/opencv.hpp>
 
-#define yThreshold  150
+#define yThreshold1     150
+#define yThreshold2     10
+#define xThreshold2     100
+#define USED            1
 
 using namespace cv;
 using namespace std;
@@ -13,19 +16,20 @@ using namespace std;
 typedef Vec<int,7> Vec7i;
 
 namespace Decision {
-enum {left_region, right_region};
+enum {left, right};
 }
 
 class DecisionMaking
 {
 private:
-    int leftStatus;
-    int rightStatus;
+    Vec2i leftStatus;
+    Vec2i rightStatus;
 public:
     DecisionMaking();
-    void decide(vector<Vec7i> &lines, Vec7i &seed_line, int side);
-    int getLeftStatus();
-    int getRightStatus();
+    void decideType(vector<Vec7i> &lines, Vec7i &seed_line, int side);
+    void decideColor(vector<Vec7i> &lines, Mat &test, int side);
+    Vec2i getLeftStatus();
+    Vec2i getRightStatus();
 };
 
 #endif // DECISION_MAKING_H

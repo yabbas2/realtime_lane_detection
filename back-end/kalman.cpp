@@ -19,17 +19,17 @@ void Kalman::kalmanFilter(vector<Vec2f> &points, char c)
 {
     if(points.empty())
     {
-        if (c == kalman::left_region)
+        if (c == kalman::left)
             newLeftPoints = prevLeftPoints;
-        else if(c == kalman::right_region)
+        else if(c == kalman::right)
             newRightPoints = prevRightPoints;
         count++;
     }
     else
     {
-        if (c == kalman::left_region)
+        if (c == kalman::left)
             newLeftPoints = points;
-        else if(c == kalman::right_region)
+        else if(c == kalman::right)
             newRightPoints = points;
         count = 0;
     }
@@ -41,13 +41,13 @@ void Kalman::smoothing(char &c)
     KalmanFilter* k;
     vector<Vec2f>* prevPoints;
     vector<Vec2f>* newPoints;
-    if (c == kalman::left_region)
+    if (c == kalman::left)
     {
         prevPoints = &prevLeftPoints;
         newPoints = &newLeftPoints;
         k = leftKalman;
     }
-    else if (c == kalman::right_region)
+    else if (c == kalman::right)
     {
         prevPoints = &prevRightPoints;
         newPoints = &newRightPoints;
@@ -79,8 +79,15 @@ void Kalman::smoothing(char &c)
     }
 }
 
-vector<Vec2f> *Kalman::getPrevLeftPoints(){return &prevLeftPoints;}
-
-vector<Vec2f> *Kalman::getPrevRightPoints(){return &prevRightPoints;}
+vector<Vec2f> *Kalman::getPrevPoints(int side)
+{
+    switch(side)
+    {
+        case kalman::left:
+        return &prevLeftPoints;
+        case kalman::right:
+        return &prevRightPoints;
+    }
+}
 
 int *Kalman::getCount(){return &count;}

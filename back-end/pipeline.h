@@ -6,6 +6,7 @@
 #include <QTimer>
 #include <vector>
 #include <QDebug>
+#include <QString>
 #include <iostream>
 #include "stream.h"
 #include "ipm.h"
@@ -39,6 +40,7 @@ private slots:
     void pause_timers();
     void exec();
     void initStatus();
+    void setVideoSource(QString s);
 
 private:
     Stream *streamObj;
@@ -69,6 +71,11 @@ private:
     VideoWidget *videoWidget;
     SideBar *sideBar;
     QTimer *timer;
+
+    Vec2i leftStatus;
+    Vec2i rightStatus;
+
+    QString videoName;
 };
 
 #endif // PIPELINE_H
