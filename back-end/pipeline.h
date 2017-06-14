@@ -76,6 +76,8 @@ private:
     Vec2i rightStatus;
 
     QString videoName;
+
+    void redetectLines(int side);
 };
 
 #endif // PIPELINE_H

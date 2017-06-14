@@ -6,6 +6,7 @@ Stream::Stream() : width(0), height(0), fps(0)
     stream_in = new StreamIn;
     stream_out = new StreamOut;
     connect(timer, SIGNAL(timeout()), this, SLOT(showFrames()));
+    connect(stream_in, SIGNAL(endStream()), this, SLOT(initScreens()));
     fsFrame = Q_NULLPTR;
     normal_default_screen = cv::Mat::zeros(480, 800, CV_8UC3);
     ipm_default_screen = cv::Mat::zeros(800, 480, CV_8UC3);
@@ -73,7 +74,6 @@ void Stream::setViewers(MultiVideoViewer *m, fullScreenVideoViewer *f)
     connect(multiViewer->getVideoWidget(1), SIGNAL(mouseClicked(int)), this, SLOT(FullScreenFrame(int)));
     connect(multiViewer->getVideoWidget(2), SIGNAL(mouseClicked(int)), this, SLOT(FullScreenFrame(int)));
     connect(multiViewer->getVideoWidget(3), SIGNAL(mouseClicked(int)), this, SLOT(FullScreenFrame(int)));
-    connect(stream_in, SIGNAL(endStream()), this, SLOT(initScreens()));
     initScreens();
 }
 
@@ -150,6 +150,7 @@ void Stream::initScreens()
     multiViewer->getVideoWidget(MultiVideo::final_rgb)->showImage(normal_default_screen);
     multiViewer->getVideoWidget(MultiVideo::ipm_rgb)->showImage(ipm_default_screen);
     multiViewer->getVideoWidget(MultiVideo::ipm_bw)->showImage(ipm_default_screen);
+    timer->stop();
 }
 
 Stream::~Stream()

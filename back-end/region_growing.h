@@ -3,8 +3,8 @@
 
 #define USED                1
 #define NOT_USED            0
-#define thresholdAngle     20
-#define thresholdX         40
+#define thresholdAngle      25
+#define thresholdX          40
 
 
 #include <opencv2/opencv.hpp>
@@ -14,6 +14,10 @@ using namespace std;
 using namespace cv;
 
 typedef Vec<int, 7> Vec7i;
+
+namespace RegGrow {
+    enum {left, right, both};
+}
 
 class RegionGrowing
 {
@@ -33,7 +37,7 @@ private:
 
 public:
     RegionGrowing();
-    void regionGrowing(vector<Vec7i> &lines, int &width);
+    void regionGrowing(vector<Vec7i> &lines, int &width, int option);
     vector<Vec7i> *getLeftLines();
     vector<Vec7i> *getRightLines();
     Vec7i *getLeftSeedLine();

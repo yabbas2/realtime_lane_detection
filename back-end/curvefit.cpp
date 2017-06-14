@@ -114,7 +114,7 @@ vector<Vec2f> *CurveFit::getPtsAfterFit(int side)
     }
 }
 
-void CurveFit::validateLineBefore(vector<Vec7i> &lines, int side)
+bool CurveFit::validateLineBefore(vector<Vec7i> &lines, int side)
 {
     if (lines.size() > 1 && side == CurveFitting::left)
     {
@@ -130,6 +130,10 @@ void CurveFit::validateLineBefore(vector<Vec7i> &lines, int side)
         leftState = false;
     else if (lines.size() <= 1 && side == CurveFitting::right)
         rightState = false;
+    if (side == CurveFitting::left)
+        return leftState;
+    else if (side == CurveFitting::right)
+        return rightState;
 }
 
 void CurveFit::validateLineAfter()
@@ -143,8 +147,8 @@ void CurveFit::validateLineAfter()
             leftPtsAfterFit.at(ptsNum-1)[0] < -xRange || leftPtsAfterFit.at(ptsNum-1)[0] > 480))
         leftPtsAfterFit.clear();
 
-    if (rightState && (rightPtsAfterFit.at(0)[0] < 0 || rightPtsAfterFit.at(0)[0] > xRange ||
-            rightPtsAfterFit.at(ptsNum-1)[0] < 0 || rightPtsAfterFit.at(ptsNum-1)[0] > xRange))
+    if (rightState && (rightPtsAfterFit.at(0)[0] < 0 || rightPtsAfterFit.at(0)[0] > xRange+480 ||
+            rightPtsAfterFit.at(ptsNum-1)[0] < 0 || rightPtsAfterFit.at(ptsNum-1)[0] > xRange+480))
         rightPtsAfterFit.clear();
 
     if (leftState && rightState && leftPtsAfterFit.size() > 0 && rightPtsAfterFit.size() > 0)
@@ -157,4 +161,9 @@ void CurveFit::validateLineAfter()
             rightPtsAfterFit.clear();
         }
     }
+}
+
+CurveFit::~CurveFit()
+{
+
 }

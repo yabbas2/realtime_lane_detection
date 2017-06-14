@@ -24,12 +24,7 @@ void StreamIn::loopStreamIn()
 {
     cap >> inputFrame;
     if (!cap.grab() || inputFrame.cols == 0 || inputFrame.rows == 0)
-    {
         emit endStream();
-        return;
-    }
-    if (inputFrame.cols != 800 || inputFrame.rows != 480)
-        cv::resize(inputFrame, inputFrame, cv::Size(800, 480), 0, 0, cv::INTER_LINEAR);
 }
 
 void StreamIn::startStreamIn()
@@ -66,6 +61,8 @@ void StreamIn::getVideoInfo(int &w, int &h, int &fps)
 
 cv::Mat *StreamIn::getFrame()
 {
+    if (inputFrame.cols != 800 || inputFrame.rows != 480)
+        cv::resize(inputFrame, inputFrame, cv::Size(800, 480), 0, 0, cv::INTER_LINEAR);
     return &inputFrame;
 }
 

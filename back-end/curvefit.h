@@ -8,7 +8,7 @@
 #include <opencv2/opencv.hpp>
 
 #define xThreshold      180
-#define xRange          800
+#define xRange          500
 
 using namespace alglib;
 using namespace std;
@@ -24,11 +24,12 @@ class CurveFit
 {
 public:
     explicit CurveFit();
+    ~CurveFit();
     void doCurveFitting(int side);
     void setParameters(int start, int end, int n);
     vector<Vec2i> *getPtsBeforeFit(int side);
     vector<Vec2f> *getPtsAfterFit(int side);
-    void validateLineBefore(vector<Vec7i> &lines, int side);
+    bool validateLineBefore(vector<Vec7i> &lines, int side);
     void validateLineAfter();
 
 private:

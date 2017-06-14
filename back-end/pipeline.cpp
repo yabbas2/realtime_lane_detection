@@ -2,7 +2,6 @@
 
 Pipeline::Pipeline()
 {
-//    streamObj = new Stream;
     ipmObj = new IPM;
     lineDetector = new LineDetection;
     filter = new Filter;
@@ -35,17 +34,36 @@ void Pipeline::exec()
     detectedLines = lineDetector->getDetectedLines();
 
     _3ebs = filter->falseDetectionElimination(*ipmFrame, *detectedLines);
-    streamObj->setIPMFrame(ipmFrame);
+//    streamObj->setIPMFrame(&_3ebs);
     filteredLines = filter->getFilteredLines();
     for (unsigned int i = 0; i < filteredLines->size(); ++i)
         line(magdy, Point((int)filteredLines->at(i)[0], (int)filteredLines->at(i)[1]), Point((int)filteredLines->at(i)[2], (int)filteredLines->at(i)[3]),
                 Scalar(255, 255, 255), 1, LINE_AA);
 
-    regGrow->regionGrowing(*filteredLines, ipmFrame->cols);
+//    filter->falseDetectionElimination(*ipmFrame, *_amany_);
+//    filteredLines = filter->getFilteredLines();
+//    for (size_t i = 0; i < _amany_->size(); ++i)
+//        line(*ipmFrame, Point((int)_amany_->at(i)[0], (int)_amany_->at(i)[1]), Point((int)_amany_->at(i)[2], (int)_amany_->at(i)[3])
+//                ,Scalar(255, 0, 0), 3);
+    streamObj->setIPMFrame(ipmFrame);
+
+    regGrow->regionGrowing(*filteredLines, ipmFrame->cols, RegGrow::both);
     leftRegion = regGrow->getLeftRegion();
     rightRegion = regGrow->getRightRegion();
     leftSeedLine = regGrow->getLeftSeedLine();
     rightSeedLine = regGrow->getRightSeedLine();
+
+    curveFit->setParameters(0, ipmFrame->rows, 20);
+    if (! curveFit->validateLineBefore(*leftRegion, CurveFitting::left))
+        redetectLines(CurveFitting::left);
+    curveFit->doCurveFitting(CurveFitting::left);
+    if (! curveFit->validateLineBefore(*rightRegion, CurveFitting::right))
+        redetectLines(CurveFitting::right);
+    curveFit->doCurveFitting(CurveFitting::right);
+    curveFit->validateLineAfter();
+    leftPoints = curveFit->getPtsAfterFit(CurveFitting::left);
+    rightPoints = curveFit->getPtsAfterFit(CurveFitting::right);
+
     if (!leftRegion->empty())
         for (unsigned int i = 0; i < leftRegion->size(); ++i)
             line(magdy, Point((int)leftRegion->at(i)[0], (int)leftRegion->at(i)[1]), Point((int)leftRegion->at(i)[2], (int)leftRegion->at(i)[3]),
@@ -58,15 +76,6 @@ void Pipeline::exec()
          Scalar(255, 0, 255), 1, LINE_AA);
     line(magdy, Point((int)rightSeedLine->operator [](0), (int)rightSeedLine->operator [](1)), Point((int)rightSeedLine->operator [](2), (int)rightSeedLine->operator [](3)),
          Scalar(255, 0, 255), 1, LINE_AA);
-
-    curveFit->setParameters(0, ipmFrame->rows, 20);
-    curveFit->validateLineBefore(*leftRegion, CurveFitting::left);
-    curveFit->doCurveFitting(CurveFitting::left);
-    curveFit->validateLineBefore(*rightRegion, CurveFitting::right);
-    curveFit->doCurveFitting(CurveFitting::right);
-    curveFit->validateLineAfter();
-    leftPoints = curveFit->getPtsAfterFit(CurveFitting::left);
-    rightPoints = curveFit->getPtsAfterFit(CurveFitting::right);
 
     vector<Vec2i> left;
     vector<Vec2i> right;
@@ -107,6 +116,28 @@ void Pipeline::exec()
 
 
     streamObj->setInfo(*leftPoints, *rightPoints, leftStatus, rightStatus);
+}
+
+void Pipeline::redetectLines(int side)
+{
+    vector<Vec4f> *_amany_;
+    lineDetector->cannyHough(*ipmFrame, side);
+    _amany_ = lineDetector->getTmpLines(side);
+    filter->falseDetectionElimination(*ipmFrame, *_amany_);
+    filteredLines = filter->getFilteredLines();
+    regGrow->regionGrowing(*filteredLines, ipmFrame->cols, side);
+    if (side == CurveFitting::left)
+    {
+        leftRegion = regGrow->getLeftRegion();
+        leftSeedLine = regGrow->getLeftSeedLine();
+        curveFit->validateLineBefore(*leftRegion, CurveFitting::left);
+    }
+    else if (side == CurveFitting::right)
+    {
+        rightRegion = regGrow->getRightRegion();
+        rightSeedLine = regGrow->getRightSeedLine();
+        curveFit->validateLineBefore(*rightRegion, CurveFitting::right);
+    }
 }
 
 void Pipeline::connectFrontEndToBackEnd(MainWindow *w)

@@ -35,7 +35,6 @@ private:
     cv::Mat inputFrame;
     cv::VideoCapture cap;
     QTimer *timer;
-
 };
 
 #endif /* STREAM_IN_H */

@@ -2,28 +2,50 @@
 
 RegionGrowing::RegionGrowing(){}
 
-void RegionGrowing::regionGrowing(vector<Vec7i> &lines, int &width)
+void RegionGrowing::regionGrowing(vector<Vec7i> &lines, int &width, int option)
 {
-    leftLines.clear();
-    rightLines.clear();
-    leftRegion.clear();
-    rightRegion.clear();
     if(lines.empty())
         return;
     sort(lines.begin(), lines.end(),
                   [](const Vec7i& a, const Vec7i& b) {
           return a[1] > b[1];
         });
-
-    for (unsigned int i = 0; i < lines.size(); ++i)
-        if (lines[i][0] < width/2)
-            leftLines.push_back(lines[i]);
-        else
-            rightLines.push_back(lines[i]);
-    findLeftSeedLines();
-    findRightSeedLines();
-    leftRegionGrowing();
-    rightRegionGrowing();
+    if (option == RegGrow::left)
+    {
+        leftLines.clear();
+        leftRegion.clear();
+        for (unsigned int i = 0; i < lines.size(); ++i)
+            if (lines[i][0] < width/2)
+                leftLines.push_back(lines[i]);
+        findLeftSeedLines();
+        leftRegionGrowing();
+    }
+    else if (option == RegGrow::right)
+    {
+        rightLines.clear();
+        rightRegion.clear();
+        for (unsigned int i = 0; i < lines.size(); ++i)
+            if (lines[i][0] >= width/2)
+                rightLines.push_back(lines[i]);
+        findRightSeedLines();
+        rightRegionGrowing();
+    }
+    else if (option == RegGrow::both)
+    {
+        leftLines.clear();
+        rightLines.clear();
+        leftRegion.clear();
+        rightRegion.clear();
+        for (unsigned int i = 0; i < lines.size(); ++i)
+            if (lines[i][0] < width/2)
+                leftLines.push_back(lines[i]);
+            else
+                rightLines.push_back(lines[i]);
+        findLeftSeedLines();
+        findRightSeedLines();
+        leftRegionGrowing();
+        rightRegionGrowing();
+    }
 }
 
 void RegionGrowing::findLeftSeedLines()
@@ -131,8 +153,8 @@ void RegionGrowing::anyRegionGrowing(char c)
             }
         }
     }
-    for (unsigned int i =0; i < region->size(); ++i)
-        region->at(i)[6] = NOT_USED;
+//    for (unsigned int i =0; i < region->size(); ++i)
+//        region->at(i)[6] = NOT_USED;
 }
 
 

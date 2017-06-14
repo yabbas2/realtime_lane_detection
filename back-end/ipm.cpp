@@ -9,16 +9,18 @@ void IPM::transform(Mat &original_frame, QString video_name){
 
     if (video_name == "youtube_video1")
         input_pts = (Mat_<double>(4, 2) << 325, 280, 485, 280, 748, 478, 120, 478);
-    else if (video_name == "youtube_video2")
+    else if (video_name == "youtube_video2" || video_name == "youtube_video3")
         input_pts = (Mat_<double>(4, 2) << 340, 280, 520, 280, 770, 478, 120, 478);
+    else if (video_name == "youtube_video4")
+        input_pts = (Mat_<double>(4, 2) << 310, 280, 445, 280, 615, 390, 200, 390);
+    else if (video_name == "youtube_video5")
+        input_pts = (Mat_<double>(4, 2) << 365, 300, 490, 300, 700, 440, 210, 440);
+    else if (video_name == "youtube_video6")
+        input_pts = (Mat_<double>(4, 2) << 380, 220, 480, 220, 610, 350, 235, 350);
     else if (video_name.startsWith("kitti_video"))
         input_pts = (Mat_<double>(4, 2) << 330, 300, 460, 300, 600, 478, 200, 478);
     else if (video_name.startsWith("udacity_video"))
-        input_pts = (Mat_<double>(4, 2) << 250, 260, 600, 260, 800, 350, 30, 350);
-    else if (video_name == "sample4")
-        input_pts = (Mat_<double>(4, 2) << 250, 222, 370, 222, 440, 290, 214, 290);
-    else if (video_name == "sample5")
-        input_pts = (Mat_<double>(4, 2) << 260, 196, 354, 196, 442, 280, 204, 280);
+        input_pts = (Mat_<double>(4, 2) << 340, 310, 475, 310, 740, 430, 120, 430);
     else
         qDebug() << ("[IPM] unknown video file!");
 

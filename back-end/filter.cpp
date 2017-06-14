@@ -29,8 +29,8 @@ Mat Filter::falseDetectionElimination(Mat &ipm_frame, vector<Vec4f> &l)
             tmp_lines.push_back(Vec7i{(int)x1, (int)y1, (int)x2, (int)y2, (int)theta, (int)length, 0});
     }
     vector<vector<Point>> contours;
-    vector<int> boundary_min = {0, 100, 0};
-    vector<int> boundary_max = {154, 225, 154};
+    vector<int> boundary_min = {75, 100, 0};
+    vector<int> boundary_max = {112, 225, 154};
     cvtColor(ipm_frame, hsv_frame, COLOR_BGR2HSV);
     inRange(hsv_frame, boundary_min, boundary_max, hsv_frame);
     findContours(hsv_frame, contours, 1, 2);
