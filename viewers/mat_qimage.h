@@ -1,8 +1,11 @@
 #ifndef MATQIMAGE_H
 #define MATQIMAGE_H
 
-#include <QtGui/qimage.h>
 #include <opencv2/opencv.hpp>
+#include <QImage>
+#include <QSysInfo>
+#include <QDebug>
+#include <cstring>
 
 namespace QtOcv {
 

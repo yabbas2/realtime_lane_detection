@@ -1,9 +1,4 @@
 #include "mat_qimage.h"
-#include <QImage>
-#include <QSysInfo>
-#include <QDebug>
-#include <cstring>
-#include "opencv2/opencv.hpp"
 
 namespace QtOcv {
 namespace {
