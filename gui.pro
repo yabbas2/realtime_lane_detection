@@ -19,7 +19,6 @@ SOURCES += main.cpp\
         sidebar/curvefitwidget.cpp \
         sidebar/decisionmakewidget.cpp \
         sidebar/regiongrowwidget.cpp \
-        viewers/mat_qimage.cpp \
         videowidget.cpp
 
 
@@ -34,7 +33,6 @@ HEADERS  += mainwindow.h \
         sidebar/curvefitwidget.h \
         sidebar/decisionmakewidget.h \
         sidebar/regiongrowwidget.h \
-        viewers/mat_qimage.h \
         videowidget.h
 
 

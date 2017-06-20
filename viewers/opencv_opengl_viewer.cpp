@@ -18,8 +18,9 @@ void CViewer::setSize(int w, int h)
 void CViewer::showImage(const cv::Mat &image)
 {
     cv::resize(image, mOrigImage, cv::Size(viewer->width(), viewer->height()), 0, 0, cv::INTER_AREA);
-    temp = QtOcv::mat2Image(mOrigImage, QtOcv::MCO_BGR, QImage::Format_RGB888);
-    mRenderQtImg = QPixmap::fromImage(temp);
+//    cv::cvtColor(mOrigImage, mOrigImage, cv::COLOR_BGR2RGB);
+    mRenderQtImg = QPixmap::fromImage(QImage((unsigned char*) mOrigImage.data, mOrigImage.cols,
+                                       mOrigImage.rows, mOrigImage.step, QImage::Format_RGB888).rgbSwapped());
     viewer->setPixmap(mRenderQtImg);
 }
 

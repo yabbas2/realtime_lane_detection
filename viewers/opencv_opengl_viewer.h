@@ -8,7 +8,6 @@
 #include <QImage>
 #include <QPixmap>
 #include <QWidget>
-#include "mat_qimage.h"
 
 class CViewer : public QWidget
 {
