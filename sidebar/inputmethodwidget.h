@@ -39,6 +39,7 @@ signals:
     void startStreaming();
     void changeVideoSource(QString source);
     void reInit();
+    void setVideoName(QString video);
 
 private:
     QGroupBox *input_gb;

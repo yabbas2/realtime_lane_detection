@@ -110,17 +110,17 @@ void VideoWidget::videoControlInit()
     gb_controls->setGraphicsEffect(textEffect_controls);
 
     BackButton = new QPushButton(gb_controls);
-    QIcon backIcon(":/icons/back.png");
+    QIcon backIcon(":/icons/resources/buttons/back.png");
     BackButton->setIcon(backIcon);
     BackButton->setFixedWidth(50);
 
     PlayButton = new QPushButton(gb_controls);
-    QIcon playIcon(":/icons/play.png");
+    QIcon playIcon(":/icons/resources/buttons/play.png");
     PlayButton->setIcon(playIcon);
     PlayButton->setFixedWidth(50);
 
     PauseButton = new QPushButton(gb_controls);
-    QIcon pauseIcon(":/icons/pause.png");
+    QIcon pauseIcon(":/icons/resources/buttons/pause.png");
     PauseButton->setIcon(pauseIcon);
     PauseButton->setFixedWidth(50);
 

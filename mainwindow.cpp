@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     mulVidWidget = new MultiVideoViewer(cen1);
     mulVidWidget->setObjectName("mulVidWidget");
     mulVidWidget->setFixedSize(multiVideoWidth, multiVideoHeight);
-    mulVidWidget->setVideoSize(250, 150);
+    mulVidWidget->setVideoSize(220, 140);
     h_cen1_layout->addWidget(mulVidWidget);
 
     fsVidWidget = new fullScreenVideoViewer(cen2);
@@ -44,13 +44,13 @@ MainWindow::MainWindow(QWidget *parent)
     widgetStack->setFixedSize(this->size());
     widgetStack->setCurrentIndex(0);
 
-    connect(mulVidWidget->getVideoWidget(0), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen()));
-    connect(mulVidWidget->getVideoWidget(1), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen()));
-    connect(mulVidWidget->getVideoWidget(2), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen()));
-    connect(mulVidWidget->getVideoWidget(3), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen()));
+    connect(mulVidWidget->getVideoWidget(0), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen(int)));
+    connect(mulVidWidget->getVideoWidget(1), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen(int)));
+    connect(mulVidWidget->getVideoWidget(2), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen(int)));
+    connect(mulVidWidget->getVideoWidget(3), SIGNAL(mouseClicked(int)), this, SLOT(switchToFullScreen(int)));
     connect(vidWid, SIGNAL(switchToMain()), this, SLOT(switchToMainScreen()));
 
-    this->setStyleSheet("#mainWindow {border-image: url(:/images/background.png) 0 0 0 0 stretch stretch; border-width: 0px; border-radius: 0px;}"
+    this->setStyleSheet("#mainWindow {border-image: url(:/images/resources/images/background.png) 0 0 0 0 stretch stretch; border-width: 0px; border-radius: 0px;}"
                         "#sidebar {background: rgba(100, 100, 100, 50); border: 1px solid gray; border-radius: 10px;}"
                         "#mulVidWidget {background: rgba(100, 100, 100, 50); border: 1px solid gray; border-radius: 10px;}");
 }
@@ -75,9 +75,22 @@ SideBar *MainWindow::getSideBarWidget()
     return sidebar;
 }
 
-void MainWindow::switchToFullScreen()
+void MainWindow::switchToFullScreen(int index)
 {
     widgetStack->setCurrentIndex(1);
+    switch(index)
+       {
+       case 0:
+       case 1:
+           fsVidWidget->setGeometry(0, 0, 854, 480);
+           fsVidWidget->setVideoSize(854, 480);
+           break;
+       case 2:
+       case 3:
+           fsVidWidget->setGeometry(292, 0, 270, 480);
+           fsVidWidget->setVideoSize(270, 480);
+           break;
+       }
 }
 
 void MainWindow::switchToMainScreen()

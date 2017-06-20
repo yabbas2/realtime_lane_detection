@@ -6,7 +6,6 @@ CVGLViewer::CVGLViewer( int index, QWidget *parent, int width, int height) :
     mBgColor = QColor::fromRgb(235, 235, 235);
     this->setFixedSize(width, height);
     this->index = index;
-//    this->setStyleSheet("background: rgba(0, 0, 0, 0); border: 3px solid black; border-radius: 10px;");
 }
 
 void CVGLViewer::initializeGL()

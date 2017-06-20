@@ -10,12 +10,12 @@
 #include <QDebug>
 #include <QStackedWidget>
 #include <QHBoxLayout>
-#include "front-end/sidebar/side_bar.h"
-#include "front-end/viewers/multivideoviewer.h"
-#include "front-end/viewers/fullscreenvideoviewer.h"
-#include "front-end/videowidget.h"
+#include "sidebar/side_bar.h"
+#include "viewers/multivideoviewer.h"
+#include "viewers/fullscreenvideoviewer.h"
+#include "videowidget.h"
 
-#define mainWindowWidth     854
+#define mainWindowWidth     800
 #define mainWindowHeight    480
 #define sideBarWidth        300
 #define sideBarHeight       (mainWindowHeight-50)
@@ -36,7 +36,7 @@ public:
     SideBar *getSideBarWidget();
 
 private slots:
-    void switchToFullScreen();
+    void switchToFullScreen(int index);
     void switchToMainScreen();
 
 private:
