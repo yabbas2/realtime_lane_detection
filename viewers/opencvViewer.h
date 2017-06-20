@@ -1,7 +1,10 @@
-#ifndef OPENCVOPENGLVIEWER_H
-#define OPENCVOPENGLVIEWER_H
+#ifndef OPENCVVIEWER_H
+#define OPENCVVIEWER_H
 
-#include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/videoio.hpp>
+#include <opencv2/photo.hpp>
 #include <QMouseEvent>
 #include <QDebug>
 #include <QLabel>

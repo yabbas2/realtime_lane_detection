@@ -2,7 +2,7 @@
 #define MULTIVIDEOVIEWER_H
 
 #include <QWidget>
-#include "opencv_opengl_viewer.h"
+#include "opencvViewer.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QSpacerItem>

@@ -1,4 +1,4 @@
-#include "opencv_opengl_viewer.h"
+#include "opencvViewer.h"
 
 CViewer::CViewer(int index, QWidget *parent, int width, int height) :
     QWidget(parent)

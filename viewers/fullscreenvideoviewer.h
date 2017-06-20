@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QDebug>
-#include "opencv_opengl_viewer.h"
+#include "opencvViewer.h"
 
 class fullScreenVideoViewer : public QWidget
 {

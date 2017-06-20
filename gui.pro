@@ -9,7 +9,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-        viewers/opencv_opengl_viewer.cpp \
         viewers/multivideoviewer.cpp \
         sidebar/side_bar.cpp \
         viewers/fullscreenvideoviewer.cpp \
@@ -19,11 +18,11 @@ SOURCES += main.cpp\
         sidebar/curvefitwidget.cpp \
         sidebar/decisionmakewidget.cpp \
         sidebar/regiongrowwidget.cpp \
-        videowidget.cpp
+        videowidget.cpp \
+    viewers/opencvViewer.cpp
 
 
 HEADERS  += mainwindow.h \
-        viewers/opencv_opengl_viewer.h \
         viewers/multivideoviewer.h \
         sidebar/side_bar.h \
         viewers/fullscreenvideoviewer.h \
@@ -33,7 +32,8 @@ HEADERS  += mainwindow.h \
         sidebar/curvefitwidget.h \
         sidebar/decisionmakewidget.h \
         sidebar/regiongrowwidget.h \
-        videowidget.h
+        videowidget.h \
+    viewers/opencvViewer.h
 
 
 #unix {
