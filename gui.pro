@@ -19,7 +19,10 @@ SOURCES += main.cpp\
         sidebar/decisionmakewidget.cpp \
         sidebar/regiongrowwidget.cpp \
         videowidget.cpp \
-    viewers/opencvViewer.cpp
+        viewers/opencvViewer.cpp \
+        stream.cpp \
+        stream_in.cpp \
+        stream_out.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -33,30 +36,24 @@ HEADERS  += mainwindow.h \
         sidebar/decisionmakewidget.h \
         sidebar/regiongrowwidget.h \
         videowidget.h \
-    viewers/opencvViewer.h
-
-
-#unix {
-#CONFIG += c++11
-#CONFIG += link_pkgconfig
-#PKGCONFIG += opencv
-#}
+        viewers/opencvViewer.h \
+        stream.h \
+        stream_in.h \
+        stream_out.h
 
 unix {
+CONFIG += c++11
 INCLUDEPATH += /usr/local/include/opencv2
 LIBS += -L/usr/local/lib
 LIBS += -lopencv_core
 LIBS += -lopencv_imgproc
 LIBS += -lopencv_highgui
 LIBS += -lopencv_ml
+LIBS += -lopencv_videoio
 LIBS += -lopencv_video
 LIBS += -lopencv_features2d
 LIBS += -lopencv_calib3d
 LIBS += -lopencv_objdetect
-#LIBS += -lopencv_contrib
-#LIBS += -lopencv_legacy
-#LIBS += -lopencv_flann
-#LIBS += -lopencv_nonfree
 }
 
 RESOURCES += \
