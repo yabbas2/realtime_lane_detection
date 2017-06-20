@@ -28,14 +28,13 @@ class MultiVideoViewer : public QWidget
 public:
     explicit MultiVideoViewer(QWidget *parent = 0);
     void setVideoSize(int w1, int w2);
-    void setVideoSize(const QSize &s1, const QSize &s2);
-    CVGLViewer *getVideoWidget(int index);
+    CViewer *getVideoWidget(int index);
 
 signals:
     void clickOnVideo(int index);
 
 protected:
-    CVGLViewer *videos[VideosNum];
+    CViewer *videos[VideosNum];
 
 private:
     QVBoxLayout *v_main_layout;

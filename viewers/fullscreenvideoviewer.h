@@ -11,12 +11,11 @@ class fullScreenVideoViewer : public QWidget
 
 public:
     explicit fullScreenVideoViewer(QWidget *parent = 0);
-    CVGLViewer *getVideoWidget();
+    CViewer *getVideoWidget();
     void setVideoSize(int w, int h);
-    void setVideoSize(const QSize &s);
 
 protected:
-    CVGLViewer *fsVideo;
+    CViewer *fsVideo;
 };
 
 #endif // FULLSCREENVIDEOVIEWER_H
