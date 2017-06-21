@@ -12,11 +12,12 @@
 #include "videowidget.h"
 #include <vector>
 #include "viewers/fullscreenvideoviewer.h"
-#include "stream_in.h"
-#include "stream_out.h"
 #include "viewers/multivideoviewer.h"
 
 #define StreamingVideos     4
+
+using namespace cv;
+using namespace std;
 
 class Stream : public QObject
 {
@@ -25,21 +26,19 @@ class Stream : public QObject
 public:
     explicit Stream();
     ~Stream();
-    void setViewers(MultiVideoViewer *m, fullScreenVideoViewer *f);
-    void setInfo(std::vector<cv::Vec2f> leftPoints, std::vector<cv::Vec2f> rightPoints, Vec2i ls, Vec2i rs);
-    cv::Mat getFrame();
-    void setIPMFrame(cv::Mat *f);
-    void setIPMBW(cv::Mat *f);
-
+    void setInfo(vector<Vec2f> leftPts, vector<Vec2f> rightPts, Vec2i leftProp, Vec2i rightProp);
+    Mat getFrame();
+    void setIPMFrame(Mat *f);
+    void setIPMBW(Mat *f);
     void reInitStream();
     void connectToFrontEnd(MainWindow *w);
     int width, height, fps;
 
 public slots:
     void changeStreamInSource(QString source);
-    void pause_timers();
-    void start_timers();
     void initScreens();
+    void pauseStream();
+    void startStream();
 
 private slots:
     void showFrames();
@@ -47,20 +46,30 @@ private slots:
 
 private:
     QString streamInSource;
-    StreamIn *stream_in;
-    StreamOut *stream_out;
-    cv::Mat frames[StreamingVideos];
-    cv::Mat *fsFrame;
-    cv::Mat normal_default_screen;
-    cv::Mat ipm_default_screen;
-    QTimer *timer;
-    std::vector<cv::Vec2i> leftPoints;
-    std::vector<cv::Vec2i> rightPoints;
+    cv::Mat inputFrame;
+    cv::VideoCapture cap;
+    Mat frames[StreamingVideos];
+    Mat *fsFrame;
+    Scalar leftColor;
+    Scalar rightColor;
+    Mat normal_default_screen;
+    Mat ipm_default_screen;
     MultiVideoViewer *multiViewer;
     fullScreenVideoViewer *fsViewer;
     SideBar *sideBar;
     VideoWidget *videoWidget;
+    vector<Vec2i> leftPts;
+    vector<Vec2i> rightPts;
     bool updateDataLock;
+    bool updateFrame;
+    vector<Vec2i> bottomPts;
+    vector<Vec2i> topPts;
+    vector<vector<Point>> prevContours;
+    vector<int> colorRange;
+    QTimer *timer;
+
+    void drawFinalRGB();
+
 };
 
 #endif // STREAM_H

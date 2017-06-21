@@ -20,9 +20,7 @@ SOURCES += main.cpp\
         sidebar/regiongrowwidget.cpp \
         videowidget.cpp \
         viewers/opencvViewer.cpp \
-        stream.cpp \
-        stream_in.cpp \
-        stream_out.cpp
+        stream.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -37,9 +35,7 @@ HEADERS  += mainwindow.h \
         sidebar/regiongrowwidget.h \
         videowidget.h \
         viewers/opencvViewer.h \
-        stream.h \
-        stream_in.h \
-        stream_out.h
+        stream.h
 
 unix {
 CONFIG += c++11
@@ -51,9 +47,9 @@ LIBS += -lopencv_imgproc
 LIBS += -lopencv_highgui
 LIBS += -lopencv_videoio
 LIBS += -lopencv_core
-#LIBS += -lopencv_ml
-#LIBS += -lopencv_video
-#LIBS += -lopencv_calib3d
+LIBS += -lopencv_ml
+LIBS += -lopencv_video
+LIBS += -lopencv_calib3d
 }
 
 RESOURCES += \

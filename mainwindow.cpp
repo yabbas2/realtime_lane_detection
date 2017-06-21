@@ -78,19 +78,19 @@ SideBar *MainWindow::getSideBarWidget()
 void MainWindow::switchToFullScreen(int index)
 {
     widgetStack->setCurrentIndex(1);
-    switch(index)
-       {
-       case 0:
-       case 1:
-           fsVidWidget->setGeometry(0, 0, 854, 480);
-           fsVidWidget->setVideoSize(854, 480);
-           break;
-       case 2:
-       case 3:
-           fsVidWidget->setGeometry(292, 0, 270, 480);
-           fsVidWidget->setVideoSize(270, 480);
-           break;
-       }
+//    switch(index)
+//       {
+//       case 0:
+//       case 1:
+//           fsVidWidget->setGeometry(0, 0, 854, 480);
+//           fsVidWidget->setVideoSize(854, 480);
+//           break;
+//       case 2:
+//       case 3:
+//           fsVidWidget->setGeometry(292, 0, 270, 480);
+//           fsVidWidget->setVideoSize(270, 480);
+//           break;
+//       }
 }
 
 void MainWindow::switchToMainScreen()
