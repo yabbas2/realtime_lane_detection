@@ -99,14 +99,14 @@ void Stream::showFrames()
 
 void Stream::pauseStream()
 {
-    qDebug() << "[STREAM] stop streaming";
+    qDebug() << "[STREAM] pause/stop streaming";
 //    timer->stop();
     updateFrame = false;
 }
 
 void Stream::startStream()
 {
-    qDebug() << "[STREAM] pause streaming";
+    qDebug() << "[STREAM] start/continue streaming";
     updateFrame = true;
 //    timer->start(static_cast<int> (1000/fps));
 }
