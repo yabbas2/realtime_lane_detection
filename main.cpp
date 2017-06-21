@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
 
     Stream st;
     st.connectToFrontEnd(&w);
+    st.start();
 
     return a.exec();
 }

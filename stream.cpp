@@ -3,12 +3,13 @@
 Stream::Stream() : width(0), height(0), fps(0)
 {
     timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(showFrames()));
+//    connect(timer, SIGNAL(timeout()), this, SLOT(showFrames()));
 //    connect(stream_in, SIGNAL(endStream()), this, SLOT(initScreens()));
     fsFrame = Q_NULLPTR;
     normal_default_screen = cv::Mat::zeros(480, 800, CV_8UC3);
     ipm_default_screen = cv::Mat::zeros(800, 480, CV_8UC3);
     updateDataLock = true;
+    updateFrame = false;
     colorRange = {0, 0, 255};
 }
 
@@ -30,7 +31,41 @@ void Stream::reInitStream()
 {
     if (cap.isOpened())
         cap.release();
+    updateFrame = false;
     initScreens();
+}
+
+void Stream::run()
+{
+    while (true)
+    {
+        if (!updateFrame)
+            continue;
+        cap >> inputFrame;
+        if (!cap.grab())
+        {
+            reInitStream();
+            continue;
+        }
+        frames[MultiVideo::normal_rgb] = inputFrame.clone();
+        frames[MultiVideo::final_rgb] = inputFrame.clone();
+//        if (!updateDataLock)
+//        {
+//            drawFinalRGB();
+//        }
+        cvtColor(frames[MultiVideo::final_rgb], frames[MultiVideo::final_rgb], COLOR_BGR2HSV);
+        if (!frames[MultiVideo::normal_rgb].empty())
+            multiViewer->getVideoWidget(MultiVideo::normal_rgb)->showImage(frames[0]);
+        if (!frames[MultiVideo::final_rgb].empty())
+            multiViewer->getVideoWidget(MultiVideo::final_rgb)->showImage(frames[1]);
+        if (!frames[MultiVideo::ipm_rgb].empty())
+            multiViewer->getVideoWidget(MultiVideo::ipm_rgb)->showImage(frames[2]);
+        if (!frames[MultiVideo::ipm_bw].empty())
+            multiViewer->getVideoWidget(MultiVideo::ipm_bw)->showImage(frames[3]);
+        if (fsFrame != Q_NULLPTR)
+            fsViewer->getVideoWidget()->showImage(*fsFrame);
+        msleep(1000/fps);
+    }
 }
 
 
@@ -64,12 +99,16 @@ void Stream::showFrames()
 
 void Stream::pauseStream()
 {
-    timer->stop();
+    qDebug() << "[STREAM] stop streaming";
+//    timer->stop();
+    updateFrame = false;
 }
 
 void Stream::startStream()
 {
-    timer->start(static_cast<int> (1000/fps));
+    qDebug() << "[STREAM] pause streaming";
+    updateFrame = true;
+//    timer->start(static_cast<int> (1000/fps));
 }
 
 void Stream::drawFinalRGB()

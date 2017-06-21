@@ -4,22 +4,23 @@
 #include <QString>
 #include <QDebug>
 #include <QObject>
-#include "mainwindow.h"
 #include <QTimer>
+#include <QThread>
 #include <opencv2/videoio.hpp>
 #include <opencv2/core.hpp>
+#include <vector>
 #include "sidebar/side_bar.h"
 #include "videowidget.h"
-#include <vector>
 #include "viewers/fullscreenvideoviewer.h"
 #include "viewers/multivideoviewer.h"
+#include "mainwindow.h"
 
 #define StreamingVideos     4
 
 using namespace cv;
 using namespace std;
 
-class Stream : public QObject
+class Stream : public QThread
 {
     Q_OBJECT
 
@@ -43,6 +44,9 @@ public slots:
 private slots:
     void showFrames();
     void FullScreenFrame(int index);
+
+protected:
+    void run();
 
 private:
     QString streamInSource;
