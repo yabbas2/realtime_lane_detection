@@ -6,7 +6,8 @@
 #include <QObject>
 #include "mainwindow.h"
 #include <QTimer>
-#include <opencv2/opencv.hpp>
+#include <opencv2/videoio.hpp>
+#include <opencv2/core.hpp>
 #include "sidebar/side_bar.h"
 #include "videowidget.h"
 #include <vector>
