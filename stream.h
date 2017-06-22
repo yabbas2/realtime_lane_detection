@@ -32,18 +32,20 @@ public:
     Mat getFrame();
     void setIPMFrame(Mat *f);
     void setIPMBW(Mat *f);
-    void reInitStream();
+    void connectToDBusSignals();
     int width, height, fps;
 
 public slots:
     void changeStreamInSource(QString source);
-    void initScreens();
     void pauseStream();
     void startStream();
 
 private slots:
     void showFrames();
     void FullScreenFrame(int index);
+
+signals:
+    void initScreens();
 
 private:
     QString streamInSource;
@@ -53,8 +55,6 @@ private:
     Mat *fsFrame;
     Scalar leftColor;
     Scalar rightColor;
-    Mat normal_default_screen;
-    Mat ipm_default_screen;
     vector<Vec2i> leftPts;
     vector<Vec2i> rightPts;
     bool updateDataLock;
@@ -67,7 +67,7 @@ private:
     QDBusInterface *ifGUI;
 
     void drawFinalRGB();
-
+    void reInitStream();
 };
 
 #endif // STREAM_H

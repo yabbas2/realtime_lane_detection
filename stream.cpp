@@ -8,14 +8,16 @@ Stream::Stream(int argc, char *argv[]) :
     connect(timer, SIGNAL(timeout()), this, SLOT(showFrames()));
 //    connect(stream_in, SIGNAL(endStream()), this, SLOT(initScreens()));
     fsFrame = Q_NULLPTR;
-    normal_default_screen = cv::Mat::zeros(480, 800, CV_8UC3);
-    ipm_default_screen = cv::Mat::zeros(800, 480, CV_8UC3);
     updateDataLock = true;
     colorRange = {0, 0, 255};
     ifGUI = new QDBusInterface("com.stage.gui", "/", "com.stage.gui", bus, this);
-    connect(ifGUI, SIGNAL(setVideoSource(QString)), this, SLOT(changeStreamInSource(QString)));
-    connect(ifGUI, SIGNAL(startStream()), this, SLOT(startStream()));
-    connect(ifGUI, SIGNAL(pauseStream()), this, SLOT(pauseStream()));
+}
+
+void Stream::connectToDBusSignals()
+{
+    while(! connect(ifGUI, SIGNAL(setVideoSource(QString)), this, SLOT(changeStreamInSource(QString))));
+    while(! connect(ifGUI, SIGNAL(startStream()), this, SLOT(startStream())));
+    while(! connect(ifGUI, SIGNAL(pauseStream()), this, SLOT(pauseStream())));
 }
 
 void Stream::changeStreamInSource(QString source)
@@ -36,7 +38,9 @@ void Stream::reInitStream()
 {
     if (cap.isOpened())
         cap.release();
-    initScreens();
+    timer->stop();
+    ifGUI->call("initViewers");
+    emit initScreens();
 }
 
 void Stream::showFrames()
@@ -124,7 +128,6 @@ void Stream::setIPMBW(cv::Mat *f)
 void Stream::FullScreenFrame(int index)
 {
 //    fsFrame = &(frames[index]);
-//    fsViewer->getVideoWidget()->showImage(*fsFrame);
 }
 
 void Stream::setInfo(vector<Vec2f> leftPoints, vector<Vec2f> rightPoints, Vec2i leftProp, Vec2i rightProp)
@@ -151,15 +154,6 @@ void Stream::setInfo(vector<Vec2f> leftPoints, vector<Vec2f> rightPoints, Vec2i 
 Mat Stream::getFrame()
 {
     return frames[stream::normal_rgb].clone();
-}
-
-void Stream::initScreens()
-{
-    frames[stream::normal_rgb] = normal_default_screen;
-    frames[stream::final_rgb] = normal_default_screen;
-    frames[stream::ipm_rgb] = ipm_default_screen;
-    frames[stream::ipm_bw] = ipm_default_screen;
-    timer->stop();
 }
 
 Stream::~Stream()
