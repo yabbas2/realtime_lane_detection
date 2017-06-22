@@ -1,15 +1,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QAction>
-#include <QApplication>
 #include <QMainWindow>
 #include <QWidget>
-#include <QtCore>
-#include <QtGui>
 #include <QDebug>
 #include <QStackedWidget>
 #include <QHBoxLayout>
+#include <QtDBus>
 #include "sidebar/side_bar.h"
 #include "viewers/multivideoviewer.h"
 #include "viewers/fullscreenvideoviewer.h"
@@ -30,24 +27,22 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    MultiVideoViewer *getMultiVideoViewerWidget();
-    fullScreenVideoViewer *getFullScreenVideoViewerWidget();
-    VideoWidget *getVideoWidget();
-    SideBar *getSideBarWidget();
+    MultiVideoViewer *mulVidWidget;
+    fullScreenVideoViewer *fsVidWidget;
+    SideBar *sidebar;
+    VideoWidget *vidWid;
 
 private slots:
     void switchToFullScreen(int index);
     void switchToMainScreen();
 
 private:
-    MultiVideoViewer *mulVidWidget;
-    fullScreenVideoViewer *fsVidWidget;
-    SideBar *sidebar;
-    VideoWidget *vidWid;
     QWidget *cen1;
     QWidget *cen2;
     QHBoxLayout *h_cen1_layout;
     QStackedWidget *widgetStack;
+    QDBusConnection bus = QDBusConnection::sessionBus();
+    QDBusInterface *ifStream;
 };
 
 #endif // MAINWINDOW_H

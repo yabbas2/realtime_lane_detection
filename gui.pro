@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui dbus
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -8,34 +8,36 @@ TEMPLATE = app
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
-        viewers/multivideoviewer.cpp \
-        sidebar/side_bar.cpp \
-        viewers/fullscreenvideoviewer.cpp \
-        sidebar/gaussianblurwidget.cpp \
-        sidebar/inputmethodwidget.cpp \
-        sidebar/lsdwidget.cpp \
-        sidebar/curvefitwidget.cpp \
-        sidebar/decisionmakewidget.cpp \
-        sidebar/regiongrowwidget.cpp \
-        videowidget.cpp \
-        viewers/opencvViewer.cpp \
-        stream.cpp
+        front-end/mainwindow.cpp \
+        front-end/viewers/multivideoviewer.cpp \
+        front-end/sidebar/side_bar.cpp \
+        front-end/viewers/fullscreenvideoviewer.cpp \
+        front-end/sidebar/gaussianblurwidget.cpp \
+        front-end/sidebar/inputmethodwidget.cpp \
+        front-end/sidebar/lsdwidget.cpp \
+        front-end/sidebar/curvefitwidget.cpp \
+        front-end/sidebar/decisionmakewidget.cpp \
+        front-end/sidebar/regiongrowwidget.cpp \
+        front-end/videowidget.cpp \
+        front-end/viewers/opencvViewer.cpp \
+        d_bus.cpp \
+        gui.cpp
 
 
-HEADERS  += mainwindow.h \
-        viewers/multivideoviewer.h \
-        sidebar/side_bar.h \
-        viewers/fullscreenvideoviewer.h \
-        sidebar/gaussianblurwidget.h \
-        sidebar/inputmethodwidget.h \
-        sidebar/lsdwidget.h \
-        sidebar/curvefitwidget.h \
-        sidebar/decisionmakewidget.h \
-        sidebar/regiongrowwidget.h \
-        videowidget.h \
-        viewers/opencvViewer.h \
-        stream.h
+HEADERS  += front-end/mainwindow.h \
+        front-end/viewers/multivideoviewer.h \
+        front-end/sidebar/side_bar.h \
+        front-end/viewers/fullscreenvideoviewer.h \
+        front-end/sidebar/gaussianblurwidget.h \
+        front-end/sidebar/inputmethodwidget.h \
+        front-end/sidebar/lsdwidget.h \
+        front-end/sidebar/curvefitwidget.h \
+        front-end/sidebar/decisionmakewidget.h \
+        front-end/sidebar/regiongrowwidget.h \
+        front-end/videowidget.h \
+        front-end/viewers/opencvViewer.h \
+        d_bus.h \
+        gui.h
 
 unix {
 CONFIG += c++11

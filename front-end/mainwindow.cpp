@@ -1,12 +1,11 @@
 #include "mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent)
 
 {
-    QMetaObject::connectSlotsByName(this);
     this->setFixedSize(mainWindowWidth, mainWindowHeight);
-    this->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", Q_NULLPTR));
+//    this->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", Q_NULLPTR));
 //    this->setWindowFlags(Qt::FramelessWindowHint);
     this->setObjectName("mainWindow");
 
@@ -53,44 +52,25 @@ MainWindow::MainWindow(QWidget *parent)
     this->setStyleSheet("#mainWindow {border-image: url(:/images/resources/images/background.png) 0 0 0 0 stretch stretch; border-width: 0px; border-radius: 0px;}"
                         "#sidebar {background: rgba(100, 100, 100, 50); border: 1px solid gray; border-radius: 10px;}"
                         "#mulVidWidget {background: rgba(100, 100, 100, 50); border: 1px solid gray; border-radius: 10px;}");
-}
-
-MultiVideoViewer *MainWindow::getMultiVideoViewerWidget()
-{
-    return mulVidWidget;
-}
-
-fullScreenVideoViewer *MainWindow::getFullScreenVideoViewerWidget()
-{
-    return fsVidWidget;
-}
-
-VideoWidget *MainWindow::getVideoWidget()
-{
-    return vidWid;
-}
-
-SideBar *MainWindow::getSideBarWidget()
-{
-    return sidebar;
+    ifStream = new QDBusInterface("com.stage.stream", "/", "com.stage.stream", bus, this);
 }
 
 void MainWindow::switchToFullScreen(int index)
 {
     widgetStack->setCurrentIndex(1);
-//    switch(index)
-//       {
-//       case 0:
-//       case 1:
-//           fsVidWidget->setGeometry(0, 0, 854, 480);
-//           fsVidWidget->setVideoSize(854, 480);
-//           break;
-//       case 2:
-//       case 3:
-//           fsVidWidget->setGeometry(292, 0, 270, 480);
-//           fsVidWidget->setVideoSize(270, 480);
-//           break;
-//       }
+    switch(index)
+       {
+       case 0:
+       case 1:
+           fsVidWidget->setGeometry(0, 0, 854, 480);
+           fsVidWidget->setVideoSize(854, 480);
+           break;
+       case 2:
+       case 3:
+           fsVidWidget->setGeometry(292, 0, 270, 480);
+           fsVidWidget->setVideoSize(270, 480);
+           break;
+       }
 }
 
 void MainWindow::switchToMainScreen()

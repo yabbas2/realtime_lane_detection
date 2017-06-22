@@ -1,21 +1,26 @@
 #include <QApplication>
-#include "mainwindow.h"
-#include "stream.h"
-#include "viewers/fullscreenvideoviewer.h"
-#include "viewers/multivideoviewer.h"
-#include "sidebar/side_bar.h"
-#include "videowidget.h"
-#include <QObject>
+#include "gui.h"
+#include "d_bus.h"
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+    GUI gui(argc, argv);
 
-    Stream st;
-    st.connectToFrontEnd(&w);
-    st.start();
+    if (!QDBusConnection::sessionBus().isConnected()) {
+        qDebug() << "[GUI] cannot connect to D-Bus - exiting..";
+        return 1;
+    }
 
-    return a.exec();
+    if (!QDBusConnection::sessionBus().registerService("com.stage.gui")) {
+        qDebug() << "[GUI] cannot register service";
+        exit(1);
+    }
+
+    new D_BUS(&gui);
+
+    QDBusConnection::sessionBus().registerObject("/", &gui);
+
+    gui.mainWindow.show();
+
+    return gui.exec();
 }
