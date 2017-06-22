@@ -1,16 +1,21 @@
 #include "stream.h"
 
-Stream::Stream() : width(0), height(0), fps(0)
+Stream::Stream(int argc, char *argv[]) :
+    QApplication(argc, argv),
+    width(0), height(0), fps(0)
 {
     timer = new QTimer(this);
-//    connect(timer, SIGNAL(timeout()), this, SLOT(showFrames()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(showFrames()));
 //    connect(stream_in, SIGNAL(endStream()), this, SLOT(initScreens()));
     fsFrame = Q_NULLPTR;
     normal_default_screen = cv::Mat::zeros(480, 800, CV_8UC3);
     ipm_default_screen = cv::Mat::zeros(800, 480, CV_8UC3);
     updateDataLock = true;
-    updateFrame = false;
     colorRange = {0, 0, 255};
+    ifGUI = new QDBusInterface("com.stage.gui", "/", "com.stage.gui", bus, this);
+    connect(ifGUI, SIGNAL(setVideoSource(QString)), this, SLOT(changeStreamInSource(QString)));
+    connect(ifGUI, SIGNAL(startStream()), this, SLOT(startStream()));
+    connect(ifGUI, SIGNAL(pauseStream()), this, SLOT(pauseStream()));
 }
 
 void Stream::changeStreamInSource(QString source)
@@ -31,43 +36,8 @@ void Stream::reInitStream()
 {
     if (cap.isOpened())
         cap.release();
-    updateFrame = false;
     initScreens();
 }
-
-void Stream::run()
-{
-    while (true)
-    {
-        if (!updateFrame)
-            continue;
-        cap >> inputFrame;
-        if (!cap.grab())
-        {
-            reInitStream();
-            continue;
-        }
-        frames[MultiVideo::normal_rgb] = inputFrame.clone();
-        frames[MultiVideo::final_rgb] = inputFrame.clone();
-//        if (!updateDataLock)
-//        {
-//            drawFinalRGB();
-//        }
-        cvtColor(frames[MultiVideo::final_rgb], frames[MultiVideo::final_rgb], COLOR_BGR2HSV);
-        if (!frames[MultiVideo::normal_rgb].empty())
-            multiViewer->getVideoWidget(MultiVideo::normal_rgb)->showImage(frames[0]);
-        if (!frames[MultiVideo::final_rgb].empty())
-            multiViewer->getVideoWidget(MultiVideo::final_rgb)->showImage(frames[1]);
-        if (!frames[MultiVideo::ipm_rgb].empty())
-            multiViewer->getVideoWidget(MultiVideo::ipm_rgb)->showImage(frames[2]);
-        if (!frames[MultiVideo::ipm_bw].empty())
-            multiViewer->getVideoWidget(MultiVideo::ipm_bw)->showImage(frames[3]);
-        if (fsFrame != Q_NULLPTR)
-            fsViewer->getVideoWidget()->showImage(*fsFrame);
-        msleep(1000/fps);
-    }
-}
-
 
 void Stream::showFrames()
 {
@@ -78,42 +48,41 @@ void Stream::showFrames()
         timer->stop();
         return;
     }
-    frames[MultiVideo::normal_rgb] = inputFrame.clone();
-    frames[MultiVideo::final_rgb] = inputFrame.clone();
+    qDebug() << "wehooooooooooo";
+    frames[stream::normal_rgb] = inputFrame.clone();
+    frames[stream::final_rgb] = inputFrame.clone();
 //    if (! updateDataLock)
 //    {
 //        drawFinalRGB();
 //    }
-    cvtColor(frames[MultiVideo::final_rgb], frames[MultiVideo::final_rgb], COLOR_BGR2HSV);
-    if (!frames[MultiVideo::normal_rgb].empty())
-        multiViewer->getVideoWidget(MultiVideo::normal_rgb)->showImage(frames[0]);
-    if (!frames[MultiVideo::final_rgb].empty())
-        multiViewer->getVideoWidget(MultiVideo::final_rgb)->showImage(frames[1]);
-    if (!frames[MultiVideo::ipm_rgb].empty())
-        multiViewer->getVideoWidget(MultiVideo::ipm_rgb)->showImage(frames[2]);
-    if (!frames[MultiVideo::ipm_bw].empty())
-        multiViewer->getVideoWidget(MultiVideo::ipm_bw)->showImage(frames[3]);
-    if (fsFrame != Q_NULLPTR)
-        fsViewer->getVideoWidget()->showImage(*fsFrame);
+    cvtColor(frames[stream::final_rgb], frames[stream::final_rgb], COLOR_BGR2HSV);
+//    if (!frames[stream::normal_rgb].empty())
+//        multiViewer->getVideoWidget(stream::normal_rgb)->showImage(frames[0]);
+//    if (!frames[stream::final_rgb].empty())
+//        multiViewer->getVideoWidget(stream::final_rgb)->showImage(frames[1]);
+//    if (!frames[stream::ipm_rgb].empty())
+//        multiViewer->getVideoWidget(stream::ipm_rgb)->showImage(frames[2]);
+//    if (!frames[stream::ipm_bw].empty())
+//        multiViewer->getVideoWidget(stream::ipm_bw)->showImage(frames[3]);
+//    if (fsFrame != Q_NULLPTR)
+//        fsViewer->getVideoWidget()->showImage(*fsFrame);
 }
 
 void Stream::pauseStream()
 {
     qDebug() << "[STREAM] pause/stop streaming";
-//    timer->stop();
-    updateFrame = false;
+    timer->stop();
 }
 
 void Stream::startStream()
 {
     qDebug() << "[STREAM] start/continue streaming";
-    updateFrame = true;
-//    timer->start(static_cast<int> (1000/fps));
+    timer->start(static_cast<int> (1000/fps));
 }
 
 void Stream::drawFinalRGB()
 {
-    Mat processed = frames[MultiVideo::final_rgb].clone();
+    Mat processed = frames[stream::final_rgb].clone();
     Mat mask;
     vector<vector<Point>> contours;
     topPts.clear();
@@ -126,8 +95,8 @@ void Stream::drawFinalRGB()
     polylines(processed, bottomPts, false, Scalar(0, 0, 255), 2, LINE_8);
     polylines(processed, leftPts, false, Scalar(0, 0, 255), 2, LINE_8);
     polylines(processed, rightPts, false, Scalar(0, 0, 255), 2, LINE_8);
-    polylines(frames[MultiVideo::final_rgb], leftPts, false, leftColor, 3, LINE_8);
-    polylines(frames[MultiVideo::final_rgb], rightPts, false, rightColor, 3, LINE_8);
+    polylines(frames[stream::final_rgb], leftPts, false, leftColor, 3, LINE_8);
+    polylines(frames[stream::final_rgb], rightPts, false, rightColor, 3, LINE_8);
     inRange(processed, colorRange, colorRange, mask);
     findContours(mask, contours, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE);
     if (contours.empty())
@@ -135,40 +104,27 @@ void Stream::drawFinalRGB()
     if (contours.size())
     {
         fillConvexPoly(processed, contours[0], Scalar(200, 0, 0), LINE_AA);
-        addWeighted(processed, 0.5, frames[MultiVideo::final_rgb], 1 - 0.5, 0, frames[MultiVideo::final_rgb]);
+        addWeighted(processed, 0.5, frames[stream::final_rgb], 1 - 0.5, 0, frames[stream::final_rgb]);
         prevContours = contours;
     }
 }
 
 void Stream::setIPMFrame(cv::Mat *f)
 {
-    frames[MultiVideo::ipm_rgb] = f->clone();
-//    frames[MultiVideo::ipm_bw] = f->clone();
+    frames[stream::ipm_rgb] = f->clone();
+//    frames[stream::ipm_bw] = f->clone();
 }
 
 void Stream::setIPMBW(cv::Mat *f)
 {
-//    frames[MultiVideo::ipm_rgb] = f->clone();
-    frames[MultiVideo::ipm_bw] = f->clone();
+//    frames[stream::ipm_rgb] = f->clone();
+    frames[stream::ipm_bw] = f->clone();
 }
 
 void Stream::FullScreenFrame(int index)
 {
-    switch(index)
-    {
-    case 0:
-    case 1:
-        fsViewer->setGeometry(0, 0, 800, 480);
-        fsViewer->setVideoSize(800, 480);
-        break;
-    case 2:
-    case 3:
-        fsViewer->setGeometry(292, 0, 270, 480);
-        fsViewer->setVideoSize(270, 480);
-        break;
-    }
-    fsFrame = &(frames[index]);
-    fsViewer->getVideoWidget()->showImage(*fsFrame);
+//    fsFrame = &(frames[index]);
+//    fsViewer->getVideoWidget()->showImage(*fsFrame);
 }
 
 void Stream::setInfo(vector<Vec2f> leftPoints, vector<Vec2f> rightPoints, Vec2i leftProp, Vec2i rightProp)
@@ -194,39 +150,16 @@ void Stream::setInfo(vector<Vec2f> leftPoints, vector<Vec2f> rightPoints, Vec2i 
 
 Mat Stream::getFrame()
 {
-    return frames[MultiVideo::normal_rgb].clone();
+    return frames[stream::normal_rgb].clone();
 }
 
 void Stream::initScreens()
 {
-    frames[MultiVideo::normal_rgb] = normal_default_screen;
-    frames[MultiVideo::final_rgb] = normal_default_screen;
-    frames[MultiVideo::ipm_rgb] = ipm_default_screen;
-    frames[MultiVideo::ipm_bw] = ipm_default_screen;
-    multiViewer->getVideoWidget(MultiVideo::normal_rgb)->showImage(normal_default_screen);
-    multiViewer->getVideoWidget(MultiVideo::final_rgb)->showImage(normal_default_screen);
-    multiViewer->getVideoWidget(MultiVideo::ipm_rgb)->showImage(ipm_default_screen);
-    multiViewer->getVideoWidget(MultiVideo::ipm_bw)->showImage(ipm_default_screen);
+    frames[stream::normal_rgb] = normal_default_screen;
+    frames[stream::final_rgb] = normal_default_screen;
+    frames[stream::ipm_rgb] = ipm_default_screen;
+    frames[stream::ipm_bw] = ipm_default_screen;
     timer->stop();
-}
-
-void Stream::connectToFrontEnd(MainWindow *w)
-{
-    multiViewer = w->getMultiVideoViewerWidget();
-    fsViewer = w->getFullScreenVideoViewerWidget();
-    sideBar = w->getSideBarWidget();
-    videoWidget = w->getVideoWidget();
-    connect(videoWidget, SIGNAL(pauseStreaming()), this, SLOT(pauseStream()));
-    connect(videoWidget, SIGNAL(startStreaming()), this, SLOT(startStream()));
-    connect(sideBar->inputMethod, SIGNAL(pauseStreaming()), this, SLOT(pauseStream()));
-    connect(sideBar->inputMethod, SIGNAL(startStreaming()), this, SLOT(startStream()));
-    connect(sideBar->inputMethod, SIGNAL(changeVideoSource(QString)), this, SLOT(changeStreamInSource(QString)));
-    connect(sideBar->inputMethod, SIGNAL(reInit()), this, SLOT(initScreens()));
-    connect(multiViewer->getVideoWidget(0), SIGNAL(mouseClicked(int)), this, SLOT(FullScreenFrame(int)));
-    connect(multiViewer->getVideoWidget(1), SIGNAL(mouseClicked(int)), this, SLOT(FullScreenFrame(int)));
-    connect(multiViewer->getVideoWidget(2), SIGNAL(mouseClicked(int)), this, SLOT(FullScreenFrame(int)));
-    connect(multiViewer->getVideoWidget(3), SIGNAL(mouseClicked(int)), this, SLOT(FullScreenFrame(int)));
-    initScreens();
 }
 
 Stream::~Stream()

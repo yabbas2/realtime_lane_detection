@@ -5,34 +5,34 @@
 #include <QDebug>
 #include <QObject>
 #include <QTimer>
-#include <QThread>
-#include <opencv2/videoio.hpp>
 #include <opencv2/core.hpp>
+#include <opencv2/videoio.hpp>
+#include <opencv2/imgproc.hpp>
 #include <vector>
-#include "sidebar/side_bar.h"
-#include "videowidget.h"
-#include "viewers/fullscreenvideoviewer.h"
-#include "viewers/multivideoviewer.h"
-#include "mainwindow.h"
+#include <QtDBus>
+#include <QApplication>
 
 #define StreamingVideos     4
+
+namespace stream {
+enum {normal_rgb, final_rgb, ipm_rgb, ipm_bw};
+}
 
 using namespace cv;
 using namespace std;
 
-class Stream : public QThread
+class Stream : public QApplication
 {
     Q_OBJECT
 
 public:
-    explicit Stream();
+    explicit Stream(int argc, char *argv[]);
     ~Stream();
     void setInfo(vector<Vec2f> leftPts, vector<Vec2f> rightPts, Vec2i leftProp, Vec2i rightProp);
     Mat getFrame();
     void setIPMFrame(Mat *f);
     void setIPMBW(Mat *f);
     void reInitStream();
-    void connectToFrontEnd(MainWindow *w);
     int width, height, fps;
 
 public slots:
@@ -45,9 +45,6 @@ private slots:
     void showFrames();
     void FullScreenFrame(int index);
 
-protected:
-    void run();
-
 private:
     QString streamInSource;
     cv::Mat inputFrame;
@@ -58,19 +55,16 @@ private:
     Scalar rightColor;
     Mat normal_default_screen;
     Mat ipm_default_screen;
-    MultiVideoViewer *multiViewer;
-    fullScreenVideoViewer *fsViewer;
-    SideBar *sideBar;
-    VideoWidget *videoWidget;
     vector<Vec2i> leftPts;
     vector<Vec2i> rightPts;
     bool updateDataLock;
-    bool updateFrame;
     vector<Vec2i> bottomPts;
     vector<Vec2i> topPts;
     vector<vector<Point>> prevContours;
     vector<int> colorRange;
     QTimer *timer;
+    QDBusConnection bus = QDBusConnection::sessionBus();
+    QDBusInterface *ifGUI;
 
     void drawFinalRGB();
 

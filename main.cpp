@@ -1,21 +1,29 @@
 #include <QApplication>
-#include "mainwindow.h"
 #include "stream.h"
-#include "viewers/fullscreenvideoviewer.h"
-#include "viewers/multivideoviewer.h"
-#include "sidebar/side_bar.h"
-#include "videowidget.h"
-#include <QObject>
+#include "d_bus.h"
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+    Stream app(argc, argv);
 
-    Stream st;
-    st.connectToFrontEnd(&w);
-    st.start();
+    if (!QDBusConnection::sessionBus().isConnected()) {
+        qDebug() << "[STREAM] cannot connect to D-Bus - exiting..";
+        return 1;
+    }
 
-    return a.exec();
+    if (!QDBusConnection::sessionBus().registerService("com.stage.stream")) {
+        qDebug() << "[STREAM] cannot register service";
+        exit(1);
+    }
+
+//    Stream st;
+
+    new D_BUS(&app);
+
+    QDBusConnection::sessionBus().registerObject("/", &app);
+
+//    app.changeStreamInSource("/home/yousef/projects/real-time_lane_detection/datasets/youtube/youtube_video1.mp4");
+//    st.startStream();
+
+    return app.exec();
 }
