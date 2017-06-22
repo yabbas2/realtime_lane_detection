@@ -11,7 +11,8 @@ D_BUS::D_BUS(GUI *application) :
     connect(app->mainWindow.sidebar->inputMethod, SIGNAL(changeVideoSource(QString)), this, SIGNAL(setVideoSource(QString)));
 }
 
-void D_BUS::initScreens()
-{
 
+void D_BUS::initViewers()
+{
+    app->mainWindow.initViewers();
 }

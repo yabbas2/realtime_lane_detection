@@ -52,8 +52,23 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setStyleSheet("#mainWindow {border-image: url(:/images/resources/images/background.png) 0 0 0 0 stretch stretch; border-width: 0px; border-radius: 0px;}"
                         "#sidebar {background: rgba(100, 100, 100, 50); border: 1px solid gray; border-radius: 10px;}"
                         "#mulVidWidget {background: rgba(100, 100, 100, 50); border: 1px solid gray; border-radius: 10px;}");
+
+    normal_default_screen = cv::Mat::zeros(480, 800, CV_8UC3);
+    ipm_default_screen = cv::Mat::zeros(800, 480, CV_8UC3);
+    initViewers();
+
     ifStream = new QDBusInterface("com.stage.stream", "/", "com.stage.stream", bus, this);
 }
+
+void MainWindow::initViewers()
+{
+    mulVidWidget->getVideoWidget(0)->showImage(normal_default_screen);
+    mulVidWidget->getVideoWidget(1)->showImage(normal_default_screen);
+    mulVidWidget->getVideoWidget(2)->showImage(ipm_default_screen);
+    mulVidWidget->getVideoWidget(3)->showImage(ipm_default_screen);
+    fsVidWidget->getVideoWidget()->showImage(normal_default_screen);
+}
+
 
 void MainWindow::switchToFullScreen(int index)
 {

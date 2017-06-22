@@ -16,7 +16,7 @@ private:
     GUI *app;
 
 public slots:
-    void initScreens();
+    void initViewers();
 
 signals:
     void pauseStream();

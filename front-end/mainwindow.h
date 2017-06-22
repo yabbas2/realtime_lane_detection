@@ -7,6 +7,7 @@
 #include <QStackedWidget>
 #include <QHBoxLayout>
 #include <QtDBus>
+#include <opencv2/core.hpp>
 #include "sidebar/side_bar.h"
 #include "viewers/multivideoviewer.h"
 #include "viewers/fullscreenvideoviewer.h"
@@ -20,6 +21,8 @@
 #define multiVideoWidth     (mainWindowWidth-sideBarWidth-30)
 #define videoWidgetWidth    300
 
+using namespace cv;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -27,6 +30,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void initViewers();
     MultiVideoViewer *mulVidWidget;
     fullScreenVideoViewer *fsVidWidget;
     SideBar *sidebar;
@@ -41,6 +45,8 @@ private:
     QWidget *cen2;
     QHBoxLayout *h_cen1_layout;
     QStackedWidget *widgetStack;
+    Mat normal_default_screen;
+    Mat ipm_default_screen;
     QDBusConnection bus = QDBusConnection::sessionBus();
     QDBusInterface *ifStream;
 };
