@@ -18,6 +18,7 @@ public slots:
     Q_NOREPLY void startStream();
     Q_NOREPLY void stopStream();
     Q_NOREPLY void setStreamSource(QString);
+    Q_NOREPLY void setVideoName(QString);
 };
 
 #endif // D_BUS_H

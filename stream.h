@@ -12,11 +12,11 @@
 #include <QtDBus>
 #include <QApplication>
 #include <QSharedMemory>
+#include <chrono>
+#include "ipm.h"
 
 #define StreamingVideos     4
-#define frameHeight         480
-#define frameWidth          800
-#define frameChannels       3
+#define FRAME_SIZE          1152000
 
 namespace stream {
 enum {normal_rgb, final_rgb, ipm_rgb, ipm_bw};
@@ -24,6 +24,7 @@ enum {normal_rgb, final_rgb, ipm_rgb, ipm_bw};
 
 using namespace cv;
 using namespace std;
+using namespace std::chrono;
 
 class Stream : public QApplication
 {
@@ -40,6 +41,7 @@ public:
     void pauseStream();
     void startStream();
     int width, height, fps;
+    IPM ipm;
 
 private slots:
     void loopOverFrames();
@@ -66,9 +68,14 @@ private:
     QDBusConnection bus2 = QDBusConnection::sessionBus();
     QDBusInterface *ifMaster;
     struct sharedData {
-        uchar rawImg[frameHeight*frameWidth*frameChannels];
+        uchar rawImg[FRAME_SIZE];
+        uchar finalImg[FRAME_SIZE];
+        uchar ipmImg[FRAME_SIZE];
+        uchar ipmRGB[FRAME_SIZE];
     };
     QSharedMemory sm;
+    high_resolution_clock::time_point t1;
+    high_resolution_clock::time_point t2;
 
     void drawFinalRGB();
     void reInitStream();

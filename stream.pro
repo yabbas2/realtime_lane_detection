@@ -9,11 +9,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
         stream.cpp \
-    d_bus.cpp
+    d_bus.cpp \
+    ipm.cpp
 
 
 HEADERS  += stream.h \
-    d_bus.h
+    d_bus.h \
+    ipm.h
 
 unix {
 CONFIG += c++11

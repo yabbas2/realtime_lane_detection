@@ -5,8 +5,8 @@ Stream::Stream(int &argc, char **argv) :
     width(0), height(0), fps(0)
 {
     timer = new QTimer(this);
+    timer->setTimerType(Qt::PreciseTimer);
     connect(timer, SIGNAL(timeout()), this, SLOT(loopOverFrames()));
-//    connect(stream_in, SIGNAL(endStream()), this, SLOT(initScreens()));
     fsFrame = Q_NULLPTR;
     updateDataLock = true;
     colorRange = {0, 0, 255};
@@ -41,6 +41,7 @@ void Stream::reInitStream()
 
 void Stream::loopOverFrames()
 {
+    t1 = high_resolution_clock::now();
     cap >> inputFrame;
     if (!cap.grab() || inputFrame.cols == 0 || inputFrame.rows == 0)
     {
@@ -48,7 +49,6 @@ void Stream::loopOverFrames()
         timer->stop();
         return;
     }
-    qDebug() << "wehooooooooooo";
     if (inputFrame.cols != 800 || inputFrame.rows != 480)
         resize(inputFrame, inputFrame, Size(800, 480), 0, 0, INTER_AREA);
     frames[stream::normal_rgb] = inputFrame.clone();
@@ -58,12 +58,25 @@ void Stream::loopOverFrames()
 //        drawFinalRGB();
 //    }
     cvtColor(frames[stream::final_rgb], frames[stream::final_rgb], COLOR_BGR2HSV);
-    uchar *rawData = inputFrame.data;
+    ipm.transform(frames[stream::normal_rgb]);
+    uchar *rawData = frames[stream::normal_rgb].data;
+    uchar *finalData = frames[stream::final_rgb].data;
+    uchar *ipmData = ipm.getIPMFrame()->data;
+    uchar *ipmRGBData = ipm.getIPMFrame()->data;
     sm.lock();
     sharedData *sData = (sharedData*) sm.data();
-    memcpy(sData->rawImg, rawData, sizeof(sharedData));
+    memcpy(sData->rawImg, rawData, FRAME_SIZE);
+    memcpy(sData->finalImg, finalData, FRAME_SIZE);
+    memcpy(sData->ipmImg, ipmData, FRAME_SIZE);
+    memcpy(sData->ipmRGB, ipmRGBData, FRAME_SIZE);
     sm.unlock();
     ifGUI->call("showFrames");
+    t2 = high_resolution_clock::now();
+    auto duration = duration_cast<milliseconds>(t2 - t1).count();
+    if ((1000/fps) > duration)
+        timer->setInterval((1000/fps) - duration);
+    else
+        timer->setInterval(0);
 }
 
 void Stream::pauseStream()
