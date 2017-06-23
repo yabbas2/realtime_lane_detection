@@ -16,13 +16,8 @@ private:
     GUI *app;
 
 public slots:
-    void initViewers();
-    void showFrames();
-
-signals:
-    void pauseStream();
-    void startStream();
-    void setVideoSource(QString);
+    Q_NOREPLY void initViewers();
+    Q_NOREPLY void showFrames();
 };
 
 #endif // D_BUS_H

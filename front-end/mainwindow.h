@@ -36,6 +36,7 @@ public:
     ~MainWindow();
     void initViewers();
     void showFrames();
+    void setSharedKey(QString keyId);
     MultiVideoViewer *mulVidWidget;
     fullScreenVideoViewer *fsVidWidget;
     SideBar *sidebar;
@@ -44,6 +45,9 @@ public:
 private slots:
     void switchToFullScreen(int index);
     void switchToMainScreen();
+    void callStartStream();
+    void callStopStream();
+    void callSetStreamSource(QString);
 
 private:
     QWidget *cen1;

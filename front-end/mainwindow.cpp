@@ -58,9 +58,32 @@ MainWindow::MainWindow(QWidget *parent) :
     initViewers();
 
     ifStream = new QDBusInterface("com.stage.stream", "/", "com.stage.stream", bus, this);
+    connect(vidWid, SIGNAL(pauseStreaming()), this, SLOT(callStopStream()));
+    connect(vidWid, SIGNAL(startStreaming()), this, SLOT(callStartStream()));
+    connect(sidebar->inputMethod, SIGNAL(pauseStreaming()), this, SLOT(callStopStream()));
+    connect(sidebar->inputMethod, SIGNAL(startStreaming()), this, SLOT(callStartStream()));
+    connect(sidebar->inputMethod, SIGNAL(changeVideoSource(QString)), this, SLOT(callSetStreamSource(QString)));
+}
 
-    sm.setKey("com.stage.stream.gui.1234");
-    sm.create(sizeof(sharedData), QSharedMemory::ReadOnly);
+void MainWindow::setSharedKey(QString keyId)
+{
+    sm.setKey(keyId);
+    sm.attach(QSharedMemory::ReadOnly);
+}
+
+void MainWindow::callSetStreamSource(QString source)
+{
+    ifStream->call("setStreamSource", source);
+}
+
+void MainWindow::callStartStream()
+{
+    ifStream->call("startStream");
+}
+
+void MainWindow::callStopStream()
+{
+    ifStream->call("stopStream");
 }
 
 void MainWindow::showFrames()
