@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
 {
     QCoreApplication a(argc, argv);
     IPM ipmObj;
-    string filename = "/home/meegz/Projects/Processes/youtube_video1.mp4";
+    string filename = "/home/yousef/projects/real-time_lane_detection/Data/samplesVideos/youtube_video1.mp4";
     VideoCapture capture(filename);
     capture.open(filename);
     Mat normalFrame;
@@ -21,8 +21,7 @@ int main(int argc, char* argv[])
     high_resolution_clock::time_point t1;
     high_resolution_clock::time_point t2;
     int counter = 0;
-    int allTime = 0;
-    string frameName;
+    long allTime = 0;
     while(true)
     {
         t1 = high_resolution_clock::now();
@@ -47,7 +46,6 @@ int main(int argc, char* argv[])
         counter++;
     }
     cout << "Avg Exec Time : " << allTime/counter << "ms" << endl;
-    waitKey(0);
 }
 
 
