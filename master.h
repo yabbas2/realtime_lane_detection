@@ -8,7 +8,7 @@
 #include <QString>
 #include <QStringList>
 
-#define SM_STREAM_GUI_SIZE          (1152000*4)
+#define SM_STREAM_GUI_SIZE          1152000
 
 class MASTER : public QApplication
 {
