@@ -2,7 +2,7 @@
 #include "stream.h"
 #include "d_bus.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
     Stream app(argc, argv);
     if (!QDBusConnection::sessionBus().isConnected()) {

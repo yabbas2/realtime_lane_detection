@@ -1,6 +1,6 @@
 #include "stream.h"
 
-Stream::Stream(int argc, char *argv[]) :
+Stream::Stream(int &argc, char **argv) :
     QApplication(argc, argv),
     width(0), height(0), fps(0)
 {

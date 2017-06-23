@@ -30,7 +30,7 @@ class Stream : public QApplication
     Q_OBJECT
 
 public:
-    explicit Stream(int argc, char *argv[]);
+    explicit Stream(int &argc, char **argv);
     ~Stream();
     void setInfo(vector<Vec2f> leftPts, vector<Vec2f> rightPts, Vec2i leftProp, Vec2i rightProp);
     Mat getFrame();
