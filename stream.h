@@ -63,6 +63,8 @@ private:
     QTimer *timer;
     QDBusConnection bus = QDBusConnection::sessionBus();
     QDBusInterface *ifGUI;
+    QDBusConnection bus2 = QDBusConnection::sessionBus();
+    QDBusInterface *ifMaster;
     struct sharedData {
         uchar rawImg[frameHeight*frameWidth*frameChannels];
     };

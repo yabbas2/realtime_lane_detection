@@ -11,7 +11,9 @@ Stream::Stream(int argc, char *argv[]) :
     updateDataLock = true;
     colorRange = {0, 0, 255};
     ifGUI = new QDBusInterface("com.stage.gui", "/", "com.stage.gui", bus, this);
-    sm.setKey(QString::fromStdString(argv[1]));
+    ifMaster = new QDBusInterface("com.stage.master", "/", "com.stage.master", bus2, this);
+    QDBusReply<QString> key = ifMaster->call("getSTREAMGUIKEY");
+    sm.setKey(key.value());
     sm.attach(QSharedMemory::ReadWrite);
 }
 
