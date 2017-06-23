@@ -8,9 +8,8 @@ QProcess gui;
 QString streamProcess = "/home/" + USER + "/stream";
 QProcess stream;
 QSharedMemory smStreamGUI;
-QStringList emptyArg;
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
     MASTER app(argc, argv);
     if (!QDBusConnection::sessionBus().isConnected()) {
@@ -26,9 +25,9 @@ int main(int argc, char *argv[])
 
     QString keyId1 = app.createSharedMemorySection(smStreamGUI, SM_STREAM_GUI_SIZE,"stream", "gui");
     app.STREAM_GUI_KEY = keyId1;
-    qint64 streamPID = app.createProcess(stream, streamProcess, emptyArg);
+    qint64 streamPID = app.createProcess(stream, streamProcess);
     app.assignProcessToCore(streamPID, 5);
-    qint64 guiPID = app.createProcess(gui, guiProcess, emptyArg);
+    qint64 guiPID = app.createProcess(gui, guiProcess);
     app.assignProcessToCore(guiPID, 6);
     return app.exec();
 }

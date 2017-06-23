@@ -13,9 +13,9 @@
 class MASTER : public QApplication
 {
 public:
-    MASTER(int argc, char *argv[]);
+    MASTER(int &argc, char **argv);
     QString createSharedMemorySection(QSharedMemory &sm, int size, QString first, QString second);
-    qint64 createProcess(QProcess &p, QString &program, QStringList &arguments);
+    qint64 createProcess(QProcess &p, QString &program);
     bool assignProcessToCore(qint64 &pid, int core);
     QString STREAM_GUI_KEY;
 };

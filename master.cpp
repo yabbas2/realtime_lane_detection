@@ -1,6 +1,6 @@
 #include "master.h"
 
-MASTER::MASTER(int argc, char *argv[]) :
+MASTER::MASTER(int &argc, char **argv) :
     QApplication(argc, argv)
 {
 }
@@ -20,9 +20,9 @@ QString MASTER::createSharedMemorySection(QSharedMemory &sm, int size, QString f
     return keyName;
 }
 
-qint64 MASTER::createProcess(QProcess &p, QString &program, QStringList &arguments)
+qint64 MASTER::createProcess(QProcess &p, QString &program)
 {
-    p.start(program, arguments);
+    p.start(program);
     p.waitForStarted();
     if (p.state() == QProcess::Running)
         qDebug() << "[MASTER]" << program << "is running with pid:" << QString::number(p.processId());
