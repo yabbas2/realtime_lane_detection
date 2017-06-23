@@ -8,34 +8,18 @@ TEMPLATE = app
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
-        front-end/mainwindow.cpp \
-        front-end/viewers/multivideoviewer.cpp \
-        front-end/sidebar/side_bar.cpp \
-        front-end/viewers/fullscreenvideoviewer.cpp \
-        front-end/sidebar/gaussianblurwidget.cpp \
-        front-end/sidebar/inputmethodwidget.cpp \
-        front-end/sidebar/lsdwidget.cpp \
-        front-end/sidebar/curvefitwidget.cpp \
-        front-end/sidebar/decisionmakewidget.cpp \
-        front-end/sidebar/regiongrowwidget.cpp \
-        front-end/videowidget.cpp \
-        front-end/viewers/opencvViewer.cpp \
+        mainwindow.cpp \
+        viewers/fullscreenvideoviewer.cpp \
+        videowidget.cpp \
+        viewers/opencvViewer.cpp \
         d_bus.cpp \
         gui.cpp
 
 
-HEADERS  += front-end/mainwindow.h \
-        front-end/viewers/multivideoviewer.h \
-        front-end/sidebar/side_bar.h \
-        front-end/viewers/fullscreenvideoviewer.h \
-        front-end/sidebar/gaussianblurwidget.h \
-        front-end/sidebar/inputmethodwidget.h \
-        front-end/sidebar/lsdwidget.h \
-        front-end/sidebar/curvefitwidget.h \
-        front-end/sidebar/decisionmakewidget.h \
-        front-end/sidebar/regiongrowwidget.h \
-        front-end/videowidget.h \
-        front-end/viewers/opencvViewer.h \
+HEADERS  += mainwindow.h \
+        viewers/fullscreenvideoviewer.h \
+        videowidget.h \
+        viewers/opencvViewer.h \
         d_bus.h \
         gui.h
 

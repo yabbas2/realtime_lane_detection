@@ -3,7 +3,7 @@
 
 #include <QApplication>
 #include <QtDBus>
-#include "front-end/mainwindow.h"
+#include "mainwindow.h"
 
 class GUI : public QApplication
 {

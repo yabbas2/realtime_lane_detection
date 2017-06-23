@@ -11,10 +11,14 @@ VideoWidget::VideoWidget(QWidget *parent) :
     mainLayout->addSpacerItem(vSpacer);
     mainLayout->addWidget(gb_controls);
     this->setLayout(mainLayout);
+    PlayButton->setEnabled(false);
+    PauseButton->setEnabled(false);
+
+    chosen_video_re.setPattern("[youtubekittiudacity]+_video[0-9]+");
 
     connect(PlayButton, SIGNAL(clicked(bool)), this, SLOT(playVideo()));
     connect(PauseButton, SIGNAL(clicked(bool)), this, SLOT(pauseVideo()));
-    connect(BackButton, SIGNAL(clicked(bool)), this, SLOT(backToMain()));
+    connect(BrowseButton, SIGNAL(clicked(bool)), this, SLOT(browseVideo()));
 }
 
 void VideoWidget::updateValues(QStringList data)
@@ -34,9 +38,24 @@ void VideoWidget::pauseVideo()
     emit pauseStreaming();
 }
 
-void VideoWidget::backToMain()
+void VideoWidget::browseVideo()
 {
-    emit switchToMain();
+    QString file_name = QFileDialog::getOpenFileName(this, "Choose video file", "/home", "*.mp4");
+    if (file_name.length() == 0)
+        return;
+    emit changeVideoSource(file_name);
+    PlayButton->setEnabled(true);
+    PauseButton->setEnabled(true);
+    QRegularExpressionMatch chosen_video_match = chosen_video_re.match(file_name);
+    QString video;
+    if (chosen_video_match.hasMatch())
+    {
+        video = chosen_video_match.captured(0);
+        qDebug() << "[VIDEO_WIDGET] video matched" << video;
+        emit setVideoName(video);
+    }
+    else
+        qDebug() << "[VIDEO_WIDGET] no video matched";
 }
 
 void VideoWidget::videoInfoInit()
@@ -44,11 +63,6 @@ void VideoWidget::videoInfoInit()
     gb_statistics = new QGroupBox(this);
     gb_statistics->setStyleSheet("QGroupBox {border: 1px solid white; border-radius: 5px;}");
     gb_statistics->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-    textEffect_statistics = new QGraphicsDropShadowEffect;
-    textEffect_statistics->setColor(QColor("#000000"));
-    textEffect_statistics->setBlurRadius(10);
-    textEffect_statistics->setOffset(0.5, 0.5);
-    gb_statistics->setGraphicsEffect(textEffect_statistics);
 
     ExecTimePerFrameLabel = new QLabel(gb_statistics);
     ExecTimePerFrameLabel->setText("Exec. Time:");
@@ -103,16 +117,11 @@ void VideoWidget::videoControlInit()
     gb_controls = new QGroupBox(this);
     gb_controls->setStyleSheet("QGroupBox {border: 1px solid white; border-radius: 5px;}");
     gb_controls->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-    textEffect_controls = new QGraphicsDropShadowEffect;
-    textEffect_controls->setColor(QColor("#000000"));
-    textEffect_controls->setBlurRadius(10);
-    textEffect_controls->setOffset(0.5, 0.5);
-    gb_controls->setGraphicsEffect(textEffect_controls);
 
-    BackButton = new QPushButton(gb_controls);
-    QIcon backIcon(":/icons/resources/buttons/back.png");
-    BackButton->setIcon(backIcon);
-    BackButton->setFixedWidth(50);
+    BrowseButton = new QPushButton(gb_controls);
+    QIcon backIcon(":/icons/resources/buttons/browse.png");
+    BrowseButton->setIcon(backIcon);
+    BrowseButton->setFixedWidth(50);
 
     PlayButton = new QPushButton(gb_controls);
     QIcon playIcon(":/icons/resources/buttons/play.png");
@@ -125,7 +134,7 @@ void VideoWidget::videoControlInit()
     PauseButton->setFixedWidth(50);
 
     horizontalLayout_controls = new QHBoxLayout;
-    horizontalLayout_controls->addWidget(BackButton);
+    horizontalLayout_controls->addWidget(BrowseButton);
     horizontalLayout_controls->addWidget(PlayButton);
     horizontalLayout_controls->addWidget(PauseButton);
     gb_controls->setLayout(horizontalLayout_controls);

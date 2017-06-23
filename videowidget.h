@@ -7,12 +7,14 @@
 #include <QGroupBox>
 #include <QString>
 #include <QLabel>
-#include <QGraphicsDropShadowEffect>
 #include <QPushButton>
 #include <QIcon>
+#include <QDebug>
 #include <QSpacerItem>
-#include <QFont>
 #include <QStringList>
+#include <QFileDialog>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
 
 class VideoWidget : public QWidget
 {
@@ -24,12 +26,13 @@ public slots:
     void updateValues(QStringList data);
     void playVideo();
     void pauseVideo();
-    void backToMain();
+    void browseVideo();
 
 signals:
     void pauseStreaming();
     void startStreaming();
-    void switchToMain();
+    void changeVideoSource(QString);
+    void setVideoName(QString);
 
 private:
     QVBoxLayout *verticalLayout_statistics;
@@ -48,17 +51,17 @@ private:
 
     QGroupBox *gb_statistics;
     QVBoxLayout *mainLayout;
-    QGraphicsDropShadowEffect *textEffect_statistics;
 
-    QPushButton *BackButton;
+    QPushButton *BrowseButton;
     QPushButton *PlayButton;
     QPushButton *PauseButton;
 
     QGroupBox *gb_controls;
-    QGraphicsDropShadowEffect *textEffect_controls;
     QHBoxLayout *horizontalLayout_controls;
 
     QSpacerItem *vSpacer;
+
+    QRegularExpression chosen_video_re;
 
     void videoInfoInit();
     void videoControlInit();

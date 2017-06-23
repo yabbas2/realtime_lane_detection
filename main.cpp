@@ -1,7 +1,5 @@
-#include <QApplication>
 #include "gui.h"
 #include "d_bus.h"
-#include "front-end/mainwindow.h"
 
 int main(int argc, char **argv)
 {
