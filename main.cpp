@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     }
     new D_BUS(&gui);
     QDBusConnection::sessionBus().registerObject("/", &gui);
-    gui.mainWindow.setSharedKey(QString::fromStdString(argv[1]));
+//    gui.mainWindow.setSharedKey(QString::fromStdString(argv[1]));
     gui.mainWindow.show();
     return gui.exec();
 }

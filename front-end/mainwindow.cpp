@@ -63,11 +63,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(sidebar->inputMethod, SIGNAL(pauseStreaming()), this, SLOT(callStopStream()));
     connect(sidebar->inputMethod, SIGNAL(startStreaming()), this, SLOT(callStartStream()));
     connect(sidebar->inputMethod, SIGNAL(changeVideoSource(QString)), this, SLOT(callSetStreamSource(QString)));
-}
 
-void MainWindow::setSharedKey(QString keyId)
-{
-    sm.setKey(keyId);
+    ifMaster = new QDBusInterface("com.stage.master", "/", "com.stage.master", bus2, this);
+    QDBusReply<QString> key = ifMaster->call("getSTREAMGUIKEY");
+    sm.setKey(key.value());
     sm.attach(QSharedMemory::ReadOnly);
 }
 

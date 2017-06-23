@@ -59,6 +59,8 @@ private:
     Mat normal_rgb_frame;
     QDBusConnection bus = QDBusConnection::sessionBus();
     QDBusInterface *ifStream;
+    QDBusConnection bus2 = QDBusConnection::sessionBus();
+    QDBusInterface *ifMaster;
     struct sharedData {
         uchar rawImg[frameHeight*frameWidth*frameChannels];
     };
