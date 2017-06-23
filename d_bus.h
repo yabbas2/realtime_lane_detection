@@ -17,9 +17,7 @@ private:
 public slots:
     Q_NOREPLY void startStream();
     Q_NOREPLY void stopStream();
-
-signals:
-    void initState();
+    Q_NOREPLY void setStreamSource(QString);
 };
 
 #endif // D_BUS_H

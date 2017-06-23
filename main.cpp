@@ -15,6 +15,5 @@ int main(int argc, char *argv[])
     }
     new D_BUS(&app);
     QDBusConnection::sessionBus().registerObject("/", &app);
-    app.connectToDBusSignals();
     return app.exec();
 }

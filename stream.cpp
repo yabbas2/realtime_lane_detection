@@ -11,15 +11,8 @@ Stream::Stream(int argc, char *argv[]) :
     updateDataLock = true;
     colorRange = {0, 0, 255};
     ifGUI = new QDBusInterface("com.stage.gui", "/", "com.stage.gui", bus, this);
-    sm.setKey("com.stage.stream.gui.1234");
+    sm.setKey(QString::fromStdString(argv[1]));
     sm.attach(QSharedMemory::ReadWrite);
-}
-
-void Stream::connectToDBusSignals()
-{
-    while(! connect(ifGUI, SIGNAL(setVideoSource(QString)), this, SLOT(changeStreamInSource(QString))));
-    while(! connect(ifGUI, SIGNAL(startStream()), this, SLOT(startStream())));
-    while(! connect(ifGUI, SIGNAL(pauseStream()), this, SLOT(pauseStream())));
 }
 
 void Stream::changeStreamInSource(QString source)
@@ -42,7 +35,6 @@ void Stream::reInitStream()
         cap.release();
     timer->stop();
     ifGUI->call("initViewers");
-    emit initScreens();
 }
 
 void Stream::loopOverFrames()

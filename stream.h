@@ -36,20 +36,14 @@ public:
     Mat getFrame();
     void setIPMFrame(Mat *f);
     void setIPMBW(Mat *f);
-    void connectToDBusSignals();
-    int width, height, fps;
-
-public slots:
     void changeStreamInSource(QString source);
     void pauseStream();
     void startStream();
+    int width, height, fps;
 
 private slots:
     void loopOverFrames();
     void FullScreenFrame(int index);
-
-signals:
-    void initScreens();
 
 private:
     QString streamInSource;
