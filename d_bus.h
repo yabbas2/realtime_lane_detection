@@ -15,6 +15,7 @@ private:
     MASTER *app;
 
 public slots:
+    QString getSTREAMGUIKEY();
 
 signals:
 };

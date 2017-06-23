@@ -5,3 +5,8 @@ D_BUS::D_BUS(MASTER *application) :
     app(application)
 {
 }
+
+QString D_BUS::getSTREAMGUIKEY()
+{
+    return app->STREAM_GUI_KEY;
+}

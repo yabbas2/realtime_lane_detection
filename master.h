@@ -17,6 +17,7 @@ public:
     QString createSharedMemorySection(QSharedMemory &sm, int size, QString first, QString second);
     qint64 createProcess(QProcess &p, QString &program, QStringList &arguments);
     bool assignProcessToCore(qint64 &pid, int core);
+    QString STREAM_GUI_KEY;
 };
 
 #endif // MASTER_H
