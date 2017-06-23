@@ -11,8 +11,8 @@ cd $GUI_DIR
 #git
 cd
 cd $GUI_BUILD_DIR
-echo "[GUI] executing make clean..."
-make clean
+echo "[GUI] cleaning..."
+rm *
 echo "[GUI] generating Makefile..."
 qmake "${GUI_DIR}/gui.pro"
 echo "[GUI] building files..."

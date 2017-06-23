@@ -11,8 +11,8 @@ cd $MASTER_DIR
 #git
 cd
 cd $MASTER_BUILD_DIR
-echo "[MASTER] executing make clean..."
-make clean
+echo "[MASTER] cleaning..."
+rm *
 echo "[MASTER] generating Makefile..."
 qmake "${MASTER_DIR}/master.pro"
 echo "[MASTER] building files..."

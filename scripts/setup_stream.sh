@@ -11,8 +11,8 @@ cd $STREAM_DIR
 #git
 cd
 cd $STREAM_BUILD_DIR
-echo "[STREAM] executing make clean..."
-make clean
+echo "[STREAM] cleaning..."
+rm *
 echo "[STREAM] generating Makefile..."
 qmake "${STREAM_DIR}/stream.pro"
 echo "[STREAM] building files..."
