@@ -15,12 +15,7 @@
 #include <chrono>
 #include "ipm.h"
 
-#define StreamingVideos     4
 #define FRAME_SIZE          1152000
-
-namespace stream {
-enum {normal_rgb, final_rgb, ipm_rgb, ipm_bw};
-}
 
 using namespace cv;
 using namespace std;
@@ -34,9 +29,6 @@ public:
     explicit Stream(int &argc, char **argv);
     ~Stream();
     void setInfo(vector<Vec2f> leftPts, vector<Vec2f> rightPts, Vec2i leftProp, Vec2i rightProp);
-    Mat getFrame();
-    void setIPMFrame(Mat *f);
-    void setIPMBW(Mat *f);
     void changeStreamInSource(QString source);
     void pauseStream();
     void startStream();
@@ -45,14 +37,12 @@ public:
 
 private slots:
     void loopOverFrames();
-    void FullScreenFrame(int index);
 
 private:
     QString streamInSource;
-    cv::Mat inputFrame;
-    cv::VideoCapture cap;
-    Mat frames[StreamingVideos];
-    Mat *fsFrame;
+    Mat inputFrame;
+    VideoCapture cap;
+    Mat fsFrame;
     Scalar leftColor;
     Scalar rightColor;
     vector<Vec2i> leftPts;
@@ -69,9 +59,6 @@ private:
     QDBusInterface *ifMaster;
     struct sharedData {
         uchar rawImg[FRAME_SIZE];
-        uchar finalImg[FRAME_SIZE];
-        uchar ipmImg[FRAME_SIZE];
-        uchar ipmRGB[FRAME_SIZE];
     };
     QSharedMemory sm;
     high_resolution_clock::time_point t1;
