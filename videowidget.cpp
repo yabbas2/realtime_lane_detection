@@ -3,11 +3,9 @@
 VideoWidget::VideoWidget(QWidget *parent) :
     QWidget(parent)
 {
-    videoInfoInit();
     videoControlInit();
     mainLayout = new QVBoxLayout;
-    vSpacer = new QSpacerItem(0, 320);
-    mainLayout->addWidget(gb_statistics);
+    vSpacer = new QSpacerItem(0, 400);
     mainLayout->addSpacerItem(vSpacer);
     mainLayout->addWidget(gb_controls);
     this->setLayout(mainLayout);
@@ -19,13 +17,6 @@ VideoWidget::VideoWidget(QWidget *parent) :
     connect(PlayButton, SIGNAL(clicked(bool)), this, SLOT(playVideo()));
     connect(PauseButton, SIGNAL(clicked(bool)), this, SLOT(pauseVideo()));
     connect(BrowseButton, SIGNAL(clicked(bool)), this, SLOT(browseVideo()));
-}
-
-void VideoWidget::updateValues(QStringList data)
-{
-    ExecTimePerFrameValue->setText(data.at(0) + " msec/frame");
-    AvgExecTimePerFrameValue->setText(data.at(1) + " msec/frame");
-    FPS_Value->setText(data.at(2) + " frame/sec");
 }
 
 void VideoWidget::playVideo()
@@ -56,60 +47,6 @@ void VideoWidget::browseVideo()
     }
     else
         qDebug() << "[VIDEO_WIDGET] no video matched";
-}
-
-void VideoWidget::videoInfoInit()
-{
-    gb_statistics = new QGroupBox(this);
-    gb_statistics->setStyleSheet("QGroupBox {border: 1px solid white; border-radius: 5px;}");
-    gb_statistics->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-
-    ExecTimePerFrameLabel = new QLabel(gb_statistics);
-    ExecTimePerFrameLabel->setText("Exec. Time:");
-    ExecTimePerFrameLabel->setStyleSheet("font: bold; color: white;");
-
-    ExecTimePerFrameValue = new QLabel(gb_statistics);
-    ExecTimePerFrameValue->setText("000.00 msec/frame");
-    ExecTimePerFrameValue->setStyleSheet("font: bold; color: white;");
-    ExecTimePerFrameValue->setFixedWidth(130);
-
-    ExecTimePerFrame = new QHBoxLayout;
-    ExecTimePerFrame->addWidget(ExecTimePerFrameLabel);
-    ExecTimePerFrame->addWidget(ExecTimePerFrameValue);
-
-    AvgExecTimePerFrameLabel = new QLabel(gb_statistics);
-    AvgExecTimePerFrameLabel->setText("Avg. Exec. Time:");
-    AvgExecTimePerFrameLabel->setStyleSheet("font: bold; color: white;");
-
-    AvgExecTimePerFrameValue = new QLabel(gb_statistics);
-    AvgExecTimePerFrameValue->setText("000.00 msec/frame");
-    AvgExecTimePerFrameValue->setStyleSheet("font: bold; color: white;");
-    AvgExecTimePerFrameValue->setFixedWidth(130);
-
-    AvgExecTimePerFrame = new QHBoxLayout;
-    AvgExecTimePerFrame->addWidget(AvgExecTimePerFrameLabel);
-    AvgExecTimePerFrame->addWidget(AvgExecTimePerFrameValue);
-
-    FPS_Label = new QLabel(gb_statistics);
-    FPS_Label->setText("FPS:");
-    FPS_Label->setStyleSheet("font: bold; color: white;");
-
-    FPS_Value = new QLabel(gb_statistics);
-    FPS_Value->setText("0 frame/sec");
-    FPS_Value->setStyleSheet("font: bold; color: white;");
-    FPS_Value->setFixedWidth(130);
-
-    AvgFramePerSec = new QHBoxLayout;
-    AvgFramePerSec->addWidget(FPS_Label);
-    AvgFramePerSec->addWidget(FPS_Value);
-
-    verticalLayout_statistics = new QVBoxLayout;
-    verticalLayout_statistics->addLayout(ExecTimePerFrame);
-    verticalLayout_statistics->addLayout(AvgExecTimePerFrame);
-    verticalLayout_statistics->addLayout(AvgFramePerSec);
-
-    gb_statistics->setLayout(verticalLayout_statistics);
-    gb_statistics->setFixedHeight(80);
 }
 
 void VideoWidget::videoControlInit()

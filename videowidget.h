@@ -6,7 +6,6 @@
 #include <QVBoxLayout>
 #include <QGroupBox>
 #include <QString>
-#include <QLabel>
 #include <QPushButton>
 #include <QIcon>
 #include <QDebug>
@@ -23,7 +22,6 @@ public:
     explicit VideoWidget(QWidget *parent = 0);
 
 public slots:
-    void updateValues(QStringList data);
     void playVideo();
     void pauseVideo();
     void browseVideo();
@@ -35,21 +33,6 @@ signals:
     void setVideoName(QString);
 
 private:
-    QVBoxLayout *verticalLayout_statistics;
-
-    QLabel *ExecTimePerFrameLabel;
-    QLabel *ExecTimePerFrameValue;
-    QHBoxLayout *ExecTimePerFrame;
-
-    QLabel *AvgExecTimePerFrameLabel;
-    QLabel *AvgExecTimePerFrameValue;
-    QHBoxLayout *AvgExecTimePerFrame;
-
-    QLabel *FPS_Label;
-    QLabel *FPS_Value;
-    QHBoxLayout *AvgFramePerSec;
-
-    QGroupBox *gb_statistics;
     QVBoxLayout *mainLayout;
 
     QPushButton *BrowseButton;
@@ -63,7 +46,6 @@ private:
 
     QRegularExpression chosen_video_re;
 
-    void videoInfoInit();
     void videoControlInit();
 };
 
