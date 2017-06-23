@@ -53,8 +53,8 @@ MainWindow::MainWindow(QWidget *parent) :
                         "#sidebar {background: rgba(100, 100, 100, 50); border: 1px solid gray; border-radius: 10px;}"
                         "#mulVidWidget {background: rgba(100, 100, 100, 50); border: 1px solid gray; border-radius: 10px;}");
 
-    normal_default_screen = cv::Mat::zeros(480, 800, CV_8UC3);
-    ipm_default_screen = cv::Mat::zeros(800, 480, CV_8UC3);
+    normal_default_screen = cv::Mat::zeros(frameHeight, frameWidth, CV_8UC3);
+    ipm_default_screen = cv::Mat::zeros(frameWidth, frameHeight, CV_8UC3);
     initViewers();
 
     ifStream = new QDBusInterface("com.stage.stream", "/", "com.stage.stream", bus, this);
@@ -63,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(sidebar->inputMethod, SIGNAL(pauseStreaming()), this, SLOT(callStopStream()));
     connect(sidebar->inputMethod, SIGNAL(startStreaming()), this, SLOT(callStartStream()));
     connect(sidebar->inputMethod, SIGNAL(changeVideoSource(QString)), this, SLOT(callSetStreamSource(QString)));
+    connect(sidebar->inputMethod, SIGNAL(setVideoName(QString)), this, SLOT(callSetVideoName(QString)));
 
     ifMaster = new QDBusInterface("com.stage.master", "/", "com.stage.master", bus2, this);
     QDBusReply<QString> key = ifMaster->call("getSTREAMGUIKEY");
@@ -73,6 +74,11 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::callSetStreamSource(QString source)
 {
     ifStream->call("setStreamSource", source);
+}
+
+void MainWindow::callSetVideoName(QString source)
+{
+    ifStream->call("setVideoName", source);
 }
 
 void MainWindow::callStartStream()
@@ -90,8 +96,14 @@ void MainWindow::showFrames()
     sm.lock();
     sharedData *sData = (sharedData*) sm.data();
     normal_rgb_frame = Mat(frameHeight, frameWidth, CV_8UC3, sData->rawImg);
-    mulVidWidget->getVideoWidget(0)->showImage(normal_rgb_frame);
+    final_rgb_frame = Mat(frameHeight, frameWidth, CV_8UC3, sData->finalImg);
+    ipm_frame = Mat(frameWidth, frameHeight, CV_8UC3, sData->ipmImg);
+    ipm_rgb_frame = Mat(frameWidth, frameHeight, CV_8UC3, sData->ipmRGB);
     sm.unlock();
+    mulVidWidget->getVideoWidget(0)->showImage(normal_rgb_frame);
+    mulVidWidget->getVideoWidget(1)->showImage(final_rgb_frame);
+    mulVidWidget->getVideoWidget(2)->showImage(ipm_frame);
+    mulVidWidget->getVideoWidget(3)->showImage(ipm_rgb_frame);
 }
 
 void MainWindow::initViewers()

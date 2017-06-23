@@ -21,9 +21,9 @@
 #define multiVideoHeight    (mainWindowHeight-50)
 #define multiVideoWidth     (mainWindowWidth-sideBarWidth-30)
 #define videoWidgetWidth    300
+#define FRAME_SIZE          1152000
 #define frameHeight         480
 #define frameWidth          800
-#define frameChannels       3
 
 using namespace cv;
 
@@ -48,6 +48,7 @@ private slots:
     void callStartStream();
     void callStopStream();
     void callSetStreamSource(QString);
+    void callSetVideoName(QString source);
 
 private:
     QWidget *cen1;
@@ -57,12 +58,18 @@ private:
     Mat normal_default_screen;
     Mat ipm_default_screen;
     Mat normal_rgb_frame;
+    Mat final_rgb_frame;
+    Mat ipm_frame;
+    Mat ipm_rgb_frame;
     QDBusConnection bus = QDBusConnection::sessionBus();
     QDBusInterface *ifStream;
     QDBusConnection bus2 = QDBusConnection::sessionBus();
     QDBusInterface *ifMaster;
     struct sharedData {
-        uchar rawImg[frameHeight*frameWidth*frameChannels];
+        uchar rawImg[FRAME_SIZE];
+        uchar finalImg[FRAME_SIZE];
+        uchar ipmImg[FRAME_SIZE];
+        uchar ipmRGB[FRAME_SIZE];
     };
     QSharedMemory sm;
 };
