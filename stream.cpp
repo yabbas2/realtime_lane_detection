@@ -5,12 +5,14 @@ Stream::Stream(int argc, char *argv[]) :
     width(0), height(0), fps(0)
 {
     timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(showFrames()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(loopOverFrames()));
 //    connect(stream_in, SIGNAL(endStream()), this, SLOT(initScreens()));
     fsFrame = Q_NULLPTR;
     updateDataLock = true;
     colorRange = {0, 0, 255};
     ifGUI = new QDBusInterface("com.stage.gui", "/", "com.stage.gui", bus, this);
+    sm.setKey("com.stage.stream.gui.1234");
+    sm.attach(QSharedMemory::ReadWrite);
 }
 
 void Stream::connectToDBusSignals()
@@ -43,16 +45,18 @@ void Stream::reInitStream()
     emit initScreens();
 }
 
-void Stream::showFrames()
+void Stream::loopOverFrames()
 {
     cap >> inputFrame;
-    if (!cap.grab())
+    if (!cap.grab() || inputFrame.cols == 0 || inputFrame.rows == 0)
     {
         reInitStream();
         timer->stop();
         return;
     }
     qDebug() << "wehooooooooooo";
+    if (inputFrame.cols != 800 || inputFrame.rows != 480)
+        resize(inputFrame, inputFrame, Size(800, 480), 0, 0, INTER_AREA);
     frames[stream::normal_rgb] = inputFrame.clone();
     frames[stream::final_rgb] = inputFrame.clone();
 //    if (! updateDataLock)
@@ -60,16 +64,12 @@ void Stream::showFrames()
 //        drawFinalRGB();
 //    }
     cvtColor(frames[stream::final_rgb], frames[stream::final_rgb], COLOR_BGR2HSV);
-//    if (!frames[stream::normal_rgb].empty())
-//        multiViewer->getVideoWidget(stream::normal_rgb)->showImage(frames[0]);
-//    if (!frames[stream::final_rgb].empty())
-//        multiViewer->getVideoWidget(stream::final_rgb)->showImage(frames[1]);
-//    if (!frames[stream::ipm_rgb].empty())
-//        multiViewer->getVideoWidget(stream::ipm_rgb)->showImage(frames[2]);
-//    if (!frames[stream::ipm_bw].empty())
-//        multiViewer->getVideoWidget(stream::ipm_bw)->showImage(frames[3]);
-//    if (fsFrame != Q_NULLPTR)
-//        fsViewer->getVideoWidget()->showImage(*fsFrame);
+    uchar *rawData = inputFrame.data;
+    sm.lock();
+    sharedData *sData = (sharedData*) sm.data();
+    memcpy(sData->rawImg, rawData, sizeof(sharedData));
+    sm.unlock();
+    ifGUI->call("showFrames");
 }
 
 void Stream::pauseStream()

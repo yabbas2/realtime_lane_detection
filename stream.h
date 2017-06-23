@@ -11,8 +11,12 @@
 #include <vector>
 #include <QtDBus>
 #include <QApplication>
+#include <QSharedMemory>
 
 #define StreamingVideos     4
+#define frameHeight         480
+#define frameWidth          800
+#define frameChannels       3
 
 namespace stream {
 enum {normal_rgb, final_rgb, ipm_rgb, ipm_bw};
@@ -41,7 +45,7 @@ public slots:
     void startStream();
 
 private slots:
-    void showFrames();
+    void loopOverFrames();
     void FullScreenFrame(int index);
 
 signals:
@@ -65,6 +69,10 @@ private:
     QTimer *timer;
     QDBusConnection bus = QDBusConnection::sessionBus();
     QDBusInterface *ifGUI;
+    struct sharedData {
+        uchar rawImg[frameHeight*frameWidth*frameChannels];
+    };
+    QSharedMemory sm;
 
     void drawFinalRGB();
     void reInitStream();
