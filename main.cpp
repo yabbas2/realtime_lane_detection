@@ -27,8 +27,8 @@ int main(int argc, char *argv[])
     QStringList args1;
     args1 << keyId1;
     qint64 streamPID = app.createProcess(stream, streamProcess, args1);
-    app.assignProcessToCore(streamPID, 1);
+    app.assignProcessToCore(streamPID, 5);
     qint64 guiPID = app.createProcess(gui, guiProcess, args1);
-    app.assignProcessToCore(guiPID, 2);
+    app.assignProcessToCore(guiPID, 6);
     return app.exec();
 }
