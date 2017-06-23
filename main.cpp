@@ -3,7 +3,7 @@
 #include "d_bus.h"
 #include "front-end/mainwindow.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
     GUI gui(argc, argv);
     if (!QDBusConnection::sessionBus().isConnected()) {
@@ -16,7 +16,6 @@ int main(int argc, char *argv[])
     }
     new D_BUS(&gui);
     QDBusConnection::sessionBus().registerObject("/", &gui);
-//    gui.mainWindow.setSharedKey(QString::fromStdString(argv[1]));
     gui.mainWindow.show();
     return gui.exec();
 }

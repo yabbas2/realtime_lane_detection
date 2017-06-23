@@ -10,7 +10,7 @@ class GUI : public QApplication
     Q_OBJECT
 
 public:
-    explicit GUI(int argc, char *argv[]);
+    explicit GUI(int &argc, char **argv);
     MainWindow mainWindow;
 };
 
