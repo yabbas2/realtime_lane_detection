@@ -2,18 +2,19 @@ QT       += core gui dbus
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = stream
+TARGET = master
 TEMPLATE = app
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
-        stream.cpp \
-    d_bus.cpp
+        d_bus.cpp \
+    master.cpp
 
 
 HEADERS  += stream.h \
-    d_bus.h
+        d_bus.h \
+    master.h
 
 unix {
 CONFIG += c++11

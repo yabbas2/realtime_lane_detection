@@ -2,24 +2,21 @@
 #define D_BUS_H
 
 #include <QtDBus>
-#include "stream.h"
+#include "master.h"
 
 class D_BUS : public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "com.stage.stream")
+    Q_CLASSINFO("D-Bus Interface", "com.stage.master")
 public:
-    D_BUS(Stream *app);
+    D_BUS(MASTER *app);
 
 private:
-    Stream *app;
+    MASTER *app;
 
 public slots:
-    Q_NOREPLY void startStream();
-    Q_NOREPLY void stopStream();
 
 signals:
-    void initState();
 };
 
 #endif // D_BUS_H
