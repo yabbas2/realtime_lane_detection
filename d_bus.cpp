@@ -16,3 +16,8 @@ void D_BUS::initViewers()
 {
     app->mainWindow.initViewers();
 }
+
+void D_BUS::showFrames()
+{
+    app->mainWindow.showFrames();
+}

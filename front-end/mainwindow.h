@@ -7,6 +7,7 @@
 #include <QStackedWidget>
 #include <QHBoxLayout>
 #include <QtDBus>
+#include <QSharedMemory>
 #include <opencv2/core.hpp>
 #include "sidebar/side_bar.h"
 #include "viewers/multivideoviewer.h"
@@ -20,6 +21,9 @@
 #define multiVideoHeight    (mainWindowHeight-50)
 #define multiVideoWidth     (mainWindowWidth-sideBarWidth-30)
 #define videoWidgetWidth    300
+#define frameHeight         480
+#define frameWidth          800
+#define frameChannels       3
 
 using namespace cv;
 
@@ -31,6 +35,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void initViewers();
+    void showFrames();
     MultiVideoViewer *mulVidWidget;
     fullScreenVideoViewer *fsVidWidget;
     SideBar *sidebar;
@@ -47,8 +52,13 @@ private:
     QStackedWidget *widgetStack;
     Mat normal_default_screen;
     Mat ipm_default_screen;
+    Mat normal_rgb_frame;
     QDBusConnection bus = QDBusConnection::sessionBus();
     QDBusInterface *ifStream;
+    struct sharedData {
+        uchar rawImg[frameHeight*frameWidth*frameChannels];
+    };
+    QSharedMemory sm;
 };
 
 #endif // MAINWINDOW_H

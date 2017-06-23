@@ -58,6 +58,18 @@ MainWindow::MainWindow(QWidget *parent) :
     initViewers();
 
     ifStream = new QDBusInterface("com.stage.stream", "/", "com.stage.stream", bus, this);
+
+    sm.setKey("com.stage.stream.gui.1234");
+    sm.create(sizeof(sharedData), QSharedMemory::ReadOnly);
+}
+
+void MainWindow::showFrames()
+{
+    sm.lock();
+    sharedData *sData = (sharedData*) sm.data();
+    normal_rgb_frame = Mat(frameHeight, frameWidth, CV_8UC3, sData->rawImg);
+    mulVidWidget->getVideoWidget(0)->showImage(normal_rgb_frame);
+    sm.unlock();
 }
 
 void MainWindow::initViewers()

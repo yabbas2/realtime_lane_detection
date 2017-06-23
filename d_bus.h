@@ -17,6 +17,7 @@ private:
 
 public slots:
     void initViewers();
+    void showFrames();
 
 signals:
     void pauseStream();
