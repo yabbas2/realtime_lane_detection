@@ -12,8 +12,7 @@ SOURCES += main.cpp\
     master.cpp
 
 
-HEADERS  += stream.h \
-        d_bus.h \
+HEADERS  += d_bus.h \
     master.h
 
 unix {
