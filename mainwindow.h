@@ -7,7 +7,7 @@
 #include <QtDBus>
 #include <QSharedMemory>
 #include <opencv2/core.hpp>
-#include "viewers/fullscreenvideoviewer.h"
+#include "fullscreenvideoviewer.h"
 #include "videowidget.h"
 
 #define mainWindowWidth     800

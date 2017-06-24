@@ -9,17 +9,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-        viewers/fullscreenvideoviewer.cpp \
+        fullscreenvideoviewer.cpp \
         videowidget.cpp \
-        viewers/opencvViewer.cpp \
+        opencvViewer.cpp \
         d_bus.cpp \
         gui.cpp
 
 
 HEADERS  += mainwindow.h \
-        viewers/fullscreenvideoviewer.h \
+        fullscreenvideoviewer.h \
         videowidget.h \
-        viewers/opencvViewer.h \
+        opencvViewer.h \
         d_bus.h \
         gui.h
 
