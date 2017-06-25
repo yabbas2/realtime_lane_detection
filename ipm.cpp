@@ -34,8 +34,3 @@ void IPM::transform(Mat &frame)
 {
     warpPerspective(frame, ipmFrame, transformHomography, Size(frameHeight, frameWidth));
 }
-
-Mat *IPM::getIPMFrame()
-{
-    return &ipmFrame;
-}

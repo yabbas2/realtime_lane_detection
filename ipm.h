@@ -22,7 +22,6 @@ public:
     IPM();
     void transform(Mat &frame);
     void setVideoPts(QString);
-    Mat *getIPMFrame();
     Mat ipmFrame;
 
 private:

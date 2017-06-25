@@ -1,5 +1,6 @@
-QT       += core gui dbus
-
+QT += core
+QT += dbus
+QT -= gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = stream

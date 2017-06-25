@@ -1,4 +1,3 @@
-#include <QApplication>
 #include "stream.h"
 #include "d_bus.h"
 

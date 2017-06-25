@@ -16,6 +16,7 @@
 #include "ipm.h"
 
 #define FRAME_SIZE          1152000
+#define IPM_FRAME_SIZE      1152000
 
 using namespace cv;
 using namespace std;
@@ -28,7 +29,6 @@ class Stream : public QApplication
 public:
     explicit Stream(int &argc, char **argv);
     ~Stream();
-    void setInfo(vector<Vec2f> leftPts, vector<Vec2f> rightPts, Vec2i leftProp, Vec2i rightProp);
     void changeStreamInSource(QString source);
     void pauseStream();
     void startStream();
@@ -57,10 +57,16 @@ private:
     QDBusInterface *ifGUI;
     QDBusConnection bus2 = QDBusConnection::sessionBus();
     QDBusInterface *ifMaster;
+    QDBusConnection bus3 = QDBusConnection::sessionBus();
+    QDBusInterface *ifDetection;
+    QSharedMemory sm;
     struct sharedData {
         uchar rawImg[FRAME_SIZE];
     };
-    QSharedMemory sm;
+    QSharedMemory sm2;
+    struct sharedData2 {
+        uchar ipmData[IPM_FRAME_SIZE];
+    };
     high_resolution_clock::time_point t1;
     high_resolution_clock::time_point t2;
 
