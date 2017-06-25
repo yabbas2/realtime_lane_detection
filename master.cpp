@@ -3,6 +3,7 @@
 MASTER::MASTER(int &argc, char **argv) :
     QApplication(argc, argv)
 {
+    log.setFile(qApp->applicationDirPath() + "/../logger/logFiles/log_master.txt");
 }
 
 QString MASTER::createSharedMemorySection(QSharedMemory &sm, int size, QString first, QString second)
@@ -25,9 +26,9 @@ qint64 MASTER::createProcess(QProcess &p, QString &program)
     p.start(program);
     p.waitForStarted();
     if (p.state() == QProcess::Running)
-        qDebug() << "[MASTER]" << program << "is running with pid:" << QString::number(p.processId());
+        log.write("[MASTER] " + program + " is running, pid: " + QString::number(p.processId()));
     else
-        qDebug() << "[MASTER] failed to start" << program;
+        log.write("[MASTER] failed to start " + program);
     return p.processId();
 }
 
@@ -38,12 +39,12 @@ bool MASTER::assignProcessToCore(qint64 &pid, int core)
     args << "-pc" << QString::number(core) << QString::number(pid);
     if (QProcess::startDetached(program, args))
     {
-        qDebug() << "[MASTER] assigned" << QString::number(pid) << "to core" << QString::number(core);
+        log.write("[MASTER] assigned " + QString::number(pid) + " to core: " + QString::number(core));
         return true;
     }
     else
     {
-        qDebug() << "[MASTER] failed to assign" << QString::number(pid) << "to core" << QString::number(core);
+        log.write("[MASTER] failed to assign " + QString::number(pid) + " to core: " + QString::number(core));
         return false;
     }
 }

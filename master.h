@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QString>
 #include <QStringList>
+#include "../logger/logger.h"
 
 #define SM_STREAM_GUI_SIZE                  1152000
 #define SM_STREAM_DETECTION_SIZE            1152000
@@ -22,6 +23,9 @@ public:
     QString STREAM_GUI_KEY;
     QString STREAM_DETECTION_KEY;
     QString DETECTION_REG_KEY;
+
+private:
+    Logger log;
 };
 
 #endif // MASTER_H
