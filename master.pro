@@ -1,5 +1,6 @@
-QT       += core gui dbus
-
+QT += core
+QT -= gui
+QT += dbus
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = master
