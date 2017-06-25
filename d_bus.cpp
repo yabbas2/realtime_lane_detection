@@ -10,3 +10,13 @@ QString D_BUS::getSTREAMGUIKEY()
 {
     return app->STREAM_GUI_KEY;
 }
+
+QString D_BUS::getSTREAMDETECTIONKEY()
+{
+    return app->STREAM_DETECTION_KEY;
+}
+
+QString D_BUS::getDETECTIONREGKEY()
+{
+    return app->DETECTION_REG_KEY;
+}

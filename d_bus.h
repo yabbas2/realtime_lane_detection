@@ -16,6 +16,8 @@ private:
 
 public slots:
     QString getSTREAMGUIKEY();
+    QString getSTREAMDETECTIONKEY();
+    QString getDETECTIONREGKEY();
 
 signals:
 };
