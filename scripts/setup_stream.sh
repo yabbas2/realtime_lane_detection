@@ -4,6 +4,7 @@ STREAM_DIR="../stream/"
 STREAM_BUILD_DIR="../build-stream/"
 
 cd ..
+echo "[STREAM] starting..."
 cd $STREAM_DIR
 #git
 cd $STREAM_BUILD_DIR

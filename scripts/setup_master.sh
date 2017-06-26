@@ -4,6 +4,7 @@ MASTER_DIR="../master/"
 MASTER_BUILD_DIR="../build-master/"
 
 cd ..
+echo "[MASTER] starting..."
 cd $MASTER_DIR
 #git
 cd $MASTER_BUILD_DIR

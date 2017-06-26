@@ -5,6 +5,7 @@ LOGGER_BUILD_DIR="../build-logger/"
 LOGGER_INSTALL_DIR="/usr/lib/arm-linux-gnueabihf/"
 
 cd ..
+echo "[LOGGER] starting..."
 cd $LOGGER_DIR
 #git
 cd $LOGGER_BUILD_DIR

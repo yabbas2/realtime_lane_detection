@@ -10,6 +10,8 @@ sh setup_gui.sh
 wait $!
 sh setup_stream.sh
 wait $!
+sh setup_detection.sh
+wait $!
 sh setup_master.sh
 wait $!
-echo "[SETUP] setup is finished!"
+echo "[SETUP] exiting setup..."

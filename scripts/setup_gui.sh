@@ -4,6 +4,7 @@ GUI_DIR="../gui/"
 GUI_BUILD_DIR="../build-gui/"
 
 cd ..
+echo "[GUI] starting..."
 cd $GUI_DIR
 #git
 cd $GUI_BUILD_DIR
