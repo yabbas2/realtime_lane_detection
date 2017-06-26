@@ -14,6 +14,7 @@
 #include <QSharedMemory>
 #include <chrono>
 #include "ipm.h"
+#include "../logger/logger.h"
 
 #define FRAME_SIZE          1152000
 #define IPM_FRAME_SIZE      1152000
@@ -69,6 +70,7 @@ private:
     };
     high_resolution_clock::time_point t1;
     high_resolution_clock::time_point t2;
+    Logger log;
 
     void drawFinalRGB();
     void reInitStream();

@@ -31,4 +31,5 @@ LIBS += -lopencv_core
 LIBS += -lopencv_ml
 LIBS += -lopencv_video
 LIBS += -lopencv_calib3d
+LIBS += -llogger
 }

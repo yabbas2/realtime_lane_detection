@@ -4,6 +4,10 @@ Stream::Stream(int &argc, char **argv) :
     QApplication(argc, argv),
     width(0), height(0), fps(0)
 {
+    log.setFile(qApp->applicationDirPath() + "/../logger/logFiles/log_stream.txt");
+    log.write("----------------------------------------------------------");
+    log.write("------------------------NEW RUN---------------------------");
+    log.write("----------------------------------------------------------");
     timer = new QTimer(this);
     timer->setTimerType(Qt::PreciseTimer);
     connect(timer, SIGNAL(timeout()), this, SLOT(loopOverFrames()));
@@ -26,11 +30,12 @@ void Stream::changeStreamInSource(QString source)
     streamInSource = source;
     if (!cap.open(source.toStdString()))
     {
-        qDebug() << "[STREAM] Cannot open video streaming source";
+        log.write("[STREAM] Cannot open video streaming source - exiting..");
         exit(1);
     }
     fps = static_cast<int> (cap.get(cv::CAP_PROP_FPS));
-    qDebug() << "[STREAM] using framerate:" << fps;
+    int frameCount = static_cast<int> (cap.get(cv::CAP_PROP_FRAME_COUNT));
+    log.write("[STREAM] opened (" + source + ") - fps: " + QString::number(fps) + " - frameCount: " + QString::number(frameCount));
 }
 
 
