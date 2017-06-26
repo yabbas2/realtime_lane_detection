@@ -1,7 +1,7 @@
 #!/bin/bash
 
 LOGGER_DIR="../logger/"
-LOGGER_BUILD_DIR="../build_logger/"
+LOGGER_BUILD_DIR="../build-logger/"
 LOGGER_INSTALL_DIR="/usr/lib/arm-linux-gnueabihf/"
 
 cd ..

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MASTER_DIR="../master/"
-MASTER_BUILD_DIR="../build_master/"
+MASTER_BUILD_DIR="../build-master/"
 
 cd ..
 cd $MASTER_DIR

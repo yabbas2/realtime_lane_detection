@@ -1,7 +1,7 @@
 #!/bin/bash
 
 STREAM_DIR="../stream/"
-STREAM_BUILD_DIR="../build_stream/"
+STREAM_BUILD_DIR="../build-stream/"
 
 cd ..
 cd $STREAM_DIR

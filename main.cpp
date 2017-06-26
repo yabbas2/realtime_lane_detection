@@ -2,12 +2,11 @@
 #include "d_bus.h"
 
 
-QString USER = qgetenv("USER");
-QString guiProcess = "/home/" + USER + "/gui";
+QString guiProcess = qApp->applicationDirPath() + "/../buid-gui/gui";
 QProcess gui;
-QString streamProcess = "/home/" + USER + "/stream";
+QString streamProcess = qApp->applicationDirPath() + "/../buid-stream/stream";
 QProcess stream;
-QString detectionProcess = "/home/" + USER + "/detection";
+QString detectionProcess = qApp->applicationDirPath() + "/../buid-detection/detection";
 QProcess detection;
 QSharedMemory smStreamGUI;
 QSharedMemory smStreamDetection;

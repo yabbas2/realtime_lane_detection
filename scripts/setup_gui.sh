@@ -1,7 +1,7 @@
 #!/bin/bash
 
 GUI_DIR="../gui/"
-GUI_BUILD_DIR="../build_gui/"
+GUI_BUILD_DIR="../build-gui/"
 
 cd ..
 cd $GUI_DIR
