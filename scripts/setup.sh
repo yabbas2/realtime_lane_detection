@@ -1,8 +1,6 @@
 #!/bin/bash
 
-SCRIPTS_DIR="/home/odroid/project/master/scripts/"
-
-cd
+SCRIPTS_DIR="."
 
 echo "[SETUP] starting setup..."
 cd $SCRIPTS_DIR

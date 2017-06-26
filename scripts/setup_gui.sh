@@ -1,24 +1,18 @@
 #!/bin/bash
 
-GUI_DIR="/home/odroid/project/gui/"
-GUI_BUILD_DIR="/home/odroid/project/build_gui/"
+GUI_DIR="../gui/"
+GUI_BUILD_DIR="../build_gui/"
 
-WD="/home/odroid/"
-
-cd
-
+cd ..
 cd $GUI_DIR
 #git
-cd
 cd $GUI_BUILD_DIR
 echo "[GUI] cleaning..."
 rm *
 echo "[GUI] generating Makefile..."
 qmake "${GUI_DIR}/gui.pro"
 echo "[GUI] building files..."
-make -j4
-echo "[GUI] copying executable to home..."
-cp "${GUI_BUILD_DIR}/gui" $WD
+make -j8
 echo "[GUI] exiting..."
 exit 0
 
