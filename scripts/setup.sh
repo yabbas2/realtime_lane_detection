@@ -4,6 +4,8 @@ SCRIPTS_DIR="."
 
 echo "[SETUP] starting setup..."
 cd $SCRIPTS_DIR
+sh setup_logger.sh
+wait $!
 sh setup_gui.sh
 wait $!
 sh setup_stream.sh
