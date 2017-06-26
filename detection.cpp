@@ -4,6 +4,9 @@ Detection::Detection(int &argc, char **argv) :
     QApplication(argc, argv)
 {
     log.setFile(qApp->applicationDirPath() + "/../logger/logFiles/log_detection.txt");
+    log.write("----------------------------------------------------------");
+    log.write("------------------------NEW RUN---------------------------");
+    log.write("----------------------------------------------------------");
     boundary_min = {75, 100, 0};
     boundary_max = {112, 225, 154};
     ifMaster = new QDBusInterface("com.stage.master", "/", "com.stage.master", bus, this);
