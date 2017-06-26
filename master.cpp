@@ -4,6 +4,9 @@ MASTER::MASTER(int &argc, char **argv) :
     QApplication(argc, argv)
 {
     log.setFile(qApp->applicationDirPath() + "/../logger/logFiles/log_master.txt");
+    log.write("----------------------------------------------------------");
+    log.write("------------------------NEW RUN---------------------------");
+    log.write("----------------------------------------------------------");
 }
 
 QString MASTER::createSharedMemorySection(QSharedMemory &sm, int size, QString first, QString second)
@@ -26,9 +29,9 @@ qint64 MASTER::createProcess(QProcess &p, QString &program)
     p.start(program);
     p.waitForStarted();
     if (p.state() == QProcess::Running)
-        log.write("[MASTER] " + program + " is running, pid: " + QString::number(p.processId()));
+        log.write("[MASTER] started (" + program + ") - pid: " + QString::number(p.processId()));
     else
-        log.write("[MASTER] failed to start " + program);
+        log.write("[MASTER] failed to start (" + program + ")");
     return p.processId();
 }
 

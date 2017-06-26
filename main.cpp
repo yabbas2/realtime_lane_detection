@@ -1,16 +1,6 @@
 #include "master.h"
 #include "d_bus.h"
-
-
-QString guiProcess = qApp->applicationDirPath() + "/../buid-gui/gui";
-QProcess gui;
-QString streamProcess = qApp->applicationDirPath() + "/../buid-stream/stream";
-QProcess stream;
-QString detectionProcess = qApp->applicationDirPath() + "/../buid-detection/detection";
-QProcess detection;
-QSharedMemory smStreamGUI;
-QSharedMemory smStreamDetection;
-QSharedMemory smDetectionReg;
+#include <QApplication>
 
 int main(int argc, char **argv)
 {
@@ -25,6 +15,16 @@ int main(int argc, char **argv)
     }
     new D_BUS(&app);
     QDBusConnection::sessionBus().registerObject("/", &app);
+
+    QString guiProcess = qApp->applicationDirPath() + "/../build-gui/gui";
+    QProcess gui;
+    QString streamProcess = qApp->applicationDirPath() + "/../build-stream/stream";
+    QProcess stream;
+    QString detectionProcess = qApp->applicationDirPath() + "/../build-detection/detection";
+    QProcess detection;
+    QSharedMemory smStreamGUI;
+    QSharedMemory smStreamDetection;
+    QSharedMemory smDetectionReg;
 
     QString keyId1 = app.createSharedMemorySection(smStreamGUI, SM_STREAM_GUI_SIZE, "stream", "gui");
     QString keyId2 = app.createSharedMemorySection(smStreamDetection, SM_STREAM_DETECTION_SIZE, "stream", "detection");
