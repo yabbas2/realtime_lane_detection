@@ -7,6 +7,8 @@
 #include <QApplication>
 #include <QSharedMemory>
 #include <QtDBus>
+#include <chrono>
+#include "../logger/logger.h"
 
 #define threshold_angle_min     70
 #define threshold_angle_max     110
@@ -19,6 +21,7 @@
 
 using namespace cv;
 using namespace std;
+using namespace std::chrono;
 
 namespace detectionSide {
     enum {left, right, both};
@@ -56,6 +59,10 @@ private:
     struct sharedData2 {
         uchar ipmData[IPM_FRAME_SIZE];
     };
+    Logger log;
+    high_resolution_clock::time_point t1;
+    high_resolution_clock::time_point t2;
+    int frameCount;
 
     void filterPhaseOne();
     void filterPhaseTwo();
