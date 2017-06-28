@@ -2,8 +2,7 @@
 #define LINEDETECTION_H
 
 #include <vector>
-#include <opencv2/core.hpp>
-#include <opencv2/line_descriptor.hpp>
+#include <opencv2/opencv.hpp>
 #include <QApplication>
 #include <QSharedMemory>
 #include <QtDBus>
