@@ -5,11 +5,9 @@ int main(int argc, char **argv)
 {
     Detection app(argc, argv);
     if (!QDBusConnection::sessionBus().isConnected()) {
-        qDebug() << "[DETECTION] cannot connect to D-Bus - exiting..";
-        return 1;
+        exit(1);
     }
     if (!QDBusConnection::sessionBus().registerService("com.stage.detection")) {
-        qDebug() << "[DETECTION] cannot register service";
         exit(1);
     }
     new D_BUS(&app);

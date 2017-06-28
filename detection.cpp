@@ -3,13 +3,14 @@
 Detection::Detection(int &argc, char **argv) :
     QApplication(argc, argv)
 {
-    log.setFile(qApp->applicationDirPath() + "/../logger/logFiles/log_detection.txt");
+    log.openFile(qApp->applicationDirPath() + "/../logger/logFiles/log_detection.txt", QIODevice::WriteOnly);
     log.write("----------------------------------------------------------");
     log.write("------------------------NEW RUN---------------------------");
     log.write("----------------------------------------------------------");
     boundary_min = {75, 100, 0};
     boundary_max = {112, 225, 154};
     ifMaster = new QDBusInterface("com.stage.master", "/", "com.stage.master", bus, this);
+    ifReg = new QDBusInterface("com.stage.reg", "/", "com.stage.reg", bus2, this);
     QDBusReply<QString> key = ifMaster->call("getDETECTIONREGKEY");
     sm.setKey(key.value());
     sm.attach(QSharedMemory::ReadWrite);
@@ -17,6 +18,7 @@ Detection::Detection(int &argc, char **argv) :
     sm2.setKey(key2.value());
     sm2.attach(QSharedMemory::ReadOnly);
     frameCount = 0;
+    lsd = createLineSegmentDetector(LSD_REFINE_STD);
     busy = false;
 }
 
@@ -25,23 +27,23 @@ void Detection::lineSegmentDetector()
     busy = true;
     t1 = high_resolution_clock::now();
     frameCount++;
-    sm2.lock();
+    while (!sm2.lock());
     sharedData2 *sData2 = (sharedData2*) sm2.data();
     inputFrame = Mat(frameWidth, frameHeight, CV_8UC3, sData2->ipmData);
     sm2.unlock();
-    lsd = createLineSegmentDetector(LSD_REFINE_STD);
     cvtColor(inputFrame, processedFrame, COLOR_BGR2GRAY);
     GaussianBlur(processedFrame, processedFrame, Size(9, 9), 1, 2);
     lsd->detect(processedFrame, lines);
     filterPhaseOne();
     filterPhaseTwo();
-    sm.lock();
+    while (!sm.lock());
     sharedData *sData = (sharedData*) sm.data();
     sData->actualSize = (phaseTwoFiltered.size() >= LINES_MAX_SIZE) ? LINES_MAX_SIZE : phaseTwoFiltered.size();
     for (int i = 0; i < sData->actualSize; ++i)
-        for (int j = 0; j < 7; ++j)
+        for (int j = 0; j < 6; ++j)
             sData->lineSegments[i][j] = phaseTwoFiltered[i][j];
     sm.unlock();
+    ifReg->call("RGCFV");
     t2 = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(t2 - t1).count();
     log.write("[DETECTION] frame no. " + QString::number(frameCount) + ", exec time: " + QString::number(duration));
@@ -64,7 +66,7 @@ void Detection::filterPhaseOne()
             theta -= 180;
         float length = sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2));
         if ((threshold_angle_min < theta) && (theta < threshold_angle_max) && (length >= threshold_length))
-            phaseOneFiltered.push_back(Vec7i{(int)x1, (int)y1, (int)x2, (int)y2, (int)theta, (int)length, 0});
+            phaseOneFiltered.push_back(Vec6i{(int)x1, (int)y1, (int)x2, (int)y2, (int)theta, (int)length});
     }
 }
 void Detection::filterPhaseTwo()
@@ -81,7 +83,7 @@ void Detection::filterPhaseTwo()
     }
     for(unsigned int it_lines = 0; it_lines < phaseOneFiltered.size(); ++it_lines)
     {
-        int flag = 0;
+        bool flag = false;
         for(unsigned int it_contours = 0; it_contours < contours.size(); ++it_contours)
         {
             if (contourArea(contours[it_contours]) > 10000 || contourArea(contours[it_contours]) < 1000)
@@ -92,14 +94,14 @@ void Detection::filterPhaseTwo()
             double dist2 = pointPolygonTest(contours[it_contours], b, true);
             if(dist1 >= -17 || dist2 >= -17)
             {
-                flag = 1;
+                flag = true;
                 break;
             }
         }
         if(!flag)
-            phaseTwoFiltered.push_back(Vec7i{phaseOneFiltered[it_lines][0], phaseOneFiltered[it_lines][1], phaseOneFiltered[it_lines][2],
-                                  phaseOneFiltered[it_lines][3], phaseOneFiltered[it_lines][4], phaseOneFiltered[it_lines][5],
-                                  phaseOneFiltered[it_lines][6]});
+            phaseTwoFiltered.push_back(Vec6i{phaseOneFiltered[it_lines][0], phaseOneFiltered[it_lines][1],
+                                             phaseOneFiltered[it_lines][2], phaseOneFiltered[it_lines][3],
+                                             phaseOneFiltered[it_lines][4], phaseOneFiltered[it_lines][5]});
     }
 }
 
