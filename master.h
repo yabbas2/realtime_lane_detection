@@ -4,14 +4,13 @@
 #include <QApplication>
 #include <QSharedMemory>
 #include <QProcess>
-#include <QDebug>
 #include <QString>
 #include <QStringList>
 #include "../logger/logger.h"
 
 #define SM_STREAM_GUI_SIZE                  1152000
 #define SM_STREAM_DETECTION_SIZE            1152000
-#define SM_DETECTION_REG_SIZE               1408
+#define SM_DETECTION_REG_SIZE               1204
 
 class MASTER : public QApplication
 {

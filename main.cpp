@@ -1,16 +1,13 @@
 #include "master.h"
 #include "d_bus.h"
-#include <QApplication>
 
 int main(int argc, char **argv)
 {
     MASTER app(argc, argv);
     if (!QDBusConnection::sessionBus().isConnected()) {
-        qDebug() << "[MASTER] cannot connect to D-Bus - exiting..";
-        return 1;
+        exit(1);
     }
     if (!QDBusConnection::sessionBus().registerService("com.stage.master")) {
-        qDebug() << "[MASTER] cannot register service";
         exit(1);
     }
     new D_BUS(&app);
@@ -22,6 +19,8 @@ int main(int argc, char **argv)
     QProcess stream;
     QString detectionProcess = qApp->applicationDirPath() + "/../build-detection/detection";
     QProcess detection;
+    QString regProcess = qApp->applicationDirPath() + "/../build-reg/reg";
+    QProcess reg;
     QSharedMemory smStreamGUI;
     QSharedMemory smStreamDetection;
     QSharedMemory smDetectionReg;
@@ -38,6 +37,8 @@ int main(int argc, char **argv)
 //    app.assignProcessToCore(guiPID, 6);
     qint64 detectionPID = app.createProcess(detection, detectionProcess);
 //    app.assignProcessToCore(detectionPID, 4);
+    qint64 regPID = app.createProcess(reg, regProcess);
+//    app.assignProcessToCore(regPID, 7);
 
     return app.exec();
 }

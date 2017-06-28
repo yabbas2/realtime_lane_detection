@@ -3,7 +3,7 @@
 MASTER::MASTER(int &argc, char **argv) :
     QApplication(argc, argv)
 {
-    log.setFile(qApp->applicationDirPath() + "/../logger/logFiles/log_master.txt");
+    log.openFile(qApp->applicationDirPath() + "/../logger/logFiles/log_master.txt", QIODevice::WriteOnly);
     log.write("----------------------------------------------------------");
     log.write("------------------------NEW RUN---------------------------");
     log.write("----------------------------------------------------------");
