@@ -12,7 +12,7 @@ class Logger
 public:
     explicit Logger();
     ~Logger();
-    void setFile(QString fileName);
+    void openFile(QString fileName, QIODevice::OpenMode om);
     void write(QString text);
 
 private:

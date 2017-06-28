@@ -4,11 +4,11 @@ Logger::Logger()
 {
 }
 
-void Logger::setFile(QString fileName)
+void Logger::openFile(QString fileName, QIODevice::OpenMode om)
 {
     file = new QFile;
     file->setFileName(fileName);
-    file->open(QIODevice::Append | QIODevice::Text);
+    file->open(om | QIODevice::Text);
 }
 
 void Logger::write(QString text)
