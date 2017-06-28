@@ -1,14 +1,14 @@
 #include "d_bus.h"
 
-D_BUS::D_BUS(Detection *application) :
+D_BUS::D_BUS(Reg *application) :
     QDBusAbstractAdaptor(application),
     app(application)
 {
 }
 
-void D_BUS::detect()
+void D_BUS::RGCFV()
 {
     if (app->busy)
         return;
-    app->lineSegmentDetector();
+    app->process();
 }

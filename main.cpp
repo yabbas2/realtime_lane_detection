@@ -1,15 +1,13 @@
-#include "detection.h"
+#include "reg.h"
 #include "d_bus.h"
 
 int main(int argc, char **argv)
 {
-    Detection app(argc, argv);
+    Reg app(argc, argv);
     if (!QDBusConnection::sessionBus().isConnected()) {
-        qDebug() << "[DETECTION] cannot connect to D-Bus - exiting..";
-        return 1;
+        exit(1);
     }
-    if (!QDBusConnection::sessionBus().registerService("com.stage.detection")) {
-        qDebug() << "[DETECTION] cannot register service";
+    if (!QDBusConnection::sessionBus().registerService("com.stage.reg")) {
         exit(1);
     }
     new D_BUS(&app);
