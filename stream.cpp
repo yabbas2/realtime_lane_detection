@@ -35,7 +35,7 @@ void Stream::changeStreamInSource(QString source)
     }
     fps = static_cast<int> (cap.get(cv::CAP_PROP_FPS));
     int frameCount = static_cast<int> (cap.get(cv::CAP_PROP_FRAME_COUNT));
-    log.write("[STREAM] opened (" + source + ") - fps: " + QString::number(fps) + " - frameCount: " + QString::number(frameCount));
+    log.write("[STREAM] opened (" + source + ") - fps: " + QString::number(fps) + " - frameCount: " + QString::number(frameCount/2));
 }
 
 
