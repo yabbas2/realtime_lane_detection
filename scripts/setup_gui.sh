@@ -11,7 +11,7 @@ cd $GUI_BUILD_DIR
 echo "[GUI] cleaning..."
 rm *
 echo "[GUI] generating Makefile..."
-qmake "${GUI_DIR}/gui.pro"
+qmake CONFIG-=debug CONFIG+=release "${GUI_DIR}/gui.pro"
 echo "[GUI] building files..."
 make -j8
 echo "[GUI] exiting..."

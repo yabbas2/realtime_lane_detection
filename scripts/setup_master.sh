@@ -11,7 +11,7 @@ cd $MASTER_BUILD_DIR
 echo "[MASTER] cleaning..."
 rm *
 echo "[MASTER] generating Makefile..."
-qmake "${MASTER_DIR}/master.pro"
+qmake CONFIG-=debug CONFIG+=release "${MASTER_DIR}/master.pro"
 echo "[MASTER] building files..."
 make -j8
 echo "[MASTER] exiting..."

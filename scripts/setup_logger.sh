@@ -12,7 +12,7 @@ cd $LOGGER_BUILD_DIR
 echo "[LOGGER] cleaning..."
 rm *
 echo "[LOGGER] generating Makefile..."
-qmake "${LOGGER_DIR}/logger.pro"
+qmake CONFIG-=debug CONFIG+=release "${LOGGER_DIR}/logger.pro"
 echo "[LOGGER] building files..."
 make -j8
 echo "[LOGGER] installing lib..."

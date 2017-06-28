@@ -11,7 +11,7 @@ cd $DETECTION_BUILD_DIR
 echo "[DETECTION] cleaning..."
 rm *
 echo "[DETECTION] generating Makefile..."
-qmake "${DETECTION_DIR}/detection.pro"
+qmake CONFIG-=debug CONFIG+=release "${DETECTION_DIR}/detection.pro"
 echo "[DETECTION] building files..."
 make -j8
 echo "[DETECTION] exiting..."

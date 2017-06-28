@@ -11,7 +11,7 @@ cd $REG_BUILD_DIR
 echo "[REG] cleaning..."
 rm *
 echo "[REG] generating Makefile..."
-qmake "${REG_DIR}/reg.pro"
+qmake CONFIG-=debug CONFIG+=release "${REG_DIR}/reg.pro"
 echo "[REG] building files..."
 make -j8
 echo "[REG] exiting..."
