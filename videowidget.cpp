@@ -42,11 +42,8 @@ void VideoWidget::browseVideo()
     if (chosen_video_match.hasMatch())
     {
         video = chosen_video_match.captured(0);
-        qDebug() << "[VIDEO_WIDGET] video matched" << video;
         emit setVideoName(video);
     }
-    else
-        qDebug() << "[VIDEO_WIDGET] no video matched";
 }
 
 void VideoWidget::videoControlInit()

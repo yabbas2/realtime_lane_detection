@@ -13,7 +13,6 @@ MainWindow::MainWindow(QWidget *parent) :
     cen->setObjectName("cen2");
     cen->setFixedSize(this->size());
 
-//    this->setCentralWidget(cen);
     fsVidWidget = new fullScreenVideoViewer(cen);
     fsVidWidget->setObjectName("fsVidWidget");
     fsVidWidget->setVideoSize(frameWidth, frameHeight);
@@ -59,7 +58,7 @@ void MainWindow::callStopStream()
 
 void MainWindow::showFrames()
 {
-    sm.lock();
+    while (!sm.lock());
     sharedData *sData = (sharedData*) sm.data();
     globalFrame = Mat(frameHeight, frameWidth, CV_8UC3, sData->rawImg);
     sm.unlock();

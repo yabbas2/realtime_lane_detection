@@ -26,7 +26,6 @@ void CViewer::showImage(const cv::Mat &image)
 
 void CViewer::mousePressEvent(QMouseEvent *event)
 {
-    qDebug() << "[CVIEWER] clicked on video:" << this->index;
     if (event->button() == Qt::LeftButton)
         emit mouseClicked(this->index);
 }

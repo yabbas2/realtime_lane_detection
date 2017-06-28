@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include <QWidget>
-#include <QDebug>
 #include <QtDBus>
 #include <QSharedMemory>
 #include <opencv2/core.hpp>

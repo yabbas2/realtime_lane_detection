@@ -8,7 +8,6 @@
 #include <QString>
 #include <QPushButton>
 #include <QIcon>
-#include <QDebug>
 #include <QSpacerItem>
 #include <QStringList>
 #include <QFileDialog>

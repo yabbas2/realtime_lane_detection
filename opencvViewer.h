@@ -5,7 +5,6 @@
 #include <opencv2/videoio.hpp>
 #include <opencv2/photo.hpp>
 #include <QMouseEvent>
-#include <QDebug>
 #include <QLabel>
 #include <QImage>
 #include <QPixmap>

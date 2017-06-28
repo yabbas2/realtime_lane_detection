@@ -2,7 +2,6 @@
 #define FULLSCREENVIDEOVIEWER_H
 
 #include <QWidget>
-#include <QDebug>
 #include "opencvViewer.h"
 
 class fullScreenVideoViewer : public QWidget
