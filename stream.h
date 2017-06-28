@@ -2,7 +2,6 @@
 #define STREAM_H
 
 #include <QString>
-#include <QDebug>
 #include <QObject>
 #include <QTimer>
 #include <opencv2/core.hpp>

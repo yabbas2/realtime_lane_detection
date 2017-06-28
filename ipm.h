@@ -2,7 +2,6 @@
 #define IPM_H
 
 #include <QString>
-#include <QDebug>
 #include <opencv2/core.hpp>
 #include <opencv2/photo.hpp>
 

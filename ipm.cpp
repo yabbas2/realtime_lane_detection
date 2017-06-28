@@ -22,8 +22,6 @@ void IPM::setVideoPts(QString videoName)
         inputPts = (Mat_<double>(4, 2) << 330, 300, 460, 300, 600, 478, 200, 478);
     else if (videoName.startsWith("udacity_video"))
         inputPts = (Mat_<double>(4, 2) << 340, 310, 475, 310, 740, 430, 120, 430);
-    else
-        qDebug() << ("[IPM] unknown video file!");
 
     inputPts.convertTo(inputPts, CV_32F);
     transformHomography = getPerspectiveTransform(inputPts, dstPts);

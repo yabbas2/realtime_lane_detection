@@ -4,7 +4,7 @@ Stream::Stream(int &argc, char **argv) :
     QApplication(argc, argv),
     width(0), height(0), fps(0)
 {
-    log.setFile(qApp->applicationDirPath() + "/../logger/logFiles/log_stream.txt");
+    log.openFile(qApp->applicationDirPath() + "/../logger/logFiles/log_stream.txt", QIODevice::WriteOnly);
     log.write("----------------------------------------------------------");
     log.write("------------------------NEW RUN---------------------------");
     log.write("----------------------------------------------------------");
@@ -58,17 +58,17 @@ void Stream::loopOverFrames()
         return;
     }
     if (inputFrame.cols != 800 || inputFrame.rows != 480)
-        resize(inputFrame, inputFrame, Size(800, 480), 0, 0, INTER_AREA);
+        resize(inputFrame, inputFrame, Size(800, 480), 0, 0, INTER_LINEAR);
     fsFrame = inputFrame.clone();
     uchar *rawData = fsFrame.data;
-    sm.lock();
+    while (!sm.lock());
     sharedData *sData = (sharedData*) sm.data();
     memcpy(sData->rawImg, rawData, FRAME_SIZE);
     sm.unlock();
     ifGUI->call("showFrames");
     ipm.transform(fsFrame);
     uchar *ipmData = ipm.ipmFrame.data;
-    sm2.lock();
+    while (!sm2.lock());
     sharedData2 *sData2 = (sharedData2*) sm2.data();
     memcpy(sData2->ipmData, ipmData, IPM_FRAME_SIZE);
     sm2.unlock();
@@ -80,13 +80,13 @@ void Stream::loopOverFrames()
 
 void Stream::pauseStream()
 {
-    qDebug() << "[STREAM] pause/stop streaming";
+    log.write("[STREAM] pause/stop streaming");
     timer->stop();
 }
 
 void Stream::startStream()
 {
-    qDebug() << "[STREAM] start/continue streaming";
+    log.write("[STREAM] start/continue streaming");
     timer->start(static_cast<int> (1000/fps));
 }
 
