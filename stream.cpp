@@ -45,6 +45,7 @@ void Stream::reInitStream()
         cap.release();
     timer->stop();
     ifGUI->call("initViewers");
+    log.write("[STREAM] pause/stop streaming");
 }
 
 void Stream::loopOverFrames()
