@@ -10,5 +10,5 @@ void D_BUS::detect()
 {
     if (app->busy)
         return;
-    app->lineSegmentDetector();
+    app->process();
 }

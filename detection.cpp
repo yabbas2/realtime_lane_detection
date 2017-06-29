@@ -3,6 +3,7 @@
 Detection::Detection(int &argc, char **argv) :
     QApplication(argc, argv)
 {
+    busy = true;
     log.openFile(qApp->applicationDirPath() + "/../logger/logFiles/log_detection.txt", QIODevice::WriteOnly);
     log.write("----------------------------------------------------------");
     log.write("------------------------NEW RUN---------------------------");
@@ -22,7 +23,7 @@ Detection::Detection(int &argc, char **argv) :
     busy = false;
 }
 
-void Detection::lineSegmentDetector()
+void Detection::process()
 {
     busy = true;
     t1 = high_resolution_clock::now();

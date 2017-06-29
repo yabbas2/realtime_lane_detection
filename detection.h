@@ -32,7 +32,7 @@ class Detection : public QApplication
 {
 public:
     Detection(int &argc, char **argv);
-    void lineSegmentDetector();
+    void process();
     void cannyHough(int side);
     void wa2();
     bool busy;
