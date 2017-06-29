@@ -2,24 +2,19 @@
 #define D_BUS_H
 
 #include <QtDBus>
-#include "master.h"
+#include "track.h"
 
 class D_BUS : public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "com.stage.master")
+    Q_CLASSINFO("D-Bus Interface", "com.stage.track")
 public:
-    D_BUS(MASTER *app);
+    D_BUS(Track *app);
 
 private:
-    MASTER *app;
+    Track *app;
 
 public slots:
-    QString getSTREAMGUIKEY();
-    QString getSTREAMDETECTIONKEY();
-    QString getDETECTIONREGKEY();
-
-signals:
 };
 
 #endif // D_BUS_H

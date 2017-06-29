@@ -3,18 +3,18 @@ QT -= gui
 QT += dbus
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = master
+TARGET = track
 TEMPLATE = app
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
         d_bus.cpp \
-    master.cpp
+    track.cpp
 
 
 HEADERS  += d_bus.h \
-    master.h
+    track.h
 
 unix {
 CONFIG += c++11
