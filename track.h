@@ -62,8 +62,6 @@ private:
     high_resolution_clock::time_point t2;
 
     void smooth();
-    void leftSmoothing();
-    void rightSmoothing();
     void kalmanFilter(int side);
     void initFilter();
 };
