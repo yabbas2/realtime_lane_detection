@@ -15,6 +15,7 @@ private:
     Track *app;
 
 public slots:
+    Q_NOREPLY void track();
 };
 
 #endif // D_BUS_H
