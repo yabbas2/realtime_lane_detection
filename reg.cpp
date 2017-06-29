@@ -3,14 +3,19 @@
 Reg::Reg(int &argc, char **argv) :
     QApplication(argc, argv)
 {
+    busy = true;
     log.openFile(qApp->applicationDirPath() + "/../logger/logFiles/log_reg.txt", QIODevice::WriteOnly);
     log.write("----------------------------------------------------------");
     log.write("------------------------NEW RUN---------------------------");
     log.write("----------------------------------------------------------");
     ifMaster = new QDBusInterface("com.stage.master", "/", "com.stage.master", bus, this);
+    ifTrack = new QDBusInterface("com.stage.track", "/", "com.stage.track", bus2, this);
     QDBusReply<QString> key = ifMaster->call("getDETECTIONREGKEY");
     sm.setKey(key.value());
     sm.attach(QSharedMemory::ReadOnly);
+    QDBusReply<QString> key2 = ifMaster->call("getREGTRACKKEY");
+    sm2.setKey(key2.value());
+    sm2.attach(QSharedMemory::ReadWrite);
     frameCount = 0;
     busy = false;
 }
@@ -49,6 +54,22 @@ void Reg::process()
         curveFit(REG::right);
     }
     validateLineAfter();
+    while (!sm2.lock());
+    sharedData2 *sData2 = (sharedData2*) sm2.data();
+    sData2->actualLeftSize = leftPtsAfterFit.size();
+    for (int i = 0; i < sData2->actualLeftSize; ++i)
+    {
+        sData2->leftPts[i][0] = leftPtsAfterFit[i][0];
+        sData2->leftPts[i][1] = leftPtsAfterFit[i][1];
+    }
+    sData2->actualRightSize = rightPtsAfterFit.size();
+    for (int i = 0; i < sData2->actualRightSize; ++i)
+    {
+        sData2->rightPts[i][0] = rightPtsAfterFit[i][0];
+        sData2->rightPts[i][1] = rightPtsAfterFit[i][1];
+    }
+    sm2.unlock();
+    ifTrack->call("track");
     t2 = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(t2 - t1).count();
     log.write("[REG] frame no. " + QString::number(frameCount) + ", exec time: " + QString::number(duration));

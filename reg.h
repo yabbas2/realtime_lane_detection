@@ -65,11 +65,20 @@ private:
         int actualSize;
         int lineSegments[LINES_MAX_SIZE][6];
     };
+    QSharedMemory sm2;
+    struct sharedData2 {
+        int actualLeftSize;
+        int actualRightSize;
+        float leftPts[PTS_NUM][2];
+        float rightPts[PTS_NUM][2];
+    };
     Logger log;
     high_resolution_clock::time_point t1;
     high_resolution_clock::time_point t2;
     QDBusConnection bus = QDBusConnection::sessionBus();
     QDBusInterface *ifMaster;
+    QDBusConnection bus2 = QDBusConnection::sessionBus();
+    QDBusInterface *ifTrack;
     int frameCount;
 
     void makeLinspace();
