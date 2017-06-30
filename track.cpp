@@ -40,13 +40,16 @@ void Track::process()
     kalmanFilter(TRACK::right);
     if (failCount <= 30)
         smooth();
+    inverseTransform(TRACK::left);
+    inverseTransform(TRACK::right);
     t2 = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(t2 - t1).count();
     log.write("[TRACK] frame no. " + QString::number(frameCount) + ", exec time: " + QString::number(duration));
     busy = false;
 }
 
-void Track::inverseTransform(int side){
+void Track::inverseTransform(int side)
+{
     vector<Vec2f> *outputPts;
     vector<Vec2f> *inputPts;
     if (side == TRACK::left)
@@ -80,6 +83,7 @@ void Track::inverseTransform(int side){
 
 void Track::setInvMat(QString videoName)
 {
+    while (busy);
     busy = true;
     Mat inputPts;
     Mat dstPts;
