@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QDBusReply<QString> key = ifMaster->call("getSTREAMGUIKEY");
     sm.setKey(key.value());
     sm.attach(QSharedMemory::ReadOnly);
+    ifTrack = new QDBusInterface("com.stage.track", "/", "com.stage.track", bus3, this);
 }
 
 void MainWindow::callSetStreamSource(QString source)
@@ -44,6 +45,7 @@ void MainWindow::callSetStreamSource(QString source)
 void MainWindow::callSetVideoName(QString source)
 {
     ifStream->call("setVideoName", source);
+    ifTrack->call("formInverseMat", source);
 }
 
 void MainWindow::callStartStream()

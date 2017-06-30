@@ -45,6 +45,8 @@ private:
     QDBusInterface *ifStream;
     QDBusConnection bus2 = QDBusConnection::sessionBus();
     QDBusInterface *ifMaster;
+    QDBusConnection bus3 = QDBusConnection::sessionBus();
+    QDBusInterface *ifTrack;
     struct sharedData {
         uchar rawImg[FRAME_SIZE];
     };
