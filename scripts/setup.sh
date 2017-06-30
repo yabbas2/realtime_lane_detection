@@ -14,6 +14,8 @@ sh setup_detection.sh
 wait $!
 sh setup_reg.sh
 wait $!
+sh setup_track.sh
+wait $!
 sh setup_master.sh
 wait $!
 echo "[SETUP] exiting setup..."
