@@ -16,7 +16,14 @@ Reg::Reg(int &argc, char **argv) :
     QDBusReply<QString> key2 = ifMaster->call("getREGTRACKKEY");
     sm2.setKey(key2.value());
     sm2.attach(QSharedMemory::ReadWrite);
+    QDBusReply<QString> key3 = ifMaster->call("getSTREAMDETECTIONKEY");
+    sm3.setKey(key3.value());
+    sm3.attach(QSharedMemory::ReadOnly);
     frameCount = 0;
+    leftStatus[0] = 0;
+    rightStatus[0] = 0;
+    leftStatus[1] = 0;
+    rightStatus[1] = 0;
     busy = false;
 }
 
@@ -70,10 +77,146 @@ void Reg::process()
     }
     sm2.unlock();
     ifTrack->call("track");
+    decideType(REG::left);
+    decideType(REG::right);
+    while (!sm3.lock());
+    sharedData3 *sData3 = (sharedData3*) sm3.data();
+    test = Mat(frameHeight, frameWidth, CV_8UC3, sData3->ipmData);
+    sm3.unlock();
+    decideColor(REG::left);
+    decideColor(REG::right);
+    //shared memory with ay erd -- masha'allah hyb2o 4 shared memories xD
     t2 = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(t2 - t1).count();
     log.write("[REG] frame no. " + QString::number(frameCount) + ", exec time: " + QString::number(duration));
     busy = false;
+}
+
+void Reg::decideType(int side)
+{
+    int* status;
+    vector<Vec7i>* lines;
+    Vec7i *seedLine;
+    if (side == REG::left)
+    {
+        seedLine = &leftSeedLine;
+        lines = &leftRegion;
+        status = &(leftStatus[0]);
+    }
+    else if (side == REG::right)
+    {
+        seedLine = &rightSeedLine;
+        lines = &rightRegion;
+        status = &(rightStatus[0]);
+    }
+    if(lines->empty())
+    {
+        if(*status > 0)
+            *status = *status - 1;
+        else if (*status < 0)
+            *status = *status + 1;
+        return;
+    }
+    int dashed = 0;
+    int solid = 0;
+    sort(lines->begin(), lines->end(),
+              [](const Vec7i& a, const Vec7i& b) {
+      return a[1] > b[1];
+    });
+    vector<Vec7i>::iterator i;
+    int y1 = (*seedLine)[1];
+    int y2 = (*seedLine)[3];
+    int y1c;
+    int y2c;
+    for(i = lines->begin(); i != lines->end(); i++)
+    {
+        y1c = (*i)[1];
+        y2c = (*i)[3];
+        if(abs(y1 - y1c) < yThreshold1)
+            continue;
+        else if(abs(y2 - y1c) < yThreshold1)
+            solid += 1;
+        else
+            dashed += 1;
+        y1 = y1c;
+        y2 = y2c;
+    }
+    if(solid > dashed || dashed == 0)
+    {
+        if(*status > -30)
+            *status = *status - 1;
+    }
+    else
+    {
+        if(*status < 30)
+            *status = *status + 1;
+    }
+}
+
+void Reg::decideColor(int side)
+{
+    int *status;
+    vector<Vec7i>* lines;
+    int r = 0, g = 0, b = 0;
+    int counter = 0;
+    Vec3b colorVal;
+    Point cen1, cen2;
+    if (side == REG::left)
+    {
+        lines = &leftRegion;
+        status = &(leftStatus[1]);
+    }
+    else if (side == REG::right)
+    {
+        lines = &rightRegion;
+        status = &(rightStatus[1]);
+    }
+    if(lines->empty())
+    {
+        if(*status > 0)
+            *status = *status - 1;
+        else if (*status < 0)
+            *status = *status + 1;
+        return;
+    }
+    for (unsigned int i = 0; i < lines->size(); ++i)
+    {
+        if (lines->at(i)[6] == USED)
+            continue;
+        lines->at(i)[6] = USED;
+        cen1 = Point((lines->at(i)[0] + lines->at(i)[2]) / 2, (lines->at(i)[1] + lines->at(i)[3]) / 2);
+        for (unsigned int j = 0; j < lines->size(); ++j)
+        {
+            if (lines->at(j)[6] == USED)
+                continue;
+            if (abs(lines->at(i)[0] - lines->at(j)[0]) <= xThreshold2 && abs(lines->at(i)[2] - lines->at(j)[2]) <= xThreshold2 &&
+                    abs(lines->at(i)[1] - lines->at(j)[1]) <= yThreshold2 && abs(lines->at(i)[3] - lines->at(j)[3]) <= yThreshold2)
+            {
+                counter++;
+                lines->at(j)[6] = USED;
+                cen2 = Point((lines->at(j)[0] + lines->at(j)[2]) / 2, (lines->at(j)[1] + lines->at(j)[3]) / 2);
+                colorVal = test.at<Vec3b>(Point((cen1.x + cen2.x) / 2, (cen1.y + cen2.y) / 2));
+                b += colorVal.val[0];
+                g += colorVal.val[1];
+                r += colorVal.val[2];
+            }
+        }
+    }
+    if (counter == 0)
+        return;
+    b /= counter;
+    g /= counter;
+    r /= counter;
+    if(abs(b - g) <= 50 && abs(b - r) <= 50 && abs(r - g) <= 50)
+    {
+        if(*status > -30)
+            *status = *status - 1;
+    }
+    else
+    {
+        if(*status < 30)
+            *status = *status + 1;
+    }
 }
 
 void Reg::regionGrowing(int option)

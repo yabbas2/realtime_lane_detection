@@ -23,6 +23,10 @@
 #define START_Y                 0
 #define END_Y                   frameHeight
 #define LINES_MAX_SIZE          50
+#define yThreshold1             150
+#define yThreshold2             10
+#define xThreshold2             100
+#define IPM_FRAME_SIZE          1152000
 
 using namespace std;
 using namespace cv;
@@ -46,6 +50,7 @@ public:
     bool busy;
 
 private:
+    Mat test;
     vector<Vec7i> leftLines;
     vector<Vec7i> rightLines;
     Vec7i leftSeedLine;
@@ -80,6 +85,12 @@ private:
     QDBusConnection bus2 = QDBusConnection::sessionBus();
     QDBusInterface *ifTrack;
     int frameCount;
+    Vec2i leftStatus;
+    Vec2i rightStatus;
+    QSharedMemory sm3;
+    struct sharedData3 {
+        uchar ipmData[IPM_FRAME_SIZE];
+    };
 
     void makeLinspace();
     void fromLinesToPoints(int side);
@@ -91,6 +102,8 @@ private:
     void curveFit(int side);
     void validateLineBefore(int side);
     void validateLineAfter();
+    void decideType(int side);
+    void decideColor(int side);
 };
 
 #endif // REG_H
