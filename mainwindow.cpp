@@ -45,7 +45,7 @@ void MainWindow::callSetStreamSource(QString source)
 void MainWindow::callSetVideoName(QString source)
 {
     ifStream->call("setVideoName", source);
-    ifTrack->call("formInverseMat", source);
+    ifTrack->call("setInvMat", source);
 }
 
 void MainWindow::callStartStream()
