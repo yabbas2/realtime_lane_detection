@@ -11,6 +11,8 @@
 #include "../logger/logger.h"
 
 #define PTS_NUM                 20
+#define frameHeight             480
+#define frameWidth              800
 
 using namespace std;
 using namespace cv;
@@ -27,6 +29,7 @@ class Track : public QApplication
 public:
     explicit Track(int &argc, char **argv);
     void process();
+    void setInvMat(QString videoName);
 
     bool busy;
 
@@ -46,6 +49,8 @@ private:
     KalmanFilter rightKalman[20];
     vector<Vec2f> inputLeftPts;
     vector<Vec2f> inputRightPts;
+    vector<Vec2f> outputLeftPts;
+    vector<Vec2f> outputRightPts;
     vector<Vec2f> prevLeftPts;
     vector<Vec2f> prevRightPts;
     vector<Vec2f> newLeftPts;
@@ -56,6 +61,7 @@ private:
     KalmanFilter* k;
     Mat mp;
     Mat tp;
+    Mat inverseHomography;
     int isMeasure;
     int failCount;
     high_resolution_clock::time_point t1;
@@ -64,6 +70,7 @@ private:
     void smooth();
     void kalmanFilter(int side);
     void initFilter();
+    void inverseTransform(int side);
 };
 
 #endif // TRACK_H

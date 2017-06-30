@@ -46,6 +46,64 @@ void Track::process()
     busy = false;
 }
 
+void Track::inverseTransform(int side){
+    vector<Vec2f> *outputPts;
+    vector<Vec2f> *inputPts;
+    if (side == TRACK::left)
+    {
+        inputPts = &prevLeftPts;
+        outputPts = &outputLeftPts;
+    }
+    else if (side == TRACK::right)
+    {
+        inputPts = &prevRightPts;
+        outputPts = &outputRightPts;
+    }
+    if(inputPts->empty())
+    {
+        outputPts->clear();
+        return;
+    }
+    float z;
+    float ptx, pty;
+    outputPts->clear();
+    for(unsigned int it = 0; it < inputPts->size(); it++){
+        z = 1 / (inverseHomography.at<double>(2,0) * inputPts->at(it)[0] + inverseHomography.at<double>(2,1) * inputPts->at(it)[1]
+                + inverseHomography.at<double>(2,2));
+        ptx =  ((inverseHomography.at<double>(0,0) * inputPts->at(it)[0] + inverseHomography.at<double>(0,1) * inputPts->at(it)[1]
+                + inverseHomography.at<double>(0,2)) * z);
+        pty =  ((inverseHomography.at<double>(1,0) * inputPts->at(it)[0] + inverseHomography.at<double>(1,1) * inputPts->at(it)[1]
+                + inverseHomography.at<double>(1,2)) * z);
+        outputPts->push_back(Vec2f{ptx, pty});
+    }
+}
+
+void Track::setInvMat(QString videoName)
+{
+    busy = true;
+    Mat inputPts;
+    Mat dstPts;
+    dstPts = (Mat_<double>(4,2) << 0, 0, frameHeight, 0, frameHeight, frameWidth, 0, frameWidth);
+    if (videoName == "youtube_video1")
+        inputPts = (Mat_<double>(4, 2) << 325, 280, 485, 280, 748, 478, 120, 478);
+    else if (videoName == "youtube_video2" || videoName == "youtube_video3")
+        inputPts = (Mat_<double>(4, 2) << 340, 280, 520, 280, 770, 478, 120, 478);
+    else if (videoName == "youtube_video4")
+        inputPts = (Mat_<double>(4, 2) << 310, 280, 445, 280, 615, 390, 200, 390);
+    else if (videoName == "youtube_video5")
+        inputPts = (Mat_<double>(4, 2) << 365, 300, 490, 300, 700, 440, 210, 440);
+    else if (videoName == "youtube_video6")
+        inputPts = (Mat_<double>(4, 2) << 380, 220, 480, 220, 610, 350, 235, 350);
+    else if (videoName.startsWith("kitti_video"))
+        inputPts = (Mat_<double>(4, 2) << 330, 300, 460, 300, 600, 478, 200, 478);
+    else if (videoName.startsWith("udacity_video"))
+        inputPts = (Mat_<double>(4, 2) << 340, 310, 475, 310, 740, 430, 120, 430);
+    inputPts.convertTo(inputPts, CV_32F);
+    dstPts.convertTo(dstPts, CV_32F);
+    inverseHomography = getPerspectiveTransform(dstPts, inputPts);
+    busy = false;
+}
+
 void Track::initFilter()
 {
     for (int i = 0; i < 20; ++i) {
@@ -96,7 +154,7 @@ void Track::smooth()
     if(isMeasure < 2)
     {
         isMeasure++;
-        for (int i = 0; i < 20; ++i) {
+        for (int i = 0; i < PTS_NUM; ++i) {
             mp.at<double>(0, 0) = newPts->at(i)[0];
             mp.at<double>(1, 0) = newPts->at(i)[1];
             for (int j = 0; j < 50; ++j) {
@@ -105,7 +163,7 @@ void Track::smooth()
             }
         }
     }
-    for (int i = 0; i < 20; ++i) {
+    for (int i = 0; i < PTS_NUM; ++i) {
         mp.at<double>(0, 0) = newPts->at(i)[0];
         mp.at<double>(1, 0) = newPts->at(i)[1];
         k[i].correct(mp);

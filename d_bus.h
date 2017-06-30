@@ -16,6 +16,7 @@ private:
 
 public slots:
     Q_NOREPLY void track();
+    Q_NOREPLY void formInverseMat(QString videoName);
 };
 
 #endif // D_BUS_H
