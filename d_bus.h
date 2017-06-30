@@ -18,8 +18,7 @@ public slots:
     QString getSTREAMGUIKEY();
     QString getSTREAMDETECTIONKEY();
     QString getDETECTIONREGKEY();
-
-signals:
+    QString getREGTRACKKEY();
 };
 
 #endif // D_BUS_H

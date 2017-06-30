@@ -11,6 +11,7 @@
 #define SM_STREAM_GUI_SIZE                  1152000
 #define SM_STREAM_DETECTION_SIZE            1152000
 #define SM_DETECTION_REG_SIZE               1204
+#define SM_REG_TRACK_SIZE                   328
 
 class MASTER : public QApplication
 {
@@ -22,6 +23,7 @@ public:
     QString STREAM_GUI_KEY;
     QString STREAM_DETECTION_KEY;
     QString DETECTION_REG_KEY;
+    QString REG_TRACK_KEY;
 
 private:
     Logger log;

@@ -21,16 +21,21 @@ int main(int argc, char **argv)
     QProcess detection;
     QString regProcess = qApp->applicationDirPath() + "/../build-reg/reg";
     QProcess reg;
+    QString trackProcess = qApp->applicationDirPath() + "/../build-track/track";
+    QProcess track;
     QSharedMemory smStreamGUI;
     QSharedMemory smStreamDetection;
     QSharedMemory smDetectionReg;
+    QSharedMemory smRegTrack;
 
     QString keyId1 = app.createSharedMemorySection(smStreamGUI, SM_STREAM_GUI_SIZE, "stream", "gui");
     QString keyId2 = app.createSharedMemorySection(smStreamDetection, SM_STREAM_DETECTION_SIZE, "stream", "detection");
     QString keyId3 = app.createSharedMemorySection(smDetectionReg, SM_DETECTION_REG_SIZE, "detection", "reg");
+    QString keyId4 = app.createSharedMemorySection(smRegTrack, SM_REG_TRACK_SIZE, "reg", "track");
     app.STREAM_GUI_KEY = keyId1;
     app.STREAM_DETECTION_KEY = keyId2;
     app.DETECTION_REG_KEY = keyId3;
+    app.REG_TRACK_KEY = keyId4;
     qint64 streamPID = app.createProcess(stream, streamProcess);
 //    app.assignProcessToCore(streamPID, 5);
     qint64 guiPID = app.createProcess(gui, guiProcess);
@@ -39,6 +44,8 @@ int main(int argc, char **argv)
 //    app.assignProcessToCore(detectionPID, 4);
     qint64 regPID = app.createProcess(reg, regProcess);
 //    app.assignProcessToCore(regPID, 7);
+    qint64 trackPID = app.createProcess(track, trackProcess);
+//    app.assignProcessToCore(trackPID, 7);
 
     return app.exec();
 }

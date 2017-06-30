@@ -20,3 +20,8 @@ QString D_BUS::getDETECTIONREGKEY()
 {
     return app->DETECTION_REG_KEY;
 }
+
+QString D_BUS::getREGTRACKKEY()
+{
+    return app->REG_TRACK_KEY;
+}
