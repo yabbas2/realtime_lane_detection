@@ -13,7 +13,7 @@ void D_BUS::track()
     app->process();
 }
 
-void D_BUS::formInverseMat(QString videoName)
+void D_BUS::setInvMat(QString videoName)
 {
     app->setInvMat(videoName);
 }
