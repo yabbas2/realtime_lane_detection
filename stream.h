@@ -7,16 +7,18 @@
 #include <opencv2/core.hpp>
 #include <opencv2/videoio.hpp>
 #include <opencv2/imgproc.hpp>
+#include <opencv2/photo.hpp>
 #include <vector>
 #include <QtDBus>
 #include <QApplication>
 #include <QSharedMemory>
 #include <chrono>
-#include "ipm.h"
 #include "../logger/logger.h"
 
 #define FRAME_SIZE          1152000
 #define IPM_FRAME_SIZE      1152000
+#define frameHeight         480
+#define frameWidth          800
 
 using namespace cv;
 using namespace std;
@@ -33,7 +35,7 @@ public:
     void pauseStream();
     void startStream();
     int width, height, fps;
-    IPM ipm;
+    void setVideoPts(QString);
 
 private slots:
     void loopOverFrames();
@@ -41,6 +43,8 @@ private slots:
 private:
     QString streamInSource;
     Mat inputFrame;
+    Mat ipmFrame;
+    Mat transformHomography;
     VideoCapture cap;
     Mat fsFrame;
     Scalar leftColor;
@@ -70,9 +74,11 @@ private:
     high_resolution_clock::time_point t1;
     high_resolution_clock::time_point t2;
     Logger log;
+    int frameCount;
 
     void drawFinalRGB();
     void reInitStream();
+    void ipmTransform();
 };
 
 #endif // STREAM_H

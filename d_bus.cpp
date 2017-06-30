@@ -23,5 +23,5 @@ void D_BUS::setStreamSource(QString source)
 
 void D_BUS::setVideoName(QString s)
 {
-    app->ipm.setVideoPts(s);
+    app->setVideoPts(s);
 }
