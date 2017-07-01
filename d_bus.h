@@ -15,10 +15,12 @@ private:
     MASTER *app;
 
 public slots:
-    QString getSTREAMGUIKEY();
-    QString getSTREAMDETECTIONKEY();
+    QString getIPMSTREAMGUIKEY();
+    QString getIPMDETECTIONKEY();
     QString getDETECTIONREGKEY();
     QString getREGTRACKKEY();
+    QString getGUITRACKKEY();
+    QString getGUIREGKEY();
 };
 
 #endif // D_BUS_H
