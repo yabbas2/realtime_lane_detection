@@ -38,8 +38,11 @@ private:
     int frameCount;
     QDBusConnection bus = QDBusConnection::sessionBus();
     QDBusInterface *ifMaster;
+    QDBusConnection bus2 = QDBusConnection::sessionBus();
+    QDBusInterface *ifGUI;
     QSharedMemory sm2;
-    struct sharedData2 {
+    QSharedMemory sm;
+    struct sharedData {
         int actualLeftSize;
         int actualRightSize;
         float leftPts[PTS_NUM][2];

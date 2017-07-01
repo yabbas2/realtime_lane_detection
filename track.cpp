@@ -9,6 +9,10 @@ Track::Track(int &argc, char **argv) :
     log.write("------------------------NEW RUN---------------------------");
     log.write("----------------------------------------------------------");
     ifMaster = new QDBusInterface("com.stage.master", "/", "com.stage.master", bus, this);
+    ifGUI = new QDBusInterface("com.stage.gui", "/", "com.stage.gui", bus2, this);
+    QDBusReply<QString> key = ifMaster->call("getGUITRACKKEY");
+    sm.setKey(key.value());
+    sm.attach(QSharedMemory::ReadWrite);
     QDBusReply<QString> key2 = ifMaster->call("getREGTRACKKEY");
     sm2.setKey(key2.value());
     sm2.attach(QSharedMemory::ReadOnly);
@@ -28,7 +32,7 @@ void Track::process()
     inputLeftPts.clear();
     inputRightPts.clear();
     while (!sm2.lock());
-    sharedData2 *sData2 = (sharedData2*) sm2.data();
+    sharedData *sData2 = (sharedData*) sm2.data();
     for (int i = 0; i < sData2->actualLeftSize; ++i)
         inputLeftPts.push_back(Vec2f{sData2->leftPts[i][0], sData2->leftPts[i][1]});
     for (int i = 0; i < sData2->actualRightSize; ++i)
@@ -42,6 +46,22 @@ void Track::process()
         smooth();
     inverseTransform(TRACK::left);
     inverseTransform(TRACK::right);
+    while (!sm.lock());
+    sharedData *sData = (sharedData*) sm.data();
+    sData->actualLeftSize = outputLeftPts.size();
+    for (int i = 0; i < sData->actualLeftSize; ++i)
+    {
+        sData->leftPts[i][0] = outputLeftPts[i][0];
+        sData->leftPts[i][1] = outputLeftPts[i][1];
+    }
+    sData->actualRightSize = outputRightPts.size();
+    for (int i = 0; i < sData->actualRightSize; ++i)
+    {
+        sData->rightPts[i][0] = outputRightPts[i][0];
+        sData->rightPts[i][1] = outputRightPts[i][1];
+    }
+    sm.unlock();
+    ifGUI->call("setData");
     t2 = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(t2 - t1).count();
     log.write("[TRACK] frame no. " + QString::number(frameCount) + ", exec time: " + QString::number(duration));
