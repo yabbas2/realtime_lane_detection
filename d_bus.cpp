@@ -20,8 +20,3 @@ void D_BUS::setStreamSource(QString source)
 {
     app->changeStreamInSource(source);
 }
-
-void D_BUS::setVideoName(QString s)
-{
-    app->setVideoPts(s);
-}
