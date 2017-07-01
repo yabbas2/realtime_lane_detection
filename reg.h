@@ -77,6 +77,11 @@ private:
         float leftPts[PTS_NUM][2];
         float rightPts[PTS_NUM][2];
     };
+    QSharedMemory sm4;
+    struct sharedData4 {
+        int leftStatus[2];
+        int rightStatus[2];
+    };
     Logger log;
     high_resolution_clock::time_point t1;
     high_resolution_clock::time_point t2;
@@ -84,6 +89,8 @@ private:
     QDBusInterface *ifMaster;
     QDBusConnection bus2 = QDBusConnection::sessionBus();
     QDBusInterface *ifTrack;
+    QDBusConnection bus3 = QDBusConnection::sessionBus();
+    QDBusInterface *ifGUI;
     int frameCount;
     Vec2i leftStatus;
     Vec2i rightStatus;

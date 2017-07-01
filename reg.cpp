@@ -16,9 +16,12 @@ Reg::Reg(int &argc, char **argv) :
     QDBusReply<QString> key2 = ifMaster->call("getREGTRACKKEY");
     sm2.setKey(key2.value());
     sm2.attach(QSharedMemory::ReadWrite);
-    QDBusReply<QString> key3 = ifMaster->call("getSTREAMDETECTIONKEY");
+    QDBusReply<QString> key3 = ifMaster->call("getIPMDETECTIONKEY");
     sm3.setKey(key3.value());
     sm3.attach(QSharedMemory::ReadOnly);
+    QDBusReply<QString> key4 = ifMaster->call("getGUIREGKEY");
+    sm4.setKey(key4.value());
+    sm4.attach(QSharedMemory::ReadWrite);
     frameCount = 0;
     leftStatus[0] = 0;
     rightStatus[0] = 0;
@@ -85,7 +88,29 @@ void Reg::process()
     sm3.unlock();
     decideColor(REG::left);
     decideColor(REG::right);
-    //shared memory with ay erd -- masha'allah hyb2o 4 shared memories xD
+    while (!sm4.lock());
+    sharedData4 *sData4 = (sharedData4*) sm4.data();
+    // type
+    if(leftStatus[0] > 0)
+        sData4->leftStatus[0] = 1;
+    else
+        sData4->leftStatus[0] = 0;
+    // Color
+    if(leftStatus[1] > 0)
+        sData4->leftStatus[1] = 0;
+    else
+        sData4->leftStatus[1] = 1;
+    // Type
+    if(rightStatus[0] > 0)
+        sData4->rightStatus[0] = 1;
+    else
+        sData4->rightStatus[0] = 0;
+    // Color
+    if(rightStatus[1] > 0)
+        sData4->rightStatus[1] = 0;
+    else
+        sData4->rightStatus[1] = 1;
+    sm4.unlock();
     t2 = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(t2 - t1).count();
     log.write("[REG] frame no. " + QString::number(frameCount) + ", exec time: " + QString::number(duration));
@@ -443,11 +468,11 @@ void Reg::validateLineAfter()
     if (!rightState)
         rightPtsAfterFit.clear();
 
-    if (leftState && (leftPtsAfterFit.at(0)[0] < -outOfRangeThreshold || leftPtsAfterFit.at(0)[0] > 480 ||
+    if (!leftPtsAfterFit.empty() && (leftPtsAfterFit.at(0)[0] < -outOfRangeThreshold || leftPtsAfterFit.at(0)[0] > 480 ||
             leftPtsAfterFit.at(PTS_NUM-1)[0] < -outOfRangeThreshold || leftPtsAfterFit.at(PTS_NUM-1)[0] > 480))
         leftPtsAfterFit.clear();
 
-    if (rightState && (rightPtsAfterFit.at(0)[0] < 0 || rightPtsAfterFit.at(0)[0] > outOfRangeThreshold+480 ||
+    if (!rightPtsAfterFit.empty() && (rightPtsAfterFit.at(0)[0] < 0 || rightPtsAfterFit.at(0)[0] > outOfRangeThreshold+480 ||
             rightPtsAfterFit.at(PTS_NUM-1)[0] < 0 || rightPtsAfterFit.at(PTS_NUM-1)[0] > outOfRangeThreshold+480))
         rightPtsAfterFit.clear();
 
