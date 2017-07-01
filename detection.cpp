@@ -15,7 +15,7 @@ Detection::Detection(int &argc, char **argv) :
     QDBusReply<QString> key = ifMaster->call("getDETECTIONREGKEY");
     sm.setKey(key.value());
     sm.attach(QSharedMemory::ReadWrite);
-    QDBusReply<QString> key2 = ifMaster->call("getSTREAMDETECTIONKEY");
+    QDBusReply<QString> key2 = ifMaster->call("getIPMDETECTIONKEY");
     sm2.setKey(key2.value());
     sm2.attach(QSharedMemory::ReadOnly);
     frameCount = 0;
