@@ -16,3 +16,8 @@ void D_BUS::showFrames()
 {
     app->mainWindow.showFrames();
 }
+
+void D_BUS::setData()
+{
+    app->mainWindow.updateData();
+}

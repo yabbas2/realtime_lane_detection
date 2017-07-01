@@ -18,6 +18,7 @@ private:
 public slots:
     Q_NOREPLY void initViewers();
     Q_NOREPLY void showFrames();
+    Q_NOREPLY void setData();
 };
 
 #endif // D_BUS_H
