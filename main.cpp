@@ -31,8 +31,6 @@ int main(int argc, char **argv)
     QSharedMemory smGUITrack;
     QSharedMemory smGUIReg;
     QSharedMemory smIPMDetection;
-    QStringList guiArgs;
-    guiArgs << "-platform" << "linuxfb";
 
     QString keyId1 = app.createSharedMemorySection(smIPMStreamGUI, SM_STREAM_GUI_IPM_SIZE, "stream_ipm", "gui_ipm");
     QString keyId2 = app.createSharedMemorySection(smIPMDetection, SM_IPM_DETECTION_SIZE, "ipm", "detection");
@@ -47,17 +45,17 @@ int main(int argc, char **argv)
     app.GUI_TRACK_KEY = keyId5;
     app.GUI_REG_KEY = keyId6;
     qint64 streamPID = app.createProcess(stream, streamProcess);
-//    app.assignProcessToCore(streamPID, 5);
+    app.assignProcessToCore(streamPID, 6);
     qint64 ipmPID = app.createProcess(ipm, ipmProcess);
-//    app.assignProcessToCore(ipmPID, 5);
-    qint64 guiPID = app.createProcess(gui, guiProcess, guiArgs);
-//    app.assignProcessToCore(guiPID, 6);
+    app.assignProcessToCore(ipmPID, 5);
+    qint64 guiPID = app.createProcess(gui, guiProcess);
+    app.assignProcessToCore(guiPID, 7);
     qint64 detectionPID = app.createProcess(detection, detectionProcess);
-//    app.assignProcessToCore(detectionPID, 4);
+    app.assignProcessToCore(detectionPID, 3);
     qint64 regPID = app.createProcess(reg, regProcess);
-//    app.assignProcessToCore(regPID, 7);
+    app.assignProcessToCore(regPID, 1);
     qint64 trackPID = app.createProcess(track, trackProcess);
-//    app.assignProcessToCore(trackPID, 7);
+    app.assignProcessToCore(trackPID, 2);
 
     return app.exec();
 }
