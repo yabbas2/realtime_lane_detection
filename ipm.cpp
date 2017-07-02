@@ -22,7 +22,6 @@ IPM::IPM(int &argc, char **argv) :
 
 void IPM::setVideoPts(QString videoName)
 {
-    while (busy);
     busy = true;
     Mat inputPts;
     Mat dstPts;
