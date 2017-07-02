@@ -20,10 +20,11 @@ class VideoWidget : public QWidget
 public:
     explicit VideoWidget(QWidget *parent = 0);
 
-public slots:
+private slots:
     void playVideo();
     void pauseVideo();
     void browseVideo();
+    void cameraVideo();
 
 signals:
     void pauseStreaming();
@@ -34,16 +35,17 @@ signals:
 private:
     QVBoxLayout *mainLayout;
 
-    QPushButton *BrowseButton;
-    QPushButton *PlayButton;
-    QPushButton *PauseButton;
+    QPushButton *browseButton;
+    QPushButton *playButton;
+    QPushButton *pauseButton;
+    QPushButton *cameraButton;
 
     QGroupBox *gb_controls;
     QHBoxLayout *horizontalLayout_controls;
 
     QSpacerItem *vSpacer;
 
-    QRegularExpression chosen_video_re;
+    QRegularExpression regexVideo;
 
     void videoControlInit();
 };

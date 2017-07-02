@@ -9,14 +9,15 @@ VideoWidget::VideoWidget(QWidget *parent) :
     mainLayout->addSpacerItem(vSpacer);
     mainLayout->addWidget(gb_controls);
     this->setLayout(mainLayout);
-    PlayButton->setEnabled(false);
-    PauseButton->setEnabled(false);
+    playButton->setEnabled(false);
+    pauseButton->setEnabled(false);
 
-    chosen_video_re.setPattern("[youtubekittiudacity]+_video[0-9]+");
+    regexVideo.setPattern("[youtubekittiudacity]+_video[0-9]+");
 
-    connect(PlayButton, SIGNAL(clicked(bool)), this, SLOT(playVideo()));
-    connect(PauseButton, SIGNAL(clicked(bool)), this, SLOT(pauseVideo()));
-    connect(BrowseButton, SIGNAL(clicked(bool)), this, SLOT(browseVideo()));
+    connect(playButton, SIGNAL(clicked(bool)), this, SLOT(playVideo()));
+    connect(pauseButton, SIGNAL(clicked(bool)), this, SLOT(pauseVideo()));
+    connect(browseButton, SIGNAL(clicked(bool)), this, SLOT(browseVideo()));
+    connect(cameraButton, SIGNAL(clicked(bool)), this, SLOT(cameraVideo()));
 }
 
 void VideoWidget::playVideo()
@@ -29,15 +30,23 @@ void VideoWidget::pauseVideo()
     emit pauseStreaming();
 }
 
+void VideoWidget::cameraVideo()
+{
+    emit changeVideoSource("/dev/video0");
+    emit setVideoName("video0");
+    playButton->setEnabled(true);
+    pauseButton->setEnabled(true);
+}
+
 void VideoWidget::browseVideo()
 {
-    QString file_name = QFileDialog::getOpenFileName(this, "Choose video file", "/home", "*.mp4");
+    QString file_name = QFileDialog::getOpenFileName(this, "Choose video file", "/home", "*");
     if (file_name.length() == 0)
         return;
     emit changeVideoSource(file_name);
-    PlayButton->setEnabled(true);
-    PauseButton->setEnabled(true);
-    QRegularExpressionMatch chosen_video_match = chosen_video_re.match(file_name);
+    playButton->setEnabled(true);
+    pauseButton->setEnabled(true);
+    QRegularExpressionMatch chosen_video_match = regexVideo.match(file_name);
     QString video;
     if (chosen_video_match.hasMatch())
     {
@@ -52,25 +61,32 @@ void VideoWidget::videoControlInit()
     gb_controls->setStyleSheet("QGroupBox {border: 1px solid white; border-radius: 5px;}");
     gb_controls->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
-    BrowseButton = new QPushButton(gb_controls);
+    browseButton = new QPushButton(gb_controls);
     QIcon backIcon(":/icons/resources/buttons/browse.png");
-    BrowseButton->setIcon(backIcon);
-    BrowseButton->setFixedWidth(50);
+    browseButton->setIcon(backIcon);
+    browseButton->setFixedWidth(50);
 
-    PlayButton = new QPushButton(gb_controls);
+    playButton = new QPushButton(gb_controls);
     QIcon playIcon(":/icons/resources/buttons/play.png");
-    PlayButton->setIcon(playIcon);
-    PlayButton->setFixedWidth(50);
+    playButton->setIcon(playIcon);
+    playButton->setFixedWidth(50);
 
-    PauseButton = new QPushButton(gb_controls);
+    pauseButton = new QPushButton(gb_controls);
     QIcon pauseIcon(":/icons/resources/buttons/pause.png");
-    PauseButton->setIcon(pauseIcon);
-    PauseButton->setFixedWidth(50);
+    pauseButton->setIcon(pauseIcon);
+    pauseButton->setFixedWidth(50);
+
+    cameraButton = new QPushButton(gb_controls);
+    QIcon cameraIcon(":/icons/resources/buttons/camera.png");
+    cameraButton->setIcon(cameraIcon);
+    cameraButton->setIconSize(QSize(27, 27));
+    cameraButton->setFixedWidth(50);
 
     horizontalLayout_controls = new QHBoxLayout;
-    horizontalLayout_controls->addWidget(BrowseButton);
-    horizontalLayout_controls->addWidget(PlayButton);
-    horizontalLayout_controls->addWidget(PauseButton);
+    horizontalLayout_controls->addWidget(browseButton);
+    horizontalLayout_controls->addWidget(cameraButton);
+    horizontalLayout_controls->addWidget(playButton);
+    horizontalLayout_controls->addWidget(pauseButton);
     gb_controls->setLayout(horizontalLayout_controls);
-    gb_controls->setFixedSize(200, 40);
+    gb_controls->setFixedSize(240, 40);
 }
