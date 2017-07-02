@@ -56,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::callSetStreamSource(QString source)
 {
     ifStream->call("setStreamSource", source);
+    updateDataLock = true;
 }
 
 void MainWindow::callSetVideoName(QString source)
