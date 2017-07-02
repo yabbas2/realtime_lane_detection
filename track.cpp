@@ -103,7 +103,6 @@ void Track::inverseTransform(int side)
 
 void Track::setInvMat(QString videoName)
 {
-    while (busy);
     busy = true;
     Mat inPts;
     Mat dstPts;
@@ -122,6 +121,8 @@ void Track::setInvMat(QString videoName)
         inPts = (Mat_<double>(4, 2) << 330, 300, 460, 300, 600, 478, 200, 478);
     else if (videoName.startsWith("udacity_video"))
         inPts = (Mat_<double>(4, 2) << 340, 310, 475, 310, 740, 430, 120, 430);
+    else
+        return;
     inPts.convertTo(inPts, CV_32F);
     dstPts.convertTo(dstPts, CV_32F);
     inverseHomography = getPerspectiveTransform(dstPts, inPts);
