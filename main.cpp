@@ -31,6 +31,8 @@ int main(int argc, char **argv)
     QSharedMemory smGUITrack;
     QSharedMemory smGUIReg;
     QSharedMemory smIPMDetection;
+    QStringList guiArgs;
+    guiArgs << "-platform" << "linuxfb";
 
     QString keyId1 = app.createSharedMemorySection(smIPMStreamGUI, SM_STREAM_GUI_IPM_SIZE, "stream_ipm", "gui_ipm");
     QString keyId2 = app.createSharedMemorySection(smIPMDetection, SM_IPM_DETECTION_SIZE, "ipm", "detection");
@@ -48,7 +50,7 @@ int main(int argc, char **argv)
 //    app.assignProcessToCore(streamPID, 5);
     qint64 ipmPID = app.createProcess(ipm, ipmProcess);
 //    app.assignProcessToCore(ipmPID, 5);
-    qint64 guiPID = app.createProcess(gui, guiProcess);
+    qint64 guiPID = app.createProcess(gui, guiProcess, guiArgs);
 //    app.assignProcessToCore(guiPID, 6);
     qint64 detectionPID = app.createProcess(detection, detectionProcess);
 //    app.assignProcessToCore(detectionPID, 4);

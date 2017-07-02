@@ -24,9 +24,9 @@ QString MASTER::createSharedMemorySection(QSharedMemory &sm, int size, QString f
     return keyName;
 }
 
-qint64 MASTER::createProcess(QProcess &p, QString &program)
+qint64 MASTER::createProcess(QProcess &p, QString &program, QStringList args)
 {
-    p.start(program);
+    p.start(program, args);
     p.waitForStarted();
     if (p.state() == QProcess::Running)
         log.write("[MASTER] started (" + program + ") - pid: " + QString::number(p.processId()));

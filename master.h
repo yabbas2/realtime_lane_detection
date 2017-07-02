@@ -20,7 +20,7 @@ class MASTER : public QApplication
 public:
     MASTER(int &argc, char **argv);
     QString createSharedMemorySection(QSharedMemory &sm, int size, QString first, QString second);
-    qint64 createProcess(QProcess &p, QString &program);
+    qint64 createProcess(QProcess &p, QString &program, QStringList args = QStringList());
     bool assignProcessToCore(qint64 &pid, int core);
     QString STREAM_GUI_IPM_KEY;
     QString DETECTION_REG_KEY;
