@@ -1,0 +1,15 @@
+[ 08.07.2017 || 17:17:45 ] => ----------------------------------------------------------
+[ 08.07.2017 || 17:17:45 ] => ------------------------NEW RUN---------------------------
+[ 08.07.2017 || 17:17:45 ] => ----------------------------------------------------------
+[ 08.07.2017 || 17:17:45 ] => [MASTER] started (/home/yousef/projects/real-time_lane_detection/kit_release_code/build-master/../build-stream/stream) - pid: 10430
+[ 08.07.2017 || 17:17:45 ] => [MASTER] assigned 10430 to core: 6
+[ 08.07.2017 || 17:17:45 ] => [MASTER] started (/home/yousef/projects/real-time_lane_detection/kit_release_code/build-master/../build-ipm/ipm) - pid: 10433
+[ 08.07.2017 || 17:17:45 ] => [MASTER] assigned 10433 to core: 5
+[ 08.07.2017 || 17:17:45 ] => [MASTER] started (/home/yousef/projects/real-time_lane_detection/kit_release_code/build-master/../build-gui/gui) - pid: 10436
+[ 08.07.2017 || 17:17:45 ] => [MASTER] assigned 10436 to core: 7
+[ 08.07.2017 || 17:17:45 ] => [MASTER] started (/home/yousef/projects/real-time_lane_detection/kit_release_code/build-master/../build-detection/detection) - pid: 10439
+[ 08.07.2017 || 17:17:45 ] => [MASTER] assigned 10439 to core: 3
+[ 08.07.2017 || 17:17:45 ] => [MASTER] started (/home/yousef/projects/real-time_lane_detection/kit_release_code/build-master/../build-reg/reg) - pid: 10442
+[ 08.07.2017 || 17:17:45 ] => [MASTER] assigned 10442 to core: 1
+[ 08.07.2017 || 17:17:45 ] => [MASTER] started (/home/yousef/projects/real-time_lane_detection/kit_release_code/build-master/../build-track/track) - pid: 10445
+[ 08.07.2017 || 17:17:45 ] => [MASTER] assigned 10445 to core: 2
